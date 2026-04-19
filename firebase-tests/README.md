@@ -21,6 +21,7 @@ Available fixture seeds:
 - `fixtures/chat_thread.json`
 - `fixtures/report.json`
 - `fixtures/block.json`
+- `fixtures/manifest.json`
 
 Suggested path mapping when emulator tests are added:
 
@@ -29,6 +30,8 @@ Suggested path mapping when emulator tests are added:
 - `chatThreads/thread-1`
 - `reports/report-1`
 - `blocks/owner-1-guest-1`
+
+The same mapping is also stored in `fixtures/manifest.json` so future emulator setup can load fixture-path pairs programmatically.
 
 These fixture seeds should stay aligned with `firestore.rules`, `docs/security_rules.md`, and `docs/firestore_indexes.md`.
 

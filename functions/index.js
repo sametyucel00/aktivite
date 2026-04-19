@@ -8,11 +8,14 @@ const {
 } = require('firebase-functions/v2/firestore');
 const { logger } = require('firebase-functions');
 const {
+  buildReportModerationReasonCode,
   getJoinApprovalOutcome,
   isActiveBlock,
   isAllowedReportReason,
   isInvalidMessagingTokenCode,
+  isTokenNormalizationNoop,
   isValidUserAction,
+  normalizeNotificationTokenRecord,
   safeNotificationPreview,
   stringifyData,
 } = require('./helpers');
@@ -163,7 +166,7 @@ exports.onReportCreated = onDocumentCreated('reports/{reportId}', async (event) 
 
   await db.collection('moderationEvents').add({
     subjectUserId: report.targetUserId,
-    reasonCode: `report_${report.reason}`,
+    reasonCode: buildReportModerationReasonCode(report.reason),
     reason: report.reason,
     isUserVisible: false,
     createdAt: FieldValue.serverTimestamp(),
@@ -258,30 +261,20 @@ exports.onNotificationTokenWritten = onDocumentWritten(
       return;
     }
 
-    const token = typeof after.token === 'string' ? after.token.trim() : '';
-    const platform = typeof after.platform === 'string' ? after.platform : 'unknown';
-    if (
-      before &&
-      before.normalizedByFunction === true &&
-      after.normalizedByFunction === true &&
-      before.token === token &&
-      before.platform === platform
-    ) {
+    const normalized = {
+      ...normalizeNotificationTokenRecord(after),
+      updatedAt: FieldValue.serverTimestamp(),
+    };
+    if (isTokenNormalizationNoop(before, normalized)) {
       return;
     }
 
-    if (!token) {
+    if (!normalized.token) {
       await event.data.after.ref.delete();
       logger.warn('Deleted empty notification token.', event.params);
       return;
     }
 
-    const normalized = {
-      token,
-      platform,
-      normalizedByFunction: true,
-      updatedAt: FieldValue.serverTimestamp(),
-    };
     await event.data.after.ref.set(normalized, { merge: true });
   },
 );

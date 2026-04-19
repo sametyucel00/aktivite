@@ -1,0 +1,22 @@
+{
+  "activity": {
+    "fixture": "fixtures/activity.json",
+    "path": "activities/activity-1"
+  },
+  "joinRequest": {
+    "fixture": "fixtures/join_request.json",
+    "path": "activities/activity-1/joinRequests/guest-1"
+  },
+  "chatThread": {
+    "fixture": "fixtures/chat_thread.json",
+    "path": "chatThreads/thread-1"
+  },
+  "report": {
+    "fixture": "fixtures/report.json",
+    "path": "reports/report-1"
+  },
+  "block": {
+    "fixture": "fixtures/block.json",
+    "path": "blocks/owner-1-guest-1"
+  }
+}

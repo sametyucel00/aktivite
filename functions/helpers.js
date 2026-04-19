@@ -34,6 +34,27 @@ function isInvalidMessagingTokenCode(code) {
   ]).has(code);
 }
 
+function normalizeNotificationTokenRecord(data) {
+  const token = typeof data?.token === 'string' ? data.token.trim() : '';
+  const platform =
+    typeof data?.platform === 'string' && data.platform.trim()
+      ? data.platform.trim()
+      : 'unknown';
+  return {
+    token,
+    platform,
+    normalizedByFunction: true,
+  };
+}
+
+function isTokenNormalizationNoop(before, normalizedAfter) {
+  return Boolean(before) &&
+    before.normalizedByFunction === true &&
+    normalizedAfter.normalizedByFunction === true &&
+    before.token === normalizedAfter.token &&
+    before.platform === normalizedAfter.platform;
+}
+
 function isAllowedReportReason(reason) {
   return new Set([
     'spam',
@@ -42,6 +63,10 @@ function isAllowedReportReason(reason) {
     'fake_profile',
     'inappropriate_content',
   ]).has(reason);
+}
+
+function buildReportModerationReasonCode(reason) {
+  return isAllowedReportReason(reason) ? `report_${reason}` : null;
 }
 
 function hasJoinCapacity(activity) {
@@ -80,13 +105,16 @@ function getJoinApprovalOutcome({ activity, request }) {
 }
 
 module.exports = {
+  buildReportModerationReasonCode,
   getJoinApprovalOutcome,
   hasJoinCapacity,
   isActiveBlock,
   isActiveBlockData,
   isAllowedReportReason,
   isInvalidMessagingTokenCode,
+  isTokenNormalizationNoop,
   isValidUserAction,
+  normalizeNotificationTokenRecord,
   safeNotificationPreview,
   stringifyData,
 };

@@ -1,12 +1,15 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const {
+  buildReportModerationReasonCode,
   getJoinApprovalOutcome,
   hasJoinCapacity,
   isActiveBlockData,
   isAllowedReportReason,
   isInvalidMessagingTokenCode,
+  isTokenNormalizationNoop,
   isValidUserAction,
+  normalizeNotificationTokenRecord,
   safeNotificationPreview,
   stringifyData,
 } = require('./helpers');
@@ -30,6 +33,31 @@ test('stringifyData coerces values into strings', () => {
     flag: 'true',
   });
   assert.deepEqual(stringifyData(), {});
+});
+
+test('normalizeNotificationTokenRecord trims token and defaults platform', () => {
+  assert.deepEqual(normalizeNotificationTokenRecord({ token: ' abc ', platform: '' }), {
+    token: 'abc',
+    platform: 'unknown',
+    normalizedByFunction: true,
+  });
+});
+
+test('isTokenNormalizationNoop matches already-normalized writes', () => {
+  assert.equal(
+    isTokenNormalizationNoop(
+      { token: 'abc', platform: 'android', normalizedByFunction: true },
+      { token: 'abc', platform: 'android', normalizedByFunction: true },
+    ),
+    true,
+  );
+  assert.equal(
+    isTokenNormalizationNoop(
+      { token: 'abc', platform: 'android', normalizedByFunction: true },
+      { token: 'def', platform: 'android', normalizedByFunction: true },
+    ),
+    false,
+  );
 });
 
 test('join approval outcome blocks owner, full, and cancelled activities', () => {
@@ -107,6 +135,11 @@ test('hasJoinCapacity reflects closed and full activities', () => {
 test('isAllowedReportReason only accepts canonical reasons', () => {
   assert.equal(isAllowedReportReason('harassment'), true);
   assert.equal(isAllowedReportReason('unknown'), false);
+});
+
+test('buildReportModerationReasonCode returns canonical moderation code', () => {
+  assert.equal(buildReportModerationReasonCode('spam'), 'report_spam');
+  assert.equal(buildReportModerationReasonCode('unknown'), null);
 });
 
 test('join approval outcome rejects missing activity or request payloads', () => {
