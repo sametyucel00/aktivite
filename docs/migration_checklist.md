@@ -88,3 +88,12 @@ The repository already has these migration-prep pieces in place:
 - pure Cloud Functions helper tests exist in `functions/index.test.js`
 - emulator-focused Firestore rules scaffold exists in `firebase-tests/`
 - widget/provider/model coverage already protects join, chat, safety, and blocked-visibility regressions before the source flip
+
+## Ready-Now Validation Assets
+
+These assets are already available before the source flip:
+
+- `.\tool\check.ps1` for the local scripted quality gate
+- `docs/manual_qa_checklist.md` for manual smoke coverage
+- `docs/storage_rules_scenarios.md` for future Storage emulator assertions
+- `docs/safety_backend_contracts.md` for cross-surface safety alignment

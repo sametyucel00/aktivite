@@ -73,6 +73,8 @@ This document captures the minimum Firestore and Storage rule boundaries that sh
 - Read: deny for normal clients unless a future verification review UI requires scoped access.
 - Write: only the owning user or trusted backend workflow.
 
+Storage-rule verification scenarios for these paths are tracked in `docs/storage_rules_scenarios.md`.
+
 ## Validation Priorities
 
 - Use centralized enum names from the app contract.

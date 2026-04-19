@@ -21,6 +21,7 @@ Aktivite uses Firebase behind repository and service interfaces. Local developme
 4. Confirm `lib/firebase_options.dart` is generated locally.
 5. Keep real secrets out of public review. Firebase client configuration files are tracked for CI because the app imports them at compile time; protect data with Firebase Auth, rules, App Check, and backend validation rather than by treating client API keys as secrets.
 6. Run `.\tool\check.ps1` after configuration.
+7. Use `docs/manual_qa_checklist.md` for focused smoke validation after larger flow changes.
 
 Use `docs/migration_checklist.md` as the step-by-step playbook when replacing in-memory seams with Firebase-backed implementations.
 
@@ -36,6 +37,7 @@ Use `docs/migration_checklist.md` as the step-by-step playbook when replacing in
 - Expected Firestore query/index shapes are tracked in `docs/firestore_indexes.md`.
 - Cloud Functions workflow contracts are tracked in `docs/functions_contracts.md`.
 - Cross-cutting trust-and-safety visibility rules are tracked in `docs/safety_backend_contracts.md`.
+- Storage path verification scenarios are tracked in `docs/storage_rules_scenarios.md`.
 
 ## Initial Data Boundaries
 

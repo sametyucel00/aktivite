@@ -24,6 +24,7 @@ Optional builds:
 4. `flutter analyze`
 5. `flutter test`
 6. optional platform builds
+7. manual QA using `docs/manual_qa_checklist.md` for higher-risk changes
 
 ## Current Test Layers
 
@@ -36,7 +37,7 @@ Optional builds:
 
 ## Manual Verification Priorities
 
-When Flutter SDK is available, verify:
+When Flutter SDK is available, verify the checklist in `docs/manual_qa_checklist.md`, with extra attention to:
 
 - auth gate and onboarding flow
 - activity create/join/approve path
@@ -61,6 +62,7 @@ Firebase emulator-based rule checks require JDK 21 or newer with the current Fir
 
 - `firebase-tests/` contains the initial fixture-oriented scaffold for future Firestore rules tests.
 - `firebase-tests/fixtures/` stores minimal JSON fixtures for activity, join request, chat, report, and block cases so emulator tests can stay deterministic.
+- storage-rule scenarios are documented separately in `docs/storage_rules_scenarios.md`
 - The scaffold is intentionally lightweight until JDK 21 is available locally and the emulator job is wired into CI.
 
 ## CI Expectation

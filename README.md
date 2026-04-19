@@ -46,13 +46,18 @@ Optional build checks can be enabled when the relevant platform toolchains are i
 
 The script runs dependency restore, localization generation, format verification, static analysis, and tests before any optional builds.
 
+If you are validating a larger feature or backend workflow manually after the scripted checks, use [docs/manual_qa_checklist.md](docs/manual_qa_checklist.md).
+
 ## Documentation
 
 - [Architecture](docs/architecture.md)
 - [Firebase setup](docs/firebase.md)
 - [Backend contracts](docs/backend_contracts.md)
+- [Safety backend contracts](docs/safety_backend_contracts.md)
 - [Security rules draft](docs/security_rules.md)
+- [Storage rules scenarios](docs/storage_rules_scenarios.md)
 - [Testing guide](docs/testing.md)
+- [Manual QA checklist](docs/manual_qa_checklist.md)
 - [Migration checklist](docs/migration_checklist.md)
 - [Firestore index plan](docs/firestore_indexes.md)
 - [Cloud Functions contracts](docs/functions_contracts.md)
@@ -66,46 +71,18 @@ The script runs dependency restore, localization generation, format verification
 - Do not commit service accounts, private keys, signing credentials, local emulator exports, or `.env` files.
 - Keep changes small enough for review and run `.\tool\check.ps1` or the equivalent Flutter commands before opening a PR.
 - Install JDK 21 or newer before running Firebase emulator-based rule checks.
+- Use the `firebase-tests/` scaffold and fixtures once JDK 21 is available locally.
 
 ## Current Repository State
 
-This repository contains the initial production-oriented scaffold:
+This repository already includes:
 
-- feature-first architecture
-- design system tokens and shared widgets
-- localized app shell
-- provider-backed app session and guarded route flow
-- in-memory repository implementations that mirror future Firebase boundaries
-- trust timeline, join-request coordination, and privacy-first map scaffolding
-- in-memory analytics signals for discovery, onboarding, safety, chat, and settings actions
-- shared join-request dialog flow across explore and map with practical note presets
-- shared recommendation reason chips across explore and map surfaces
-- lightweight plan-capacity, approval, and coordination chat scaffolding
-- owner-facing activities flow now derives from user-owned plans instead of generic discovery lists
-- bottom navigation badges surface pending join requests and active coordination threads
-- shared join-request status helpers now keep explore and map labels aligned
-- owner-side request summaries are aggregated across managed plans
-- shared localized label utilities now reduce duplicate enum-to-copy mapping across onboarding, profile, and plan creation
-- safety center now exposes action summaries and prevents duplicate report/block actions in the local state flow
-- settings now render human-readable product signals and a quick preference summary
-- enabling safe meetup reminders from settings now creates a trust event once for the signed-in user
-- trust records now carry timestamps so safety history reads more like a real moderation timeline
-- settings include a recent analytics summary and profile includes quick links to safety and settings
-- route-based CTAs are shared so empty states and quick actions navigate consistently
-- trust signal rendering is shared between explore and safety surfaces
-- profile-completion gates now reuse one shared card across plan creation and discovery
-- plan publishing uses the shared feedback helper so creation success is visible immediately
-- join-request status and submission actions are shared between explore and map surfaces
-- trust-event reason codes and timestamped event creation are centralized through a small factory utility
-- analytics event names are centralized so logging, formatting, and signal summaries stay aligned
-- Remote Config keys and fallback values are centralized so rollout defaults stay consistent
-- route paths are centralized through `AppRoutes` so navigation and quick actions stay aligned
-- in-memory seed user, activity, and thread ids are centralized through `SampleIds`
-- runtime timestamp and generated id helpers are centralized through `AppClock` and `AppIdFactory`
-- activity composer time selection uses typed `PlanTimeOption` values instead of localized string comparisons
-- activity plans can carry typed time options so recommendation matching can avoid localized label parsing when available
-- activity plan copy/update and capacity/discovery rules are centralized on the model to reduce duplicated business checks
-- MVP screen inventory for auth, onboarding, explore, activities, chat, map, safety, profile, and settings
+- feature-first Flutter structure with localized app shell, guarded session flow, design-system primitives, and shared route/action helpers
+- in-memory repository seams that mirror Firebase boundaries for auth, profile, activities, join requests, chat, moderation, analytics, remote config, and safety
+- activity-first user flows for explore, map, owned activities, join requests, coordination chat, safety center, profile, and settings
+- shared domain helpers for profile gating, join-request status, activity invariants, chat normalization, trust-event creation, enum parsing, ids, and timestamps
+- Firebase migration prep through field/path constants, Firestore index planning, Functions workflow contracts, security-rule docs, and emulator test scaffolding
+- regression coverage for widget, provider, repository, model, and Cloud Functions helper behavior across join, chat, blocked visibility, and safety flows
 
 ## Notes
 
@@ -140,6 +117,9 @@ This repository contains the initial production-oriented scaffold:
 - A repository-by-repository Firebase migration checklist is now documented so `RepositorySource` flips stay deliberate and reviewable.
 - A Firestore index draft is now documented so discovery, join-request, chat, and safety queries can migrate without hidden backend surprises.
 - Cloud Functions trigger contracts are now documented so approval, notification, and moderation side effects can move server-side deliberately.
+- Cross-cutting block, report, verification, and placeholder safety behavior is now documented in `docs/safety_backend_contracts.md`.
+- Storage-rule verification scenarios are now documented in `docs/storage_rules_scenarios.md`.
+- Manual post-check smoke verification now has a dedicated checklist in `docs/manual_qa_checklist.md`.
 - Auth now collects a real phone number with local validation and submit-state handling before the platform-specific OTP verification UI is fully connected.
 - Auth repositories now return typed phone-verification results so immediate sign-in, code-sent, unsupported-platform, and failure states can share one contract.
 - Auth now includes a second-step SMS code confirmation flow with typed failure mapping for invalid, expired, or rate-limited verification attempts.
