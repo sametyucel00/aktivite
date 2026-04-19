@@ -254,6 +254,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get blockUser => 'Block user';
 
   @override
+  String get chatSelectedThreadEmpty =>
+      'Choose an approved thread to start coordinating.';
+
+  @override
+  String get chatSelectedThreadSubtitle =>
+      'Switch between approved chats and keep one coordination thread in focus.';
+
+  @override
+  String get chatSelectedThreadTitle => 'Selected thread';
+
+  @override
+  String chatThreadChipLabel(String activityId, int count) {
+    return '$activityId · $count people';
+  }
+
+  @override
   String chatActivityLabel(String activityId) {
     return 'Activity: $activityId';
   }
@@ -497,6 +513,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get joinRequestsEmpty => 'No join requests yet.';
 
   @override
+  String joinRequestsPlanContext(String title, String schedule) {
+    return 'Reviewing requests for $title · $schedule';
+  }
+
+  @override
   String get joinRequestsNoPlanSelected =>
       'Select or create a plan to review requests.';
 
@@ -660,6 +681,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get openSafetyCenterAction => 'Open safety center';
 
   @override
+  String get guestPreviewLabel => 'Guest preview';
+
+  @override
   String get openSettingsAction => 'Open settings';
 
   @override
@@ -735,6 +759,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get profileGroupPreferenceTitle => 'Group preference';
+
+  @override
+  String memberLabel(String memberId) {
+    return 'Member $memberId';
+  }
 
   @override
   String profileMoodLabel(String mood) {
@@ -860,6 +889,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get safetyReportSubmittedToast => 'Report submitted.';
+
+  @override
+  String safetyReportsPrivateHint(int count) {
+    return '$count report records stay private and are only shown here as a summary.';
+  }
+
+  @override
+  String get safetyReportsPrivateLabel => 'Private reports';
+
+  @override
+  String get safetyReportsPrivateSummary =>
+      'Reports stay private and are only surfaced as a lightweight summary.';
+
+  @override
+  String get safetyReportsTitle => 'Report visibility';
 
   @override
   String get safetyActionUnavailableToast =>

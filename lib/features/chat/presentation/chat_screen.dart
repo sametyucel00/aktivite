@@ -25,6 +25,7 @@ class ChatScreen extends ConsumerStatefulWidget {
 class _ChatScreenState extends ConsumerState<ChatScreen> {
   late final TextEditingController _messageController;
   bool _isSendingMessage = false;
+  String? _selectedThreadId;
 
   @override
   void initState() {
@@ -45,16 +46,37 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     final blockedChatThreadsCount =
         ref.watch(blockedChatThreadsCountProvider).valueOrNull ?? 0;
     final primaryThreadId = ref.watch(primaryChatThreadIdProvider);
-    final primaryThread = ref.watch(primaryChatThreadProvider);
     final currentUserId = ref.watch(currentUserIdProvider);
-    final canSendToPrimary =
-        primaryThread?.hasParticipant(currentUserId) ?? false;
-    final canSendMessage = canSendToPrimary && !_isSendingMessage;
+    final resolvedThreads = threadsAsync.valueOrNull;
+    final resolvedSelectedThreadId = resolvedThreads != null &&
+            resolvedThreads.any((thread) => thread.id == _selectedThreadId)
+        ? _selectedThreadId
+        : primaryThreadId;
+    final composerThread =
+        resolvedSelectedThreadId == null || resolvedThreads == null
+            ? null
+            : resolvedThreads.firstWhere(
+                (thread) => thread.id == resolvedSelectedThreadId,
+              );
+    final canSendMessage =
+        (composerThread?.hasParticipant(currentUserId) ?? false) &&
+            !_isSendingMessage;
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.chatTitle)),
       body: threadsAsync.when(
         data: (threads) {
+          final effectiveThreadId = threads.any(
+            (thread) => thread.id == _selectedThreadId,
+          )
+              ? _selectedThreadId
+              : threads.isEmpty
+                  ? null
+                  : threads.first.id;
+          final selectedThread = effectiveThreadId == null
+              ? null
+              : threads.firstWhere((thread) => thread.id == effectiveThreadId);
+
           if (threads.isEmpty) {
             return EmptyStateView(
               title: blockedChatThreadsCount > 0
@@ -75,17 +97,17 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
               Card(
                 child: Padding(
                   padding: const EdgeInsets.all(AppSpacing.lg),
-                  child: primaryThread == null
+                  child: selectedThread == null
                       ? Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              l10n.chatPrimaryThreadTitle,
+                              l10n.chatSelectedThreadTitle,
                               style: Theme.of(context).textTheme.titleMedium,
                             ),
                             const SizedBox(height: AppSpacing.xs),
                             Text(
-                              l10n.chatPrimaryThreadEmpty,
+                              l10n.chatSelectedThreadEmpty,
                               style: Theme.of(context).textTheme.bodySmall,
                             ),
                           ],
@@ -94,25 +116,51 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              l10n.chatPrimaryThreadTitle,
+                              l10n.chatSelectedThreadTitle,
                               style: Theme.of(context).textTheme.titleMedium,
                             ),
                             const SizedBox(height: AppSpacing.xs),
                             Text(
-                              l10n.chatPrimaryThreadSubtitle,
+                              l10n.chatSelectedThreadSubtitle,
                               style: Theme.of(context).textTheme.bodySmall,
                             ),
+                            if (threads.length > 1) ...[
+                              const SizedBox(height: AppSpacing.md),
+                              Wrap(
+                                spacing: AppSpacing.sm,
+                                runSpacing: AppSpacing.sm,
+                                children: threads
+                                    .map(
+                                      (thread) => ChoiceChip(
+                                        selected:
+                                            thread.id == selectedThread.id,
+                                        onSelected: (_) {
+                                          setState(() {
+                                            _selectedThreadId = thread.id;
+                                          });
+                                        },
+                                        label: Text(
+                                          l10n.chatThreadChipLabel(
+                                            thread.activityId,
+                                            thread.participantsCount,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                    .toList(growable: false),
+                              ),
+                            ],
                             const SizedBox(height: AppSpacing.md),
                             Text(
-                              l10n.chatActivityLabel(primaryThread.activityId),
+                              l10n.chatActivityLabel(selectedThread.activityId),
                               style: Theme.of(context).textTheme.labelLarge,
                             ),
                             const SizedBox(height: AppSpacing.xs),
-                            Text(primaryThread.lastMessagePreview),
+                            Text(selectedThread.lastMessagePreview),
                             const SizedBox(height: AppSpacing.xs),
                             Text(
                               l10n.chatParticipantsCount(
-                                primaryThread.participantsCount,
+                                selectedThread.participantsCount,
                               ),
                               style: Theme.of(context).textTheme.bodySmall,
                             ),
@@ -121,28 +169,18 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                 ),
               ),
               const SizedBox(height: AppSpacing.md),
-              ...List.generate(threads.length, (index) {
-                final thread = threads[index];
-                return Padding(
-                  padding: EdgeInsets.only(
-                    bottom: index == threads.length - 1 ? 0 : AppSpacing.md,
-                  ),
-                  child: _ThreadCard(
-                    thread: thread,
-                    isPrimary: thread.id == primaryThreadId,
-                    isSendingMessage: _isSendingMessage,
-                    currentUserId: currentUserId,
-                    draftController: thread.id == primaryThreadId
-                        ? _messageController
-                        : null,
-                    onSendMessage: (message) => _sendMessage(
-                      threadId: thread.id,
-                      senderUserId: currentUserId,
-                      message: message,
-                    ),
-                  ),
-                );
-              }),
+              _ThreadCard(
+                thread: selectedThread!,
+                isPrimary: true,
+                isSendingMessage: _isSendingMessage,
+                currentUserId: currentUserId,
+                draftController: _messageController,
+                onSendMessage: (message) => _sendMessage(
+                  threadId: selectedThread.id,
+                  senderUserId: currentUserId,
+                  message: message,
+                ),
+              ),
             ],
           );
         },
@@ -164,16 +202,16 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
               maxLength: ChatMessage.maxTextLength,
               onSubmitted: (value) async {
                 await _sendMessage(
-                  threadId: primaryThreadId,
+                  threadId: resolvedSelectedThreadId,
                   senderUserId: currentUserId,
                   message: value,
                 );
               },
               decoration: InputDecoration(
                 border: InputBorder.none,
-                hintText: canSendToPrimary
+                hintText: canSendMessage
                     ? l10n.chatComposerHint
-                    : l10n.chatPrimaryThreadEmpty,
+                    : l10n.chatSelectedThreadEmpty,
                 suffixIcon: _isSendingMessage
                     ? const Padding(
                         padding: EdgeInsets.all(AppSpacing.md),
@@ -188,7 +226,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                             ? null
                             : () async {
                                 await _sendMessage(
-                                  threadId: primaryThreadId,
+                                  threadId: resolvedSelectedThreadId,
                                   senderUserId: currentUserId,
                                   message: _messageController.text,
                                 );

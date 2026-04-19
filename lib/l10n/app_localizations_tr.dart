@@ -257,6 +257,22 @@ class AppLocalizationsTr extends AppLocalizations {
   String get blockUser => 'Kullaniciyi engelle';
 
   @override
+  String get chatSelectedThreadEmpty =>
+      'Koordinasyona baslamak icin onayli bir sohbet sec.';
+
+  @override
+  String get chatSelectedThreadSubtitle =>
+      'Onayli sohbetler arasinda gecis yap ve tek bir koordinasyon sohbetine odaklan.';
+
+  @override
+  String get chatSelectedThreadTitle => 'Secili sohbet';
+
+  @override
+  String chatThreadChipLabel(String activityId, int count) {
+    return '$activityId · $count kisi';
+  }
+
+  @override
   String chatActivityLabel(String activityId) {
     return 'Aktivite: $activityId';
   }
@@ -497,6 +513,11 @@ class AppLocalizationsTr extends AppLocalizations {
   String get joinRequestsEmpty => 'Henuz katilim istegi yok.';
 
   @override
+  String joinRequestsPlanContext(String title, String schedule) {
+    return '$title · $schedule icin istekler inceleniyor';
+  }
+
+  @override
   String get joinRequestsNoPlanSelected =>
       'Istekleri gormek icin bir plan sec veya olustur.';
 
@@ -660,6 +681,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get openSafetyCenterAction => 'Guvenlik merkezini ac';
 
   @override
+  String get guestPreviewLabel => 'Misafir onizlemesi';
+
+  @override
   String get openSettingsAction => 'Ayarlari ac';
 
   @override
@@ -735,6 +759,11 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get profileGroupPreferenceTitle => 'Grup tercihi';
+
+  @override
+  String memberLabel(String memberId) {
+    return 'Uye $memberId';
+  }
 
   @override
   String profileMoodLabel(String mood) {
@@ -860,6 +889,21 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get safetyReportSubmittedToast => 'Bildirim gonderildi.';
+
+  @override
+  String safetyReportsPrivateHint(int count) {
+    return '$count bildirim kaydi gizli kalir ve burada sadece ozet olarak gorunur.';
+  }
+
+  @override
+  String get safetyReportsPrivateLabel => 'Gizli bildirimler';
+
+  @override
+  String get safetyReportsPrivateSummary =>
+      'Bildirimler gizli kalir ve yalnizca hafif bir ozet olarak gorunur.';
+
+  @override
+  String get safetyReportsTitle => 'Bildirim gorunurlugu';
 
   @override
   String get safetyActionUnavailableToast =>

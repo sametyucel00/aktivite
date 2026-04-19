@@ -81,6 +81,7 @@ Function responsibilities:
 
 - validate minimum required report fields
 - validate the report reason against the supported moderation taxonomy
+- assume the client selected the reason from the controlled safety-reason UI and still re-validate server-side
 - enqueue moderation review
 - append internal moderation event
 - optionally update internal trust risk state for the reported user
@@ -100,6 +101,7 @@ Function responsibilities:
 
 - hide or exclude relevant plans, chats, and coordination visibility for the blocking user
 - prevent future notification fanout between blocked pairs where practical
+- leave room for future trusted-contact and safe-return hooks without turning block data into a public signal
 
 Outputs:
 
@@ -147,6 +149,7 @@ Outputs:
 - Keep function writes scoped and explicit; do not let one trigger rewrite unrelated user data.
 - Log enough structured context for debugging, but avoid storing sensitive freeform content when not needed.
 - Route privileged writes through Cloud Functions instead of trusting client devices for approval or moderation side effects.
+- Keep future abuse and rate-limit hooks private and operational; they should influence moderation workflows without becoming user-facing scorecards.
 
 ## Migration Notes
 

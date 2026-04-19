@@ -110,6 +110,20 @@
   "availabilityMornings": "Mornings",
   "availabilityWeekends": "Weekends",
   "blockUser": "Block user",
+  "chatSelectedThreadEmpty": "Choose an approved thread to start coordinating.",
+  "chatSelectedThreadSubtitle": "Switch between approved chats and keep one coordination thread in focus.",
+  "chatSelectedThreadTitle": "Selected thread",
+  "chatThreadChipLabel": "{activityId} · {count} people",
+  "@chatThreadChipLabel": {
+    "placeholders": {
+      "activityId": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "chatActivityLabel": "Activity: {activityId}",
   "@chatActivityLabel": {
     "placeholders": {
@@ -198,6 +212,17 @@
   "joinRequestRejectedNotice": "This request was not approved.",
   "joinRequestRejectedLocalNotice": "Request rejected.",
   "joinRequestsEmpty": "No join requests yet.",
+  "joinRequestsPlanContext": "Reviewing requests for {title} · {schedule}",
+  "@joinRequestsPlanContext": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "schedule": {
+        "type": "String"
+      }
+    }
+  },
   "joinRequestsNoPlanSelected": "Select or create a plan to review requests.",
   "joinRequestsPendingCount": "{count} pending requests",
   "@joinRequestsPendingCount": {
@@ -263,6 +288,7 @@
   "openPlansAction": "Open plans",
   "openProfileAction": "Open profile",
   "openSafetyCenterAction": "Open safety center",
+  "guestPreviewLabel": "Guest preview",
   "openSettingsAction": "Open settings",
   "peopleCount": "{current}/{max} people",
   "@peopleCount": {
@@ -310,6 +336,14 @@
   },
   "profileGateTitle": "Add a little more to your profile",
   "profileGroupPreferenceTitle": "Group preference",
+  "memberLabel": "Member {memberId}",
+  "@memberLabel": {
+    "placeholders": {
+      "memberId": {
+        "type": "String"
+      }
+    }
+  },
   "profileMoodLabel": "Social mood: {mood}",
   "@profileMoodLabel": {
     "placeholders": {
@@ -369,6 +403,17 @@
     }
   },
   "safetyReportSubmittedToast": "Report submitted.",
+  "safetyReportsPrivateHint": "{count} report records stay private and are only shown here as a summary.",
+  "@safetyReportsPrivateHint": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "safetyReportsPrivateLabel": "Private reports",
+  "safetyReportsPrivateSummary": "Reports stay private and are only surfaced as a lightweight summary.",
+  "safetyReportsTitle": "Report visibility",
   "safetyActionUnavailableToast": "Safety tools need an active session right now.",
   "safetyActionFailedToast": "Safety action could not be completed right now.",
   "safetySummarySubtitle": "A quick view of your recent trust actions.",

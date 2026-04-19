@@ -110,6 +110,20 @@
   "availabilityMornings": "Sabahlari",
   "availabilityWeekends": "Hafta sonlari",
   "blockUser": "Kullaniciyi engelle",
+  "chatSelectedThreadEmpty": "Koordinasyona baslamak icin onayli bir sohbet sec.",
+  "chatSelectedThreadSubtitle": "Onayli sohbetler arasinda gecis yap ve tek bir koordinasyon sohbetine odaklan.",
+  "chatSelectedThreadTitle": "Secili sohbet",
+  "chatThreadChipLabel": "{activityId} · {count} kisi",
+  "@chatThreadChipLabel": {
+    "placeholders": {
+      "activityId": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "chatActivityLabel": "Aktivite: {activityId}",
   "@chatActivityLabel": {
     "placeholders": {
@@ -198,6 +212,17 @@
   "joinRequestRejectedNotice": "Bu istek onaylanmadi.",
   "joinRequestRejectedLocalNotice": "Istek reddedildi.",
   "joinRequestsEmpty": "Henuz katilim istegi yok.",
+  "joinRequestsPlanContext": "{title} · {schedule} icin istekler inceleniyor",
+  "@joinRequestsPlanContext": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "schedule": {
+        "type": "String"
+      }
+    }
+  },
   "joinRequestsNoPlanSelected": "Istekleri gormek icin bir plan sec veya olustur.",
   "joinRequestsPendingCount": "{count} bekleyen istek",
   "@joinRequestsPendingCount": {
@@ -263,6 +288,7 @@
   "openPlansAction": "Planlari ac",
   "openProfileAction": "Profili ac",
   "openSafetyCenterAction": "Guvenlik merkezini ac",
+  "guestPreviewLabel": "Misafir onizlemesi",
   "openSettingsAction": "Ayarlari ac",
   "peopleCount": "{current}/{max} kisi",
   "@peopleCount": {
@@ -310,6 +336,14 @@
   },
   "profileGateTitle": "Profiline biraz daha detay ekle",
   "profileGroupPreferenceTitle": "Grup tercihi",
+  "memberLabel": "Uye {memberId}",
+  "@memberLabel": {
+    "placeholders": {
+      "memberId": {
+        "type": "String"
+      }
+    }
+  },
   "profileMoodLabel": "Sosyal ruh hali: {mood}",
   "@profileMoodLabel": {
     "placeholders": {
@@ -369,6 +403,17 @@
     }
   },
   "safetyReportSubmittedToast": "Bildirim gonderildi.",
+  "safetyReportsPrivateHint": "{count} bildirim kaydi gizli kalir ve burada sadece ozet olarak gorunur.",
+  "@safetyReportsPrivateHint": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "safetyReportsPrivateLabel": "Gizli bildirimler",
+  "safetyReportsPrivateSummary": "Bildirimler gizli kalir ve yalnizca hafif bir ozet olarak gorunur.",
+  "safetyReportsTitle": "Bildirim gorunurlugu",
   "safetyActionUnavailableToast": "Guvenlik araclari su anda aktif bir oturum gerektiriyor.",
   "safetyActionFailedToast": "Guvenlik eylemi su anda tamamlanamadi.",
   "safetySummarySubtitle": "Son guven eylemlerinin hizli ozeti.",

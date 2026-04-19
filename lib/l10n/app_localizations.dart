@@ -548,6 +548,30 @@ abstract class AppLocalizations {
   /// **'Block user'**
   String get blockUser;
 
+  /// No description provided for @chatSelectedThreadEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose an approved thread to start coordinating.'**
+  String get chatSelectedThreadEmpty;
+
+  /// No description provided for @chatSelectedThreadSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch between approved chats and keep one coordination thread in focus.'**
+  String get chatSelectedThreadSubtitle;
+
+  /// No description provided for @chatSelectedThreadTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected thread'**
+  String get chatSelectedThreadTitle;
+
+  /// No description provided for @chatThreadChipLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{activityId} · {count} people'**
+  String chatThreadChipLabel(String activityId, int count);
+
   /// No description provided for @chatActivityLabel.
   ///
   /// In en, this message translates to:
@@ -992,6 +1016,12 @@ abstract class AppLocalizations {
   /// **'No join requests yet.'**
   String get joinRequestsEmpty;
 
+  /// No description provided for @joinRequestsPlanContext.
+  ///
+  /// In en, this message translates to:
+  /// **'Reviewing requests for {title} · {schedule}'**
+  String joinRequestsPlanContext(String title, String schedule);
+
   /// No description provided for @joinRequestsNoPlanSelected.
   ///
   /// In en, this message translates to:
@@ -1298,6 +1328,12 @@ abstract class AppLocalizations {
   /// **'Open safety center'**
   String get openSafetyCenterAction;
 
+  /// No description provided for @guestPreviewLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Guest preview'**
+  String get guestPreviewLabel;
+
   /// No description provided for @openSettingsAction.
   ///
   /// In en, this message translates to:
@@ -1435,6 +1471,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Group preference'**
   String get profileGroupPreferenceTitle;
+
+  /// No description provided for @memberLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Member {memberId}'**
+  String memberLabel(String memberId);
 
   /// No description provided for @profileMoodLabel.
   ///
@@ -1663,6 +1705,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Report submitted.'**
   String get safetyReportSubmittedToast;
+
+  /// No description provided for @safetyReportsPrivateHint.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} report records stay private and are only shown here as a summary.'**
+  String safetyReportsPrivateHint(int count);
+
+  /// No description provided for @safetyReportsPrivateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Private reports'**
+  String get safetyReportsPrivateLabel;
+
+  /// No description provided for @safetyReportsPrivateSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Reports stay private and are only surfaced as a lightweight summary.'**
+  String get safetyReportsPrivateSummary;
+
+  /// No description provided for @safetyReportsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Report visibility'**
+  String get safetyReportsTitle;
 
   /// No description provided for @safetyActionUnavailableToast.
   ///

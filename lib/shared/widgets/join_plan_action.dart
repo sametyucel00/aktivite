@@ -107,6 +107,18 @@ class JoinPlanAction extends ConsumerWidget {
         }
 
         final canRequest = profileAsync.valueOrNull?.canCreatePlans ?? false;
+        if (profileAsync.hasValue &&
+            session.userId != null &&
+            plan.ownerUserId != session.userId &&
+            !canRequest) {
+          return _JoinPlanUnavailableAction(
+            label: l10n.profileGateMessage(
+              profileAsync.valueOrNull?.profileCompletion ?? 0,
+            ),
+            style: style,
+            actionLabel: l10n.profileGateAction,
+          );
+        }
         final onPressed = !canSubmitJoinRequest(
           plan: plan,
           requests: requests,
@@ -170,10 +182,12 @@ class _JoinPlanUnavailableAction extends StatelessWidget {
   const _JoinPlanUnavailableAction({
     required this.label,
     required this.style,
+    this.actionLabel,
   });
 
   final String label;
   final JoinPlanActionStyle style;
+  final String? actionLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -189,11 +203,11 @@ class _JoinPlanUnavailableAction extends StatelessWidget {
         switch (style) {
           JoinPlanActionStyle.tonal => FilledButton.tonal(
               onPressed: null,
-              child: Text(l10n.activityStatusFull),
+              child: Text(actionLabel ?? l10n.activityStatusFull),
             ),
           JoinPlanActionStyle.text => TextButton(
               onPressed: null,
-              child: Text(l10n.activityStatusFull),
+              child: Text(actionLabel ?? l10n.activityStatusFull),
             ),
         },
       ],

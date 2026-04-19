@@ -70,6 +70,10 @@ class SafetyScreen extends ConsumerWidget {
                         l10n.safetyReportedCount(summary.reportCount),
                       ),
                     ),
+                    if (summary.reportCount > 0)
+                      Chip(
+                        label: Text(l10n.safetyReportsPrivateLabel),
+                      ),
                   ],
                 ),
               ),
@@ -100,6 +104,13 @@ class SafetyScreen extends ConsumerWidget {
                           subtitle: Text(
                             '${trustEventSubtitle(l10n, event)} | ${formatTimeLabel(event.createdAt)}',
                           ),
+                          trailing: Chip(
+                            label: Text(
+                              event.isUserVisible
+                                  ? l10n.safetyEventVisible
+                                  : l10n.safetyEventInternal,
+                            ),
+                          ),
                         ),
                       )
                       .toList(growable: false),
@@ -126,7 +137,8 @@ class SafetyScreen extends ConsumerWidget {
                           (userId) => ListTile(
                             contentPadding: EdgeInsets.zero,
                             leading: const Icon(Icons.block_outlined),
-                            title: Text(userId),
+                            title: Text(_safetyUserLabel(l10n, userId)),
+                            subtitle: Text(userId),
                           ),
                         )
                         .toList(growable: false),
@@ -138,6 +150,16 @@ class SafetyScreen extends ConsumerWidget {
             error: (error, stackTrace) => <Widget>[
               AsyncErrorView(message: error.toString()),
             ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+          AppSectionCard(
+            title: l10n.safetyReportsTitle,
+            subtitle: l10n.safetyReportsPrivateSummary,
+            child: Text(
+              l10n.safetyReportsPrivateHint(
+                safetySummaryAsync.valueOrNull?.reportCount ?? 0,
+              ),
+            ),
           ),
           const SizedBox(height: AppSpacing.md),
           FilledButton.tonalIcon(
@@ -321,5 +343,13 @@ class SafetyScreen extends ConsumerWidget {
         return l10n.safetyReportReasonInappropriateContent;
     }
     return reason;
+  }
+
+  String _safetyUserLabel(AppLocalizations l10n, String userId) {
+    if (userId == TrustEventReasonCodes.guestUserId) {
+      return l10n.guestPreviewLabel;
+    }
+    final compactId = userId.length <= 10 ? userId : userId.substring(0, 10);
+    return l10n.memberLabel(compactId);
   }
 }

@@ -21,9 +21,28 @@ class JoinRequest {
 
   bool get isCancelled => status == JoinRequestStatus.cancelled;
 
+  bool get needsOwnerReview => status == JoinRequestStatus.pending;
+
+  bool get isClosed =>
+      status == JoinRequestStatus.rejected ||
+      status == JoinRequestStatus.cancelled;
+
   bool get isRejected =>
       status == JoinRequestStatus.rejected ||
       status == JoinRequestStatus.cancelled;
+
+  int get ownerListSortPriority {
+    switch (status) {
+      case JoinRequestStatus.pending:
+        return 0;
+      case JoinRequestStatus.approved:
+        return 1;
+      case JoinRequestStatus.rejected:
+        return 2;
+      case JoinRequestStatus.cancelled:
+        return 3;
+    }
+  }
 
   JoinRequest copyWith({
     String? id,

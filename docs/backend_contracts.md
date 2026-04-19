@@ -50,7 +50,16 @@ Expected query/index combinations for these paths are tracked in `docs/firestore
 - Chat thread creation is backend-owned after join approval; clients may only send messages as their authenticated user and update the thread preview metadata that mirrors their latest sent message.
 - Reports and internal moderation events should not be publicly readable.
 - Report writes should use a small canonical reason taxonomy so Cloud Functions and moderation tooling do not depend on arbitrary freeform strings.
+- The safety UI should present controlled report-reason choices that map directly to the canonical moderation taxonomy.
+- User-facing safety summaries may show counts, but should not expose public reporter-to-reported ledgers or reputation-style scorecards.
 - Trust events can include user-visible safety timeline records, but internal risk signals should stay private.
+
+## Safety UX Notes
+
+- Blocked users should disappear consistently from explore, map, and chat coordination surfaces once the local trust-event stream reflects the block.
+- If a blocked relationship hides a chat thread, the chat empty state should explain that the thread is intentionally hidden instead of implying data loss.
+- Trusted contact and safe-return flows remain planned placeholder architecture only; when implemented they should stay private, opt-in, and operational rather than public-facing signals.
+- Verification state should remain a private trust indicator with room for expansion, not a public humiliation mechanic.
 
 ## Cloud Functions Hooks
 

@@ -392,6 +392,14 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
                 : l10n.joinRequestsSubtitle,
             child: requestsAsync.when(
               data: (requests) {
+                final sortedRequests = [...requests]..sort((left, right) {
+                    final statusCompare = left.ownerListSortPriority
+                        .compareTo(right.ownerListSortPriority);
+                    if (statusCompare != 0) {
+                      return statusCompare;
+                    }
+                    return left.requesterId.compareTo(right.requesterId);
+                  });
                 final summary = JoinRequestSummary.fromRequests(requests);
                 if (requests.isEmpty) {
                   return Text(l10n.joinRequestsEmpty);
@@ -404,7 +412,18 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
                       style: Theme.of(context).textTheme.labelLarge,
                     ),
                     const SizedBox(height: AppSpacing.md),
-                    ...requests.map(
+                    if (primaryPlan != null) ...[
+                      Text(
+                        l10n.joinRequestsPlanContext(
+                          primaryPlan.title,
+                          DateFormat('dd MMMM, HH:mm')
+                              .format(primaryPlan.scheduledAt),
+                        ),
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                      const SizedBox(height: AppSpacing.md),
+                    ],
+                    ...sortedRequests.map(
                       (request) => Padding(
                         padding: const EdgeInsets.only(bottom: AppSpacing.md),
                         child: Column(
@@ -413,10 +432,25 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
                             Row(
                               children: [
                                 Expanded(
-                                  child: Text(
-                                    request.requesterId,
-                                    style:
-                                        Theme.of(context).textTheme.titleSmall,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        _requesterLabel(l10n, request),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleSmall,
+                                      ),
+                                      const SizedBox(height: AppSpacing.xs),
+                                      Text(
+                                        primaryPlan?.title ??
+                                            request.activityId,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall,
+                                      ),
+                                    ],
                                   ),
                                 ),
                                 const SizedBox(width: AppSpacing.sm),
@@ -425,6 +459,16 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
                             ),
                             const SizedBox(height: AppSpacing.xs),
                             Text(request.message),
+                            if (request.isApproved) ...[
+                              const SizedBox(height: AppSpacing.xs),
+                              Text(
+                                ref.read(repositorySourceProvider) ==
+                                        RepositorySource.firebase
+                                    ? l10n.joinRequestApprovedFirebaseNotice
+                                    : l10n.joinRequestApprovedLocalNotice,
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
+                            ],
                             const SizedBox(height: AppSpacing.sm),
                             Wrap(
                               spacing: AppSpacing.sm,
@@ -504,6 +548,16 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
       ),
     );
   }
+
+  String _requesterLabel(AppLocalizations l10n, JoinRequest request) {
+    if (request.requesterId.startsWith('guest-')) {
+      return l10n.guestPreviewLabel;
+    }
+    final compactId = request.requesterId.length <= 10
+        ? request.requesterId
+        : request.requesterId.substring(0, 10);
+    return l10n.memberLabel(compactId);
+  }
 }
 
 class _JoinRequestStatusBadge extends StatelessWidget {
@@ -517,8 +571,7 @@ class _JoinRequestStatusBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final scheme = Theme.of(context).colorScheme;
-    final (label, icon, backgroundColor, foregroundColor) =
-        switch (status) {
+    final (label, icon, backgroundColor, foregroundColor) = switch (status) {
       JoinRequestStatus.pending => (
           l10n.requestStatusPending,
           Icons.schedule_outlined,
