@@ -114,12 +114,14 @@ Expected query families:
 Likely index combinations:
 
 1. `reports`
-   - `reporterUserId` ascending
+   - `userId` ascending
    - `createdAt` descending
 
 2. `blocks`
-   - `ownerUserId` ascending
+   - `userId` ascending
    - `createdAt` descending
+
+Current `firestore.indexes.json` already matches these user-scoped safety indexes.
 
 ## Migration Guidance
 

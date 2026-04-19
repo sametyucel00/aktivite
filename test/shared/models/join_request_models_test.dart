@@ -45,6 +45,9 @@ void main() {
 
       expect(rejected.isRejected, isTrue);
       expect(cancelled.isRejected, isTrue);
+      expect(pending.needsOwnerReview, isTrue);
+      expect(cancelled.isClosed, isTrue);
+      expect(approved.isTerminal, isFalse);
     });
 
     test('copyWith preserves unspecified values and updates status', () {
@@ -63,6 +66,27 @@ void main() {
       expect(updated.requesterId, request.requesterId);
       expect(updated.message, request.message);
       expect(updated.status, JoinRequestStatus.approved);
+    });
+
+    test('canTransitionTo blocks terminal-state changes', () {
+      const pending = JoinRequest(
+        id: 'join-1',
+        activityId: 'activity-1',
+        requesterId: 'user-1',
+        message: 'Pending',
+        status: JoinRequestStatus.pending,
+      );
+      const approved = JoinRequest(
+        id: 'join-2',
+        activityId: 'activity-1',
+        requesterId: 'user-2',
+        message: 'Approved',
+        status: JoinRequestStatus.approved,
+      );
+
+      expect(pending.canTransitionTo(JoinRequestStatus.approved), isTrue);
+      expect(pending.canTransitionTo(JoinRequestStatus.cancelled), isTrue);
+      expect(approved.canTransitionTo(JoinRequestStatus.rejected), isFalse);
     });
   });
 

@@ -1,9 +1,9 @@
-import 'package:aktivite/core/constants/safety_report_reasons.dart';
 import 'package:aktivite/core/config/firebase_collection_paths.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'safety_repository.dart';
+import 'safety_action_normalizer.dart';
 
 class FirestoreSafetyRepository implements SafetyRepository {
   FirestoreSafetyRepository({
@@ -27,12 +27,12 @@ class FirestoreSafetyRepository implements SafetyRepository {
     required String reason,
   }) async {
     final currentUserId = _currentUserId;
-    final normalizedTargetUserId = targetUserId.trim();
-    final normalizedReason = SafetyReportReasons.normalize(reason);
-    if (currentUserId == null ||
-        normalizedTargetUserId.isEmpty ||
-        normalizedTargetUserId == currentUserId ||
-        normalizedReason == null) {
+    final normalizedTargetUserId = normalizeSafetyTargetUserId(
+      targetUserId,
+      currentUserId: currentUserId,
+    );
+    final normalizedReason = normalizeSafetyReason(reason);
+    if (normalizedTargetUserId == null || normalizedReason == null) {
       return;
     }
 
@@ -52,10 +52,11 @@ class FirestoreSafetyRepository implements SafetyRepository {
     required String targetUserId,
   }) async {
     final currentUserId = _currentUserId;
-    final normalizedTargetUserId = targetUserId.trim();
-    if (currentUserId == null ||
-        normalizedTargetUserId.isEmpty ||
-        normalizedTargetUserId == currentUserId) {
+    final normalizedTargetUserId = normalizeSafetyTargetUserId(
+      targetUserId,
+      currentUserId: currentUserId,
+    );
+    if (normalizedTargetUserId == null) {
       return;
     }
 

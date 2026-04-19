@@ -7,6 +7,14 @@ const {
   onDocumentWritten,
 } = require('firebase-functions/v2/firestore');
 const { logger } = require('firebase-functions');
+const {
+  getJoinApprovalOutcome,
+  isActiveBlock,
+  isInvalidMessagingTokenCode,
+  isValidUserAction,
+  safeNotificationPreview,
+  stringifyData,
+} = require('./helpers');
 
 initializeApp();
 
@@ -349,28 +357,29 @@ async function handleJoinRequestApproved({ activityId, requestId, request, reque
       return false;
     }
 
-    const currentParticipantCount = latestData.participantCount || 0;
-    const maxParticipants = latestData.maxParticipants || 1;
-    if (
-      latestData.status === 'full' ||
-      latestData.status === 'cancelled' ||
-      latestData.status === 'completed' ||
-      currentParticipantCount >= maxParticipants
-    ) {
+    const approvalOutcome = getJoinApprovalOutcome({
+      activity: latestData,
+      request: latestRequestData,
+    });
+    if (!approvalOutcome.allowSideEffects) {
       transaction.update(requestRef, {
-        workflowStatus: 'approvalCapacityBlocked',
+        ...(approvalOutcome.nextStatus ? { status: approvalOutcome.nextStatus } : {}),
+        workflowStatus: approvalOutcome.workflowStatus,
         updatedAt: FieldValue.serverTimestamp(),
       });
       logger.warn('Approved join request skipped because activity is not joinable.', {
         activityId,
         requestId,
         activityStatus: latestData.status,
-        participantCount: currentParticipantCount,
-        maxParticipants,
+        participantCount: latestData.participantCount || 0,
+        maxParticipants: latestData.maxParticipants || 1,
+        workflowStatus: approvalOutcome.workflowStatus,
       });
       return false;
     }
 
+    const currentParticipantCount = latestData.participantCount || 0;
+    const maxParticipants = latestData.maxParticipants || 1;
     const participantCount = Math.min(
       currentParticipantCount + 1,
       maxParticipants,
@@ -478,17 +487,6 @@ async function filterBlockedNotificationRecipients({ actorUserId, recipientIds }
   return checks.filter(Boolean);
 }
 
-function isActiveBlock(snapshot) {
-  return snapshot.exists && snapshot.data().status === 'active';
-}
-
-function isValidUserAction(action) {
-  const userId = typeof action.userId === 'string' ? action.userId.trim() : '';
-  const targetUserId =
-    typeof action.targetUserId === 'string' ? action.targetUserId.trim() : '';
-  return Boolean(userId && targetUserId && userId !== targetUserId);
-}
-
 async function collectNotificationTokens(userIds) {
   const snapshots = await Promise.all(
     userIds.map((userId) =>
@@ -507,15 +505,11 @@ async function collectNotificationTokens(userIds) {
 }
 
 async function cleanupInvalidTokens(tokenRecords, responses) {
-  const invalidCodes = new Set([
-    'messaging/invalid-registration-token',
-    'messaging/registration-token-not-registered',
-  ]);
   const deletes = [];
 
   responses.forEach((response, index) => {
     const code = response.error && response.error.code;
-    if (code && invalidCodes.has(code)) {
+    if (code && isInvalidMessagingTokenCode(code)) {
       deletes.push(tokenRecords[index].ref.delete());
     }
   });
@@ -524,18 +518,4 @@ async function cleanupInvalidTokens(tokenRecords, responses) {
     await Promise.all(deletes);
     logger.info('Removed invalid notification tokens.', { count: deletes.length });
   }
-}
-
-function stringifyData(data) {
-  return Object.fromEntries(
-    Object.entries(data || {}).map(([key, value]) => [key, String(value)]),
-  );
-}
-
-function safeNotificationPreview(text) {
-  const normalized = typeof text === 'string' ? text.trim() : '';
-  if (!normalized) {
-    return 'You have a new coordination message.';
-  }
-  return normalized.length > 80 ? `${normalized.substring(0, 77)}...` : normalized;
 }

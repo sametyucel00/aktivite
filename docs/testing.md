@@ -31,6 +31,8 @@ Optional builds:
 - Model tests for profile, chat, join request, and serialization helpers
 - In-memory repository/service tests for auth, profile, activities, join requests, chat, moderation, analytics, remote config, and safety bookkeeping
 - Provider seam tests for app-level derived state plus repository/provider source selection
+- Widget tests for safety, chat, join CTA, and owner request ordering regressions
+- Node unit tests for pure Cloud Functions helper logic in `functions/helpers.js`
 
 ## Manual Verification Priorities
 
@@ -54,6 +56,11 @@ After any Firebase-backed repository is introduced:
 5. document any new generated files or CLI steps
 
 Firebase emulator-based rule checks require JDK 21 or newer with the current Firebase CLI.
+
+## Emulator Scaffold
+
+- `firebase-tests/` contains the initial fixture-oriented scaffold for future Firestore rules tests.
+- The scaffold is intentionally lightweight until JDK 21 is available locally and the emulator job is wired into CI.
 
 ## CI Expectation
 

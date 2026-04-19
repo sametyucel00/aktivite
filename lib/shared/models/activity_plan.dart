@@ -50,6 +50,18 @@ class ActivityPlan {
   bool get isDiscoverable =>
       status == ActivityStatus.open || status == ActivityStatus.full;
 
+  bool get hasValidIdentity =>
+      id.trim().isNotEmpty && ownerUserId.trim().isNotEmpty;
+
+  bool get hasValidCreateDetails =>
+      title.trim().isNotEmpty &&
+      description.trim().isNotEmpty &&
+      city.trim().isNotEmpty &&
+      approximateLocation.trim().isNotEmpty;
+
+  bool get canAcceptJoinRequests =>
+      status == ActivityStatus.open && participantCount < maxParticipants;
+
   ActivityPlan copyWith({
     String? id,
     String? ownerUserId,

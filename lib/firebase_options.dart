@@ -70,8 +70,10 @@ class DefaultFirebaseOptions {
     projectId: 'nar-rehberi',
     databaseURL: 'https://nar-rehberi-default-rtdb.firebaseio.com',
     storageBucket: 'nar-rehberi.firebasestorage.app',
-    androidClientId: '310514488602-i77rlej2vq3jb6gk991o222lsgapdvro.apps.googleusercontent.com',
-    iosClientId: '310514488602-05bb1o76ohk1c2eef4sfk61ttco8ge6v.apps.googleusercontent.com',
+    androidClientId:
+        '310514488602-i77rlej2vq3jb6gk991o222lsgapdvro.apps.googleusercontent.com',
+    iosClientId:
+        '310514488602-05bb1o76ohk1c2eef4sfk61ttco8ge6v.apps.googleusercontent.com',
     iosBundleId: 'com.example.aktivite',
   );
 

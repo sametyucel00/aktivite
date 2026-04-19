@@ -18,6 +18,28 @@ This document maps current repository abstractions to the Firebase collections t
 
 The active backend mode is selected through `AppConfig.repositorySource` and exposed to Riverpod through `repositorySourceProvider`. Keep it on `RepositorySource.inMemory` until Firebase-backed implementations are added for the repositories and services behind `lib/shared/providers/repository_factories.dart`.
 
+## Repository Behavior Matrix
+
+| Seam | In-memory behavior | Firebase behavior |
+| --- | --- | --- |
+| `ActivityRepository.createPlan` | trims core text fields and no-ops invalid or duplicate ids | trims core text fields, no-ops invalid or duplicate ids, writes timestamps through Firestore |
+| `JoinRequestRepository.submitJoinRequest` | trims payloads and no-ops duplicate active requests | trims payloads, requires signed-in user, keeps one request document per user/activity |
+| `ChatRepository.sendMessage` | trims/clamps text and no-ops blanks or unknown thread ids | trims/clamps text, requires signed-in Firebase user, throws on missing auth |
+| `SafetyRepository.reportUser` | normalizes target/reason and no-ops invalid inputs | normalizes target/reason and no-ops invalid inputs before Firestore write |
+| `SafetyRepository.blockUser` | normalizes target id and no-ops invalid/self targets | normalizes target id and no-ops invalid/self targets before Firestore write |
+
+## Error Strategy
+
+- Prefer silent no-op for invalid local payloads that are recoverable at the UI level: blank text, duplicate active requests, self-targeted safety actions.
+- Prefer typed or explicit throw when an authenticated backend dependency is truly required and missing, such as Firebase-backed chat send without a signed-in user.
+- Keep repository normalization deterministic so UI state, tests, rules, and backend hooks all agree on what is valid.
+
+## Timestamp Notes
+
+- In-memory repositories emit plain Dart `DateTime` values.
+- Firebase repositories normalize Firestore `Timestamp` objects into `DateTime` at the model-mapping boundary.
+- New Firebase-backed seams should keep timestamp conversion inside repository adapters or model-map helpers, never in widgets.
+
 ## Field Naming
 
 Use constants from `FirebaseDocumentFields` instead of writing Firestore field strings inside repositories. This keeps future Freezed/json models, Firestore converters, and security rules aligned.

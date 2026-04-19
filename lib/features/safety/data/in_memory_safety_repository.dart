@@ -1,6 +1,7 @@
-import 'package:aktivite/core/constants/safety_report_reasons.dart';
 import 'package:aktivite/core/config/sample_ids.dart';
 import 'package:aktivite/features/safety/data/safety_repository.dart';
+
+import 'safety_action_normalizer.dart';
 
 class InMemorySafetyRepository implements SafetyRepository {
   final Set<String> _blockedUserIds = <String>{};
@@ -28,8 +29,11 @@ class InMemorySafetyRepository implements SafetyRepository {
   Future<void> blockUser({
     required String targetUserId,
   }) async {
-    final normalizedUserId = targetUserId.trim();
-    if (normalizedUserId.isEmpty || normalizedUserId == SampleIds.currentUser) {
+    final normalizedUserId = normalizeSafetyTargetUserId(
+      targetUserId,
+      currentUserId: SampleIds.currentUser,
+    );
+    if (normalizedUserId == null) {
       return;
     }
     _blockedUserIds.add(normalizedUserId);
@@ -40,11 +44,12 @@ class InMemorySafetyRepository implements SafetyRepository {
     required String targetUserId,
     required String reason,
   }) async {
-    final normalizedUserId = targetUserId.trim();
-    final normalizedReason = SafetyReportReasons.normalize(reason);
-    if (normalizedUserId.isEmpty ||
-        normalizedUserId == SampleIds.currentUser ||
-        normalizedReason == null) {
+    final normalizedUserId = normalizeSafetyTargetUserId(
+      targetUserId,
+      currentUserId: SampleIds.currentUser,
+    );
+    final normalizedReason = normalizeSafetyReason(reason);
+    if (normalizedUserId == null || normalizedReason == null) {
       return;
     }
 

@@ -31,6 +31,26 @@ class JoinRequest {
       status == JoinRequestStatus.rejected ||
       status == JoinRequestStatus.cancelled;
 
+  bool get isTerminal =>
+      status == JoinRequestStatus.rejected ||
+      status == JoinRequestStatus.cancelled;
+
+  bool canTransitionTo(JoinRequestStatus nextStatus) {
+    if (status == nextStatus) {
+      return true;
+    }
+    switch (status) {
+      case JoinRequestStatus.pending:
+        return nextStatus != JoinRequestStatus.pending;
+      case JoinRequestStatus.approved:
+        return false;
+      case JoinRequestStatus.rejected:
+        return false;
+      case JoinRequestStatus.cancelled:
+        return false;
+    }
+  }
+
   int get ownerListSortPriority {
     switch (status) {
       case JoinRequestStatus.pending:
