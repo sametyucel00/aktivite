@@ -62,6 +62,7 @@ Trigger:
 Function responsibilities:
 
 - notify the requester if the product keeps that feedback loop
+- suppress requester notification if either side has an active block against the other
 - avoid creating chat access
 
 Outputs:

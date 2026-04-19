@@ -154,4 +154,5 @@ This repository contains the initial production-oriented scaffold:
 - Join approval side effects now use workflow metadata inside the transaction so repeated trigger delivery stays idempotent.
 - Notification fanout now respects active block records for join-request and chat coordination workflows.
 - Firebase-backed chat writes now keep thread creation backend-owned and derive message senders from Firebase Auth.
+- Block records now use rule-enforced deterministic ids and preserve blocker/target identity on update.
 - The current code is structured to stay reviewable and CI-friendly on GitHub from day one.

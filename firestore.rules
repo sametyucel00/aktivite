@@ -53,6 +53,21 @@ service cloud.firestore {
       return signedIn() && uid() in resource.data.participantIds;
     }
 
+    function isOwnBlock(blockId) {
+      return signedIn() &&
+        request.resource.data.userId == uid() &&
+        request.resource.data.targetUserId is string &&
+        request.resource.data.targetUserId != uid() &&
+        blockId == uid() + '-' + request.resource.data.targetUserId &&
+        request.resource.data.status == 'active';
+    }
+
+    function keepsBlockIdentity(blockId) {
+      return isOwnBlock(blockId) &&
+        request.resource.data.userId == resource.data.userId &&
+        request.resource.data.targetUserId == resource.data.targetUserId;
+    }
+
     function publicActivityHasNoExactLocation() {
       return !request.resource.data.keys().hasAny([
         'exactLocation',
@@ -140,9 +155,8 @@ service cloud.firestore {
 
     match /blocks/{blockId} {
       allow read: if signedIn() && resource.data.userId == uid();
-      allow create, update: if signedIn() &&
-        request.resource.data.userId == uid() &&
-        request.resource.data.targetUserId is string;
+      allow create: if isOwnBlock(blockId);
+      allow update: if keepsBlockIdentity(blockId);
       allow delete: if signedIn() && resource.data.userId == uid();
     }
 

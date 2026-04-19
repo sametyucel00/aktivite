@@ -99,8 +99,14 @@ exports.onJoinRequestStatusUpdated = onDocumentUpdated(
     }
 
     if (after.status === 'rejected') {
+      const activitySnapshot = await db.collection('activities').doc(activityId).get();
+      const activity = activitySnapshot.exists ? activitySnapshot.data() : {};
+      const requesterRecipients = await filterBlockedNotificationRecipients({
+        actorUserId: activity.ownerUserId,
+        recipientIds: [after.requesterId],
+      });
       await sendNotificationToUsers({
-        userIds: [after.requesterId],
+        userIds: requesterRecipients,
         title: 'Plan request update',
         body: 'Your join request was not approved this time.',
         data: {
