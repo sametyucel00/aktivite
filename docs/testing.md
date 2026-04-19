@@ -37,7 +37,7 @@ Optional builds:
 
 ## Manual Verification Priorities
 
-When Flutter SDK is available, verify the checklist in `docs/manual_qa_checklist.md`, with extra attention to:
+For manual checks, use `docs/manual_qa_checklist.md`, with extra attention to:
 
 - auth gate and onboarding flow
 - activity create/join/approve path
