@@ -3,6 +3,8 @@ const assert = require('node:assert/strict');
 const {
   buildReportModerationReasonCode,
   buildBlockedPairIds,
+  buildOwnerInvalidApprovalUpdate,
+  buildApprovalSideEffectsCompletedUpdate,
   buildClosedJoinRequestUpdate,
   buildInvalidPayloadUpdate,
   buildJoinRequestApprovedNotificationData,
@@ -11,9 +13,11 @@ const {
   buildMessageCreatedNotificationData,
   buildApprovedThreadId,
   buildApprovedThreadPreview,
+  buildApprovedParticipantIds,
   collectInvalidTokenRefs,
   getJoinApprovalOutcome,
   hasJoinCapacity,
+  hasApprovedSideEffectsCompleted,
   isActiveBlockData,
   isAllowedReportReason,
   isInvalidMessagingTokenCode,
@@ -22,6 +26,7 @@ const {
   mapTokenDocs,
   normalizeNotificationTokenRecord,
   safeNotificationPreview,
+  shouldDeleteNormalizedToken,
   stringifyData,
   uniqueUserIds,
 } = require('./helpers');
@@ -97,6 +102,15 @@ test('workflow helpers build deterministic metadata payloads', () => {
     buildApprovedThreadPreview(),
     'Join request approved. Coordinate the meetup safely.',
   );
+  assert.deepEqual(buildOwnerInvalidApprovalUpdate(), {
+    status: 'cancelled',
+    workflowStatus: 'invalidOwnerRequest',
+    updatedAt: '<server-timestamp>',
+  });
+  assert.deepEqual(buildApprovalSideEffectsCompletedUpdate(), {
+    workflowStatus: 'approvalSideEffectsCompleted',
+    updatedAt: '<server-timestamp>',
+  });
 });
 
 test('workflow helpers build notification payloads', () => {
@@ -177,6 +191,11 @@ test('collectInvalidTokenRefs returns refs for invalid token responses only', ()
   assert.deepEqual(refs, [{ id: '1' }]);
 });
 
+test('shouldDeleteNormalizedToken matches empty normalized tokens', () => {
+  assert.equal(shouldDeleteNormalizedToken({ token: '' }), true);
+  assert.equal(shouldDeleteNormalizedToken({ token: 'abc' }), false);
+});
+
 test('join approval outcome blocks owner, full, and cancelled activities', () => {
   assert.deepEqual(
     getJoinApprovalOutcome({
@@ -247,6 +266,17 @@ test('hasJoinCapacity reflects closed and full activities', () => {
     false,
   );
   assert.equal(hasJoinCapacity({ status: 'cancelled' }), false);
+});
+
+test('join helpers build sorted participant ids and detect completed side effects', () => {
+  assert.deepEqual(buildApprovedParticipantIds('owner', 'guest'), ['guest', 'owner']);
+  assert.equal(
+    hasApprovedSideEffectsCompleted({
+      workflowStatus: 'approvalSideEffectsCompleted',
+    }),
+    true,
+  );
+  assert.equal(hasApprovedSideEffectsCompleted({ workflowStatus: 'pending' }), false);
 });
 
 test('isAllowedReportReason only accepts canonical reasons', () => {

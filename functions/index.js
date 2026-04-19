@@ -10,6 +10,8 @@ const { logger } = require('firebase-functions');
 const {
   buildReportModerationReasonCode,
   buildBlockedPairIds,
+  buildOwnerInvalidApprovalUpdate,
+  buildApprovalSideEffectsCompletedUpdate,
   buildClosedJoinRequestUpdate,
   buildInvalidPayloadUpdate,
   buildJoinRequestApprovedNotificationData,
@@ -19,7 +21,9 @@ const {
   buildApprovedThreadId,
   buildApprovedThreadPreview,
   collectInvalidTokenRefs,
+  buildApprovedParticipantIds,
   getJoinApprovalOutcome,
+  hasApprovedSideEffectsCompleted,
   isActiveBlock,
   isAllowedReportReason,
   isInvalidMessagingTokenCode,
@@ -28,6 +32,7 @@ const {
   mapTokenDocs,
   normalizeNotificationTokenRecord,
   safeNotificationPreview,
+  shouldDeleteNormalizedToken,
   stringifyData,
   uniqueUserIds,
 } = require('./helpers');
@@ -272,7 +277,7 @@ exports.onNotificationTokenWritten = onDocumentWritten(
       return;
     }
 
-    if (!normalized.token) {
+    if (shouldDeleteNormalizedToken(normalized)) {
       await event.data.after.ref.delete();
       logger.warn('Deleted empty notification token.', event.params);
       return;
@@ -291,7 +296,10 @@ async function handleJoinRequestApproved({ activityId, requestId, request, reque
   }
 
   const activity = activitySnapshot.data();
-  const participantIds = [activity.ownerUserId, request.requesterId].filter(Boolean).sort();
+  const participantIds = buildApprovedParticipantIds(
+    activity.ownerUserId,
+    request.requesterId,
+  );
   const threadId = buildApprovedThreadId(activityId, request.requesterId);
   const threadRef = db.collection('chatThreads').doc(threadId);
 
@@ -315,7 +323,7 @@ async function handleJoinRequestApproved({ activityId, requestId, request, reque
       return false;
     }
 
-    if (latestRequestData.workflowStatus === 'approvalSideEffectsCompleted') {
+    if (hasApprovedSideEffectsCompleted(latestRequestData)) {
       logger.info('Approved join request side effects already completed.', {
         activityId,
         requestId,
@@ -335,8 +343,7 @@ async function handleJoinRequestApproved({ activityId, requestId, request, reque
     const latestData = latestActivity.data();
     if (latestData.ownerUserId === latestRequestData.requesterId) {
       transaction.update(requestRef, {
-        status: 'cancelled',
-        workflowStatus: 'invalidOwnerRequest',
+        ...buildOwnerInvalidApprovalUpdate(),
         updatedAt: FieldValue.serverTimestamp(),
       });
       logger.warn('Approved join request tried to approve the activity owner.', {
@@ -396,7 +403,7 @@ async function handleJoinRequestApproved({ activityId, requestId, request, reque
     );
 
     transaction.update(requestRef, {
-      workflowStatus: 'approvalSideEffectsCompleted',
+      ...buildApprovalSideEffectsCompletedUpdate(),
       updatedAt: FieldValue.serverTimestamp(),
     });
 

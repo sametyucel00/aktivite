@@ -5,6 +5,21 @@ function buildInvalidPayloadUpdate(workflowStatus) {
   };
 }
 
+function buildOwnerInvalidApprovalUpdate() {
+  return {
+    status: 'cancelled',
+    workflowStatus: 'invalidOwnerRequest',
+    updatedAt: '<server-timestamp>',
+  };
+}
+
+function buildApprovalSideEffectsCompletedUpdate() {
+  return {
+    workflowStatus: 'approvalSideEffectsCompleted',
+    updatedAt: '<server-timestamp>',
+  };
+}
+
 function buildClosedJoinRequestUpdate(status) {
   const workflowStatusByStatus = {
     rejected: 'closedRejected',
@@ -63,6 +78,7 @@ function buildMessageCreatedNotificationData({ threadId, messageId }) {
 }
 
 module.exports = {
+  buildApprovalSideEffectsCompletedUpdate,
   buildApprovedThreadId,
   buildApprovedThreadPreview,
   buildClosedJoinRequestUpdate,
@@ -71,4 +87,5 @@ module.exports = {
   buildJoinRequestCreatedNotificationData,
   buildJoinRequestRejectedNotificationData,
   buildMessageCreatedNotificationData,
+  buildOwnerInvalidApprovalUpdate,
 };

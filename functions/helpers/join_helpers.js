@@ -10,6 +10,14 @@ function hasJoinCapacity(activity) {
   );
 }
 
+function buildApprovedParticipantIds(activityOwnerUserId, requesterId) {
+  return [activityOwnerUserId, requesterId].filter(Boolean).sort();
+}
+
+function hasApprovedSideEffectsCompleted(request) {
+  return request?.workflowStatus === 'approvalSideEffectsCompleted';
+}
+
 function getJoinApprovalOutcome({ activity, request }) {
   if (!activity || !request) {
     return { allowSideEffects: false, workflowStatus: 'invalidMissingActivity' };
@@ -34,6 +42,8 @@ function getJoinApprovalOutcome({ activity, request }) {
 }
 
 module.exports = {
+  buildApprovedParticipantIds,
   getJoinApprovalOutcome,
   hasJoinCapacity,
+  hasApprovedSideEffectsCompleted,
 };

@@ -31,9 +31,14 @@ function collectInvalidTokenRefs(tokenRecords, responses, isInvalidMessagingToke
   return deletes.filter(Boolean);
 }
 
+function shouldDeleteNormalizedToken(normalizedRecord) {
+  return !normalizedRecord?.token;
+}
+
 module.exports = {
   buildBlockedPairIds,
   collectInvalidTokenRefs,
   mapTokenDocs,
+  shouldDeleteNormalizedToken,
   uniqueUserIds,
 };
