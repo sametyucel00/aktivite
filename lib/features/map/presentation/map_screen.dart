@@ -214,14 +214,16 @@ class _RecommendedPlanTile extends ConsumerWidget {
               reasons: planMatchReasons(profile!, plan),
               maxItems: 2,
             ),
-          const SizedBox(height: AppSpacing.xs),
-          JoinPlanStatusText(plan: plan),
+          const SizedBox(height: AppSpacing.sm),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: JoinPlanAction(
+              plan: plan,
+              analyticsEventName: AnalyticsEvents.mapJoinRequestSubmitted,
+              style: JoinPlanActionStyle.text,
+            ),
+          ),
         ],
-      ),
-      trailing: JoinPlanAction(
-        plan: plan,
-        analyticsEventName: AnalyticsEvents.mapJoinRequestSubmitted,
-        showStatus: false,
       ),
     );
   }
@@ -267,15 +269,16 @@ class _NearbyPlanTile extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('${plan.city} - ${mapPrivacyModeLabel(l10n, privacyMode)}'),
-          const SizedBox(height: AppSpacing.xs),
-          JoinPlanStatusText(plan: plan),
+          const SizedBox(height: AppSpacing.sm),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: JoinPlanAction(
+              plan: plan,
+              analyticsEventName: AnalyticsEvents.mapNearbyJoinRequestSubmitted,
+              style: JoinPlanActionStyle.text,
+            ),
+          ),
         ],
-      ),
-      trailing: JoinPlanAction(
-        plan: plan,
-        analyticsEventName: AnalyticsEvents.mapNearbyJoinRequestSubmitted,
-        style: JoinPlanActionStyle.text,
-        showStatus: false,
       ),
     );
   }
