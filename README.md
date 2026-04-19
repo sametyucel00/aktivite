@@ -161,4 +161,5 @@ This repository contains the initial production-oriented scaffold:
 - Safety report and block writes now ignore blank or self-targeted payloads before moderation side effects run.
 - Join approval functions now block chat side effects when the activity is full, closed, or self-targeted.
 - Owner approval actions now show localized feedback for local and Firebase-backed chat readiness.
+- Join request rules now restrict owner/requester updates to status and workflow metadata only.
 - The current code is structured to stay reviewable and CI-friendly on GitHub from day one.

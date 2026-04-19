@@ -51,6 +51,14 @@ service cloud.firestore {
         request.resource.data.requesterId == resource.data.requesterId;
     }
 
+    function updatesOnlyJoinRequestStatusFields() {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+        'status',
+        'workflowStatus',
+        'updatedAt'
+      ]);
+    }
+
     function isThreadParticipant() {
       return signedIn() && uid() in resource.data.participantIds;
     }
@@ -134,7 +142,8 @@ service cloud.firestore {
       match /joinRequests/{requestId} {
         allow read: if isActivityOwner(activityId) || isRequester();
         allow create: if createsOwnRequest(activityId, requestId);
-        allow update: if keepsRequestIdentity(activityId) && (
+        allow update: if keepsRequestIdentity(activityId) &&
+          updatesOnlyJoinRequestStatusFields() && (
           (
             isActivityOwner(activityId) &&
             resource.data.status == 'pending' &&
