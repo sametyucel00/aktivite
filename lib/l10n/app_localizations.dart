@@ -584,6 +584,12 @@ abstract class AppLocalizations {
   /// **'Recent messages'**
   String get chatHistoryTitle;
 
+  /// No description provided for @chatMessageSendFailedToast.
+  ///
+  /// In en, this message translates to:
+  /// **'Message could not be sent right now.'**
+  String get chatMessageSendFailedToast;
+
   /// No description provided for @chatParticipantsCount.
   ///
   /// In en, this message translates to:

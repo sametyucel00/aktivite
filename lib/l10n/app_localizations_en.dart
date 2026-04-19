@@ -275,6 +275,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chatHistoryTitle => 'Recent messages';
 
   @override
+  String get chatMessageSendFailedToast =>
+      'Message could not be sent right now.';
+
+  @override
   String chatParticipantsCount(int count) {
     return '$count participants';
   }

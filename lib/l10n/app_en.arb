@@ -123,6 +123,7 @@
   "chatEmptyTitle": "No approved chats yet",
   "chatHistoryEmpty": "No messages yet.",
   "chatHistoryTitle": "Recent messages",
+  "chatMessageSendFailedToast": "Message could not be sent right now.",
   "chatParticipantsCount": "{count} participants",
   "@chatParticipantsCount": {
     "placeholders": {

@@ -1,6 +1,7 @@
 import 'package:aktivite/app/app_routes.dart';
 import 'package:aktivite/core/constants/app_spacing.dart';
 import 'package:aktivite/core/utils/analytics_events.dart';
+import 'package:aktivite/core/utils/app_feedback.dart';
 import 'package:aktivite/l10n/app_localizations.dart';
 import 'package:aktivite/shared/models/chat_message.dart';
 import 'package:aktivite/shared/models/chat_thread.dart';
@@ -231,6 +232,13 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         },
       );
       _messageController.clear();
+    } catch (_) {
+      if (mounted) {
+        showAppSnackBar(
+          context,
+          AppLocalizations.of(context).chatMessageSendFailedToast,
+        );
+      }
     } finally {
       if (mounted) {
         setState(() {

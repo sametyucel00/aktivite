@@ -123,6 +123,7 @@
   "chatEmptyTitle": "Henuz onayli sohbet yok",
   "chatHistoryEmpty": "Henuz mesaj yok.",
   "chatHistoryTitle": "Son mesajlar",
+  "chatMessageSendFailedToast": "Mesaj su anda gonderilemedi.",
   "chatParticipantsCount": "{count} katilimci",
   "@chatParticipantsCount": {
     "placeholders": {

@@ -278,6 +278,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get chatHistoryTitle => 'Son mesajlar';
 
   @override
+  String get chatMessageSendFailedToast => 'Mesaj su anda gonderilemedi.';
+
+  @override
   String chatParticipantsCount(int count) {
     return '$count katilimci';
   }
