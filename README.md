@@ -152,4 +152,5 @@ This repository contains the initial production-oriented scaffold:
 - Firestore join approval and safety writes now include workflow metadata so future Cloud Functions and security rules can identify client fallback side effects.
 - Cloud Functions now include notification fanout helpers for join-request and chat workflows, plus basic notification-token normalization.
 - Join approval side effects now use workflow metadata inside the transaction so repeated trigger delivery stays idempotent.
+- Notification fanout now respects active block records for join-request and chat coordination workflows.
 - The current code is structured to stay reviewable and CI-friendly on GitHub from day one.

@@ -44,8 +44,12 @@ exports.onJoinRequestCreated = onDocumentCreated(
       return;
     }
 
+    const ownerRecipients = await filterBlockedNotificationRecipients({
+      actorUserId: request.requesterId,
+      recipientIds: [activity.ownerUserId],
+    });
     await sendNotificationToUsers({
-      userIds: [activity.ownerUserId],
+      userIds: ownerRecipients,
       title: 'New join request',
       body: 'Someone wants to join your plan.',
       data: {
@@ -190,7 +194,10 @@ exports.onMessageCreated = onDocumentCreated(
       return;
     }
 
-    const recipientIds = thread.participantIds.filter((userId) => userId !== message.senderUserId);
+    const recipientIds = await filterBlockedNotificationRecipients({
+      actorUserId: message.senderUserId,
+      recipientIds: thread.participantIds.filter((userId) => userId !== message.senderUserId),
+    });
     await sendNotificationToUsers({
       userIds: recipientIds,
       title: 'New coordination message',
@@ -336,8 +343,12 @@ async function handleJoinRequestApproved({ activityId, requestId, request, reque
     return;
   }
 
+  const requesterRecipients = await filterBlockedNotificationRecipients({
+    actorUserId: activity.ownerUserId,
+    recipientIds: [request.requesterId],
+  });
   await sendNotificationToUsers({
-    userIds: [request.requesterId],
+    userIds: requesterRecipients,
     title: 'Your plan request was approved',
     body: 'You can now coordinate the meetup in chat.',
     data: {
@@ -377,6 +388,32 @@ async function sendNotificationToUsers({ userIds, title, body, data }) {
   });
 
   await cleanupInvalidTokens(tokenRecords, response.responses);
+}
+
+async function filterBlockedNotificationRecipients({ actorUserId, recipientIds }) {
+  const uniqueRecipientIds = [...new Set((recipientIds || []).filter(Boolean))];
+  if (!actorUserId || uniqueRecipientIds.length === 0) {
+    return uniqueRecipientIds;
+  }
+
+  const checks = await Promise.all(
+    uniqueRecipientIds.map(async (recipientId) => {
+      const [actorBlockedRecipient, recipientBlockedActor] = await Promise.all([
+        db.collection('blocks').doc(`${actorUserId}-${recipientId}`).get(),
+        db.collection('blocks').doc(`${recipientId}-${actorUserId}`).get(),
+      ]);
+
+      return isActiveBlock(actorBlockedRecipient) || isActiveBlock(recipientBlockedActor)
+        ? null
+        : recipientId;
+    }),
+  );
+
+  return checks.filter(Boolean);
+}
+
+function isActiveBlock(snapshot) {
+  return snapshot.exists && snapshot.data().status === 'active';
 }
 
 async function collectNotificationTokens(userIds) {

@@ -55,7 +55,7 @@ Expected query/index combinations for these paths are tracked in `docs/firestore
 - On join request approved: create or reveal chat thread and notify requester.
 - On report created: enqueue moderation review and optionally update internal trust events.
 - On block created: hide relevant plans and chats for the blocking user.
-- On message created: run lightweight moderation checks and notify other participants.
+- On message created: run lightweight moderation checks and notify other participants unless an active block exists between sender and recipient.
 
 Detailed trigger responsibilities and side effects are tracked in `docs/functions_contracts.md`.
 

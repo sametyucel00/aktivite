@@ -20,6 +20,7 @@ Function responsibilities:
 - validate the referenced activity still exists
 - validate the requester is not the owner
 - notify the activity owner
+- suppress owner notification if either side has an active block against the other
 - optionally create an internal moderation signal if the requester is blocked or rate-limited
 
 Outputs:
@@ -40,6 +41,7 @@ Function responsibilities:
 - create or reveal the related chat thread
 - ensure participants are limited to owner + approved requester for the MVP path
 - notify the requester
+- suppress requester notification if either side has an active block against the other
 - optionally append a user-visible trust event if that product decision is kept
 
 Outputs:
@@ -110,6 +112,7 @@ Function responsibilities:
 
 - verify sender still belongs to the thread
 - fan out notifications to other participants
+- suppress message notification fanout across active blocked pairs
 - run lightweight moderation heuristics or enqueue async checks
 
 Outputs:
