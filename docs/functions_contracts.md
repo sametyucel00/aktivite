@@ -49,6 +49,7 @@ Outputs:
 - optional trust event
 - participant count update through a Firestore transaction
 - workflow completion metadata on the join request
+- idempotency guard so repeated trigger delivery does not increment participant count or fan out notifications twice
 
 ## Join Request Rejected
 

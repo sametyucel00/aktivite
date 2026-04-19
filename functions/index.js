@@ -260,8 +260,43 @@ async function handleJoinRequestApproved({ activityId, requestId, request, reque
   const threadId = `activity-${activityId}-${request.requesterId}`;
   const threadRef = db.collection('chatThreads').doc(threadId);
 
-  await db.runTransaction(async (transaction) => {
+  const sideEffectsApplied = await db.runTransaction(async (transaction) => {
+    const latestRequest = await transaction.get(requestRef);
+    if (!latestRequest.exists) {
+      logger.warn('Approved join request disappeared before side effects.', {
+        activityId,
+        requestId,
+      });
+      return false;
+    }
+
+    const latestRequestData = latestRequest.data();
+    if (latestRequestData.status !== 'approved') {
+      logger.warn('Approved join request side effects skipped for stale status.', {
+        activityId,
+        requestId,
+        status: latestRequestData.status,
+      });
+      return false;
+    }
+
+    if (latestRequestData.workflowStatus === 'approvalSideEffectsCompleted') {
+      logger.info('Approved join request side effects already completed.', {
+        activityId,
+        requestId,
+      });
+      return false;
+    }
+
     const latestActivity = await transaction.get(activityRef);
+    if (!latestActivity.exists) {
+      logger.warn('Approved join request activity disappeared before side effects.', {
+        activityId,
+        requestId,
+      });
+      return false;
+    }
+
     const latestData = latestActivity.data();
     const participantCount = Math.min(
       (latestData.participantCount || 0) + 1,
@@ -288,12 +323,18 @@ async function handleJoinRequestApproved({ activityId, requestId, request, reque
       },
       { merge: true },
     );
+
+    transaction.update(requestRef, {
+      workflowStatus: 'approvalSideEffectsCompleted',
+      updatedAt: FieldValue.serverTimestamp(),
+    });
+
+    return true;
   });
 
-  await requestRef.update({
-    workflowStatus: 'approvalSideEffectsCompleted',
-    updatedAt: FieldValue.serverTimestamp(),
-  });
+  if (!sideEffectsApplied) {
+    return;
+  }
 
   await sendNotificationToUsers({
     userIds: [request.requesterId],
