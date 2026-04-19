@@ -53,6 +53,8 @@ After any Firebase-backed repository is introduced:
 4. verify no widget imports Firebase SDK directly
 5. document any new generated files or CLI steps
 
+Firebase emulator-based rule checks require JDK 21 or newer with the current Firebase CLI.
+
 ## CI Expectation
 
 GitHub Actions should continue to cover:

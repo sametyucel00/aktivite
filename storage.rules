@@ -1,0 +1,33 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isSelf(userId) {
+      return signedIn() && request.auth.uid == userId;
+    }
+
+    function isSupportedImage() {
+      return request.resource != null &&
+        request.resource.size < 5 * 1024 * 1024 &&
+        request.resource.contentType.matches('image/(jpeg|png|webp)');
+    }
+
+    match /profilePhotos/{userId}/{fileName} {
+      allow read: if signedIn();
+      allow write: if isSelf(userId) && isSupportedImage();
+    }
+
+    match /verification/{userId}/{fileName} {
+      allow read: if false;
+      allow write: if isSelf(userId) && isSupportedImage();
+    }
+
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

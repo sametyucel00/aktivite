@@ -1,6 +1,6 @@
 # Security Rules Draft
 
-This draft captures the minimum Firestore and Storage rule boundaries that should exist before the in-memory repositories are replaced.
+This document captures the minimum Firestore and Storage rule boundaries that should exist before the in-memory repositories are replaced. The first concrete rules live in `firestore.rules` and `storage.rules`.
 
 ## Firestore Collections
 
@@ -89,9 +89,9 @@ Prefer Cloud Functions or server-trusted paths for:
 
 ## MVP Rule Checklist
 
-1. Lock down public reads for reports, blocks, and moderation events.
-2. Limit activity writes to owners.
-3. Limit join request reads to requester + owner.
-4. Limit chat reads/writes to approved participants.
-5. Limit notification token writes to the owning user.
-6. Keep exact location fields out of public-readable documents.
+1. Lock down public reads for reports, blocks, and moderation events. Implemented in `firestore.rules`.
+2. Limit activity writes to owners. Implemented in `firestore.rules`.
+3. Limit join request reads to requester + owner. Implemented in `firestore.rules`.
+4. Limit chat reads/writes to approved participants. Implemented in `firestore.rules`.
+5. Limit notification token writes to the owning user. Implemented in `firestore.rules`.
+6. Keep exact location fields out of public-readable documents. Implemented with write-time rejection for common exact-location field names.

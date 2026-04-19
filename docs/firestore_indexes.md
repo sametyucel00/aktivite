@@ -1,6 +1,6 @@
 # Firestore Index Plan
 
-This draft lists likely Firestore index needs based on the current discovery, ownership, join-request, chat, and safety seams.
+This document lists Firestore index needs based on the current discovery, ownership, join-request, chat, and safety seams. The first concrete index config lives in `firestore.indexes.json`.
 
 ## Activities
 
@@ -126,4 +126,4 @@ Likely index combinations:
 1. Add indexes only when the Firebase implementation introduces the matching query.
 2. Keep index definitions scoped to one repository migration at a time.
 3. Update this document when a query shape changes.
-4. Link the final generated index config file from this document once it exists.
+4. Keep `firestore.indexes.json` and this document aligned whenever a query shape changes.

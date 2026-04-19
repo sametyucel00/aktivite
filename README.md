@@ -56,12 +56,16 @@ The script runs dependency restore, localization generation, format verification
 - [Migration checklist](docs/migration_checklist.md)
 - [Firestore index plan](docs/firestore_indexes.md)
 - [Cloud Functions contracts](docs/functions_contracts.md)
+- [Firestore rules](firestore.rules)
+- [Storage rules](storage.rules)
+- [Firestore indexes](firestore.indexes.json)
 
 ## GitHub-First Repo Policy
 
 - Firebase client config is tracked because the app imports it during analysis and build.
 - Do not commit service accounts, private keys, signing credentials, local emulator exports, or `.env` files.
 - Keep changes small enough for review and run `.\tool\check.ps1` or the equivalent Flutter commands before opening a PR.
+- Install JDK 21 or newer before running Firebase emulator-based rule checks.
 
 ## Current Repository State
 

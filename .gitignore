@@ -18,3 +18,7 @@ android/local.properties
 firebase-debug.log
 firestore-debug.log
 storage-debug.log
+node_modules/
+functions/node_modules/
+functions/lib/
+functions/.runtimeconfig.json

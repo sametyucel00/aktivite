@@ -1,1 +1,56 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"nar-rehberi","appId":"1:310514488602:android:f260b933a0ecbaaa9a88a3","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"nar-rehberi","configurations":{"android":"1:310514488602:android:f260b933a0ecbaaa9a88a3","ios":"1:310514488602:ios:019600bee29bde649a88a3","web":"1:310514488602:web:3790968da8a9cfc09a88a3","windows":"1:310514488602:web:54d648777db020b29a88a3"}}}}}}
+{
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "storage": {
+    "rules": "storage.rules"
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log"
+      ]
+    }
+  ],
+  "emulators": {
+    "firestore": {
+      "port": 8080
+    },
+    "storage": {
+      "port": 9199
+    },
+    "ui": {
+      "enabled": true,
+      "port": 4000
+    },
+    "singleProjectMode": true
+  },
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "nar-rehberi",
+          "appId": "1:310514488602:android:f260b933a0ecbaaa9a88a3",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "nar-rehberi",
+          "configurations": {
+            "android": "1:310514488602:android:f260b933a0ecbaaa9a88a3",
+            "ios": "1:310514488602:ios:019600bee29bde649a88a3",
+            "web": "1:310514488602:web:3790968da8a9cfc09a88a3",
+            "windows": "1:310514488602:web:54d648777db020b29a88a3"
+          }
+        }
+      }
+    }
+  }
+}

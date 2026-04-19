@@ -1,6 +1,6 @@
 # Cloud Functions Contracts
 
-This draft describes the first backend workflows that should move to trusted server-side execution when Firebase-backed repositories are introduced.
+This document describes the first backend workflows that should move to trusted server-side execution when Firebase-backed repositories are introduced. The first deployable scaffold lives in `functions/index.js`.
 
 ## Design Goals
 
