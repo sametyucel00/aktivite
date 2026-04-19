@@ -664,10 +664,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profilePhotoChange => 'Change photo';
 
   @override
+  String get profilePhotoEmpty => 'Choose a non-empty image file.';
+
+  @override
   String get profilePhotoFailed => 'Profile photo could not be updated.';
 
   @override
   String get profilePhotoReady => 'Profile photo is ready to save.';
+
+  @override
+  String get profilePhotoRemove => 'Remove photo';
 
   @override
   String get profilePhotoSectionSubtitle =>
@@ -675,6 +681,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get profilePhotoSectionTitle => 'Profile photo';
+
+  @override
+  String get profilePhotoTooLarge => 'Choose an image smaller than 5 MB.';
+
+  @override
+  String get profilePhotoUnsupportedType => 'Use a JPG, PNG, or WebP image.';
 
   @override
   String get profilePhotoUpdated => 'Profile photo updated.';

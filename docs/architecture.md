@@ -64,6 +64,7 @@ lib/
 - Phone auth verification now has a second repository-driven confirmation step so SMS code entry, submit state, and failure mapping stay centralized in the auth form controller.
 - Profile media now flows through dedicated picker and storage services so onboarding/profile UI can preview selected photos immediately while persistence stays backend-aware.
 - Profile media upload is guarded by a shared policy for supported image types, sanitized file names, and a 5 MB upload limit before data reaches Firebase Storage.
+- Profile and onboarding controllers keep photo validation state and removal behavior outside widgets so media UX stays testable.
 - Activity composition now stores concrete schedule and duration metadata alongside privacy-first approximate location text, keeping discovery labels separate from persisted planning data.
 - Activity composition validation is centralized so screens, tests, and repositories share the same expectations for approximate location, schedule, and supported duration values.
 - Profile completion scoring is centralized in a pure utility so onboarding, profile editing, and creation gates use the same rule set.

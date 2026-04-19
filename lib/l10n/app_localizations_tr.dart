@@ -665,10 +665,16 @@ class AppLocalizationsTr extends AppLocalizations {
   String get profilePhotoChange => 'Fotografi degistir';
 
   @override
+  String get profilePhotoEmpty => 'Bos olmayan bir gorsel dosyasi sec.';
+
+  @override
   String get profilePhotoFailed => 'Profil fotografi guncellenemedi.';
 
   @override
   String get profilePhotoReady => 'Profil fotografi kaydetmeye hazir.';
+
+  @override
+  String get profilePhotoRemove => 'Fotografi kaldir';
 
   @override
   String get profilePhotoSectionSubtitle =>
@@ -676,6 +682,12 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get profilePhotoSectionTitle => 'Profil fotografi';
+
+  @override
+  String get profilePhotoTooLarge => '5 MB\'den kucuk bir gorsel sec.';
+
+  @override
+  String get profilePhotoUnsupportedType => 'JPG, PNG veya WebP gorsel kullan.';
 
   @override
   String get profilePhotoUpdated => 'Profil fotografi guncellendi.';

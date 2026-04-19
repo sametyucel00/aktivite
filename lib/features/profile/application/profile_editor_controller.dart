@@ -25,6 +25,7 @@ class ProfileEditorState {
     required this.groupPreference,
     required this.safeMeetupRemindersEnabled,
     required this.isUploadingPhoto,
+    required this.profilePhotoIssue,
     required this.hasSeeded,
   });
 
@@ -40,6 +41,7 @@ class ProfileEditorState {
         groupPreference = GroupPreference.flexible,
         safeMeetupRemindersEnabled = true,
         isUploadingPhoto = false,
+        profilePhotoIssue = null,
         hasSeeded = false;
 
   final String displayName;
@@ -53,6 +55,7 @@ class ProfileEditorState {
   final GroupPreference groupPreference;
   final bool safeMeetupRemindersEnabled;
   final bool isUploadingPhoto;
+  final ProfilePhotoValidationIssue? profilePhotoIssue;
   final bool hasSeeded;
 
   bool get canSubmit =>
@@ -86,6 +89,8 @@ class ProfileEditorState {
     GroupPreference? groupPreference,
     bool? safeMeetupRemindersEnabled,
     bool? isUploadingPhoto,
+    ProfilePhotoValidationIssue? profilePhotoIssue,
+    bool clearProfilePhotoIssue = false,
     bool? hasSeeded,
   }) {
     return ProfileEditorState(
@@ -106,6 +111,9 @@ class ProfileEditorState {
       safeMeetupRemindersEnabled:
           safeMeetupRemindersEnabled ?? this.safeMeetupRemindersEnabled,
       isUploadingPhoto: isUploadingPhoto ?? this.isUploadingPhoto,
+      profilePhotoIssue: clearProfilePhotoIssue
+          ? null
+          : profilePhotoIssue ?? this.profilePhotoIssue,
       hasSeeded: hasSeeded ?? this.hasSeeded,
     );
   }
@@ -132,6 +140,7 @@ class ProfileEditorController extends Notifier<ProfileEditorState> {
       groupPreference: profile.groupPreference,
       safeMeetupRemindersEnabled: true,
       isUploadingPhoto: false,
+      profilePhotoIssue: null,
       hasSeeded: true,
     );
   }
@@ -185,11 +194,16 @@ class ProfileEditorController extends Notifier<ProfileEditorState> {
     if (photo == null) {
       return false;
     }
-    if (validateProfilePhoto(photo) != null) {
+    final validationIssue = validateProfilePhoto(photo);
+    if (validationIssue != null) {
+      state = state.copyWith(profilePhotoIssue: validationIssue);
       return false;
     }
 
-    state = state.copyWith(isUploadingPhoto: true);
+    state = state.copyWith(
+      isUploadingPhoto: true,
+      clearProfilePhotoIssue: true,
+    );
     try {
       final photoUrl = await storage.uploadProfilePhoto(
         userId: userId,
@@ -204,12 +218,21 @@ class ProfileEditorController extends Notifier<ProfileEditorState> {
         profilePhotoUrl: photoUrl,
         profilePhotoBytes: photo.bytes,
         isUploadingPhoto: false,
+        clearProfilePhotoIssue: true,
       );
       return true;
     } catch (_) {
       state = state.copyWith(isUploadingPhoto: false);
       return false;
     }
+  }
+
+  void removeProfilePhoto() {
+    state = state.copyWith(
+      profilePhotoUrl: '',
+      profilePhotoBytes: null,
+      clearProfilePhotoIssue: true,
+    );
   }
 
   Future<void> save(

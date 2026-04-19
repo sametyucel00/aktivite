@@ -7,6 +7,7 @@ import 'package:aktivite/core/enums/activity_category.dart';
 import 'package:aktivite/core/enums/availability_slot.dart';
 import 'package:aktivite/core/enums/group_preference.dart';
 import 'package:aktivite/core/enums/social_mood.dart';
+import 'package:aktivite/core/utils/profile_photo_policy.dart';
 import 'package:aktivite/core/utils/analytics_events.dart';
 import 'package:aktivite/core/utils/localized_labels.dart';
 import 'package:aktivite/features/auth/application/session_controller.dart';
@@ -119,45 +120,64 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                 _OnboardingPhotoAvatar(
                   photoUrl: onboarding.profilePhotoUrl,
                   photoBytes: onboarding.profilePhotoBytes,
+                  semanticLabel: l10n.onboardingItemPhoto,
                 ),
                 const SizedBox(height: AppSpacing.sm),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: OutlinedButton(
-                    onPressed: onboarding.isUploadingPhoto
-                        ? null
-                        : () async {
-                            final userId =
-                                ref.read(sessionControllerProvider).userId ??
-                                    SampleIds.currentUser;
-                            final success = await controller.uploadProfilePhoto(
-                              userId: userId,
-                              picker:
-                                  ref.read(profilePhotoPickerServiceProvider),
-                              storage:
-                                  ref.read(profilePhotoStorageServiceProvider),
-                            );
-                            if (!context.mounted) {
-                              return;
-                            }
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  success
-                                      ? l10n.profilePhotoUpdated
-                                      : l10n.profilePhotoFailed,
+                Text(_onboardingPhotoMessage(context, onboarding)),
+                const SizedBox(height: AppSpacing.sm),
+                Row(
+                  children: [
+                    OutlinedButton(
+                      onPressed: onboarding.isUploadingPhoto
+                          ? null
+                          : () async {
+                              final userId =
+                                  ref.read(sessionControllerProvider).userId ??
+                                      SampleIds.currentUser;
+                              final success =
+                                  await controller.uploadProfilePhoto(
+                                userId: userId,
+                                picker:
+                                    ref.read(profilePhotoPickerServiceProvider),
+                                storage: ref
+                                    .read(profilePhotoStorageServiceProvider),
+                              );
+                              if (!context.mounted) {
+                                return;
+                              }
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    success
+                                        ? l10n.profilePhotoUpdated
+                                        : _onboardingPhotoMessage(
+                                            context,
+                                            ref.read(
+                                                onboardingControllerProvider),
+                                          ),
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
-                    child: Text(
-                      onboarding.isUploadingPhoto
-                          ? l10n.profilePhotoUploading
-                          : onboarding.profilePhotoUrl.isEmpty
-                              ? l10n.profilePhotoAdd
-                              : l10n.profilePhotoChange,
+                              );
+                            },
+                      child: Text(
+                        onboarding.isUploadingPhoto
+                            ? l10n.profilePhotoUploading
+                            : onboarding.profilePhotoUrl.isEmpty
+                                ? l10n.profilePhotoAdd
+                                : l10n.profilePhotoChange,
+                      ),
                     ),
-                  ),
+                    if (onboarding.profilePhotoUrl.isNotEmpty ||
+                        onboarding.profilePhotoBytes != null) ...[
+                      const SizedBox(width: AppSpacing.sm),
+                      TextButton(
+                        onPressed: onboarding.isUploadingPhoto
+                            ? null
+                            : controller.removeProfilePhoto,
+                        child: Text(l10n.profilePhotoRemove),
+                      ),
+                    ],
+                  ],
                 ),
                 const SizedBox(height: AppSpacing.md),
                 DropdownButtonFormField<SocialMood>(
@@ -317,10 +337,12 @@ class _OnboardingPhotoAvatar extends StatelessWidget {
   const _OnboardingPhotoAvatar({
     required this.photoUrl,
     required this.photoBytes,
+    required this.semanticLabel,
   });
 
   final String photoUrl;
   final Object? photoBytes;
+  final String semanticLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -331,13 +353,36 @@ class _OnboardingPhotoAvatar extends StatelessWidget {
             ? NetworkImage(photoUrl)
             : null;
 
-    return CircleAvatar(
-      radius: 32,
-      backgroundImage: imageProvider as ImageProvider<Object>?,
-      child: imageProvider == null
-          ? const Icon(Icons.person_outline, size: 28)
-          : null,
+    return Semantics(
+      image: true,
+      label: semanticLabel,
+      child: CircleAvatar(
+        radius: 32,
+        backgroundImage: imageProvider as ImageProvider<Object>?,
+        child: imageProvider == null
+            ? const Icon(Icons.person_outline, size: 28)
+            : null,
+      ),
     );
+  }
+}
+
+String _onboardingPhotoMessage(
+  BuildContext context,
+  OnboardingState onboarding,
+) {
+  final l10n = AppLocalizations.of(context);
+  switch (onboarding.profilePhotoIssue) {
+    case ProfilePhotoValidationIssue.empty:
+      return l10n.profilePhotoEmpty;
+    case ProfilePhotoValidationIssue.unsupportedType:
+      return l10n.profilePhotoUnsupportedType;
+    case ProfilePhotoValidationIssue.tooLarge:
+      return l10n.profilePhotoTooLarge;
+    case null:
+      return onboarding.profilePhotoUrl.isEmpty
+          ? l10n.profilePhotoSectionSubtitle
+          : l10n.profilePhotoReady;
   }
 }
 

@@ -23,6 +23,7 @@ class OnboardingState {
     required this.groupPreference,
     required this.safeMeetupRemindersEnabled,
     required this.isUploadingPhoto,
+    required this.profilePhotoIssue,
   });
 
   const OnboardingState.initial()
@@ -42,7 +43,8 @@ class OnboardingState {
         ],
         groupPreference = GroupPreference.flexible,
         safeMeetupRemindersEnabled = true,
-        isUploadingPhoto = false;
+        isUploadingPhoto = false,
+        profilePhotoIssue = null;
 
   final String displayName;
   final String profilePhotoUrl;
@@ -55,6 +57,7 @@ class OnboardingState {
   final GroupPreference groupPreference;
   final bool safeMeetupRemindersEnabled;
   final bool isUploadingPhoto;
+  final ProfilePhotoValidationIssue? profilePhotoIssue;
 
   bool get canSubmit =>
       displayName.trim().isNotEmpty &&
@@ -87,6 +90,8 @@ class OnboardingState {
     GroupPreference? groupPreference,
     bool? safeMeetupRemindersEnabled,
     bool? isUploadingPhoto,
+    ProfilePhotoValidationIssue? profilePhotoIssue,
+    bool clearProfilePhotoIssue = false,
   }) {
     return OnboardingState(
       displayName: displayName ?? this.displayName,
@@ -103,6 +108,9 @@ class OnboardingState {
       safeMeetupRemindersEnabled:
           safeMeetupRemindersEnabled ?? this.safeMeetupRemindersEnabled,
       isUploadingPhoto: isUploadingPhoto ?? this.isUploadingPhoto,
+      profilePhotoIssue: clearProfilePhotoIssue
+          ? null
+          : profilePhotoIssue ?? this.profilePhotoIssue,
     );
   }
 }
@@ -168,11 +176,16 @@ class OnboardingController extends Notifier<OnboardingState> {
     if (photo == null) {
       return false;
     }
-    if (validateProfilePhoto(photo) != null) {
+    final validationIssue = validateProfilePhoto(photo);
+    if (validationIssue != null) {
+      state = state.copyWith(profilePhotoIssue: validationIssue);
       return false;
     }
 
-    state = state.copyWith(isUploadingPhoto: true);
+    state = state.copyWith(
+      isUploadingPhoto: true,
+      clearProfilePhotoIssue: true,
+    );
     try {
       final photoUrl = await storage.uploadProfilePhoto(
         userId: userId,
@@ -186,12 +199,21 @@ class OnboardingController extends Notifier<OnboardingState> {
         profilePhotoUrl: photoUrl,
         profilePhotoBytes: photo.bytes,
         isUploadingPhoto: false,
+        clearProfilePhotoIssue: true,
       );
       return true;
     } catch (_) {
       state = state.copyWith(isUploadingPhoto: false);
       return false;
     }
+  }
+
+  void removeProfilePhoto() {
+    state = state.copyWith(
+      profilePhotoUrl: '',
+      profilePhotoBytes: null,
+      clearProfilePhotoIssue: true,
+    );
   }
 
   AppUserProfile toProfile({

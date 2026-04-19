@@ -145,6 +145,7 @@ This repository contains the initial production-oriented scaffold:
 - Auth SMS verification now exposes a resend action while preserving typed pending-verification state.
 - Profile and onboarding flows now share a picker/storage-based photo upload seam so profile media can move to Firebase Storage without leaking SDK code into widgets.
 - Profile media now has a shared file policy for supported image types, sanitized names, and a 5 MB safety limit before uploads reach Storage.
+- Profile and onboarding photo flows now expose typed validation feedback and a remove-photo action before saving.
 - Activity creation now carries typed schedule, duration, and approximate-location metadata instead of relying only on a loose time label and city string.
 - Activity creation validation now checks approximate location, supported duration values, and clearly past schedule times through a shared helper.
 - Firestore join approval and safety writes now include workflow metadata so future Cloud Functions and security rules can identify client fallback side effects.

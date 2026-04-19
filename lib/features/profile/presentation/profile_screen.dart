@@ -9,6 +9,7 @@ import 'package:aktivite/core/enums/group_preference.dart';
 import 'package:aktivite/core/enums/social_mood.dart';
 import 'package:aktivite/core/utils/analytics_events.dart';
 import 'package:aktivite/core/utils/localized_labels.dart';
+import 'package:aktivite/core/utils/profile_photo_policy.dart';
 import 'package:aktivite/features/profile/application/profile_editor_controller.dart';
 import 'package:aktivite/l10n/app_localizations.dart';
 import 'package:aktivite/shared/providers/app_providers.dart';
@@ -110,6 +111,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   Center(
                     child: _ProfilePhotoAvatar(
                       photoUrl: loadedProfile.profilePhotoUrl,
+                      semanticLabel: l10n.profilePhotoSectionTitle,
                     ),
                   ),
                   const SizedBox(height: AppSpacing.md),
@@ -208,46 +210,60 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 _ProfilePhotoAvatar(
                   photoUrl: editor.profilePhotoUrl,
                   photoBytes: editor.profilePhotoBytes,
+                  semanticLabel: l10n.profilePhotoSectionTitle,
                 ),
                 const SizedBox(height: AppSpacing.sm),
                 Text(
-                  editor.profilePhotoUrl.isEmpty
-                      ? l10n.profilePhotoSectionSubtitle
-                      : l10n.profilePhotoReady,
+                  _profilePhotoMessage(context, editor),
                 ),
                 const SizedBox(height: AppSpacing.sm),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: OutlinedButton(
-                    onPressed: profile == null || editor.isUploadingPhoto
-                        ? null
-                        : () async {
-                            final success =
-                                await editorController.uploadProfilePhoto(
-                              userId: profile.id,
-                              picker:
-                                  ref.read(profilePhotoPickerServiceProvider),
-                              storage:
-                                  ref.read(profilePhotoStorageServiceProvider),
-                            );
-                            if (!context.mounted) {
-                              return;
-                            }
-                            showAppSnackBar(
-                              context,
-                              success
-                                  ? l10n.profilePhotoUpdated
-                                  : l10n.profilePhotoFailed,
-                            );
-                          },
-                    child: Text(
-                      editor.isUploadingPhoto
-                          ? l10n.profilePhotoUploading
-                          : editor.profilePhotoUrl.isEmpty
-                              ? l10n.profilePhotoAdd
-                              : l10n.profilePhotoChange,
+                Row(
+                  children: [
+                    OutlinedButton(
+                      onPressed: profile == null || editor.isUploadingPhoto
+                          ? null
+                          : () async {
+                              final success =
+                                  await editorController.uploadProfilePhoto(
+                                userId: profile.id,
+                                picker:
+                                    ref.read(profilePhotoPickerServiceProvider),
+                                storage: ref
+                                    .read(profilePhotoStorageServiceProvider),
+                              );
+                              if (!context.mounted) {
+                                return;
+                              }
+                              showAppSnackBar(
+                                context,
+                                success
+                                    ? l10n.profilePhotoUpdated
+                                    : _profilePhotoMessage(
+                                        context,
+                                        ref.read(
+                                            profileEditorControllerProvider),
+                                      ),
+                              );
+                            },
+                      child: Text(
+                        editor.isUploadingPhoto
+                            ? l10n.profilePhotoUploading
+                            : editor.profilePhotoUrl.isEmpty
+                                ? l10n.profilePhotoAdd
+                                : l10n.profilePhotoChange,
+                      ),
                     ),
-                  ),
+                    if (editor.profilePhotoUrl.isNotEmpty ||
+                        editor.profilePhotoBytes != null) ...[
+                      const SizedBox(width: AppSpacing.sm),
+                      TextButton(
+                        onPressed: editor.isUploadingPhoto
+                            ? null
+                            : editorController.removeProfilePhoto,
+                        child: Text(l10n.profilePhotoRemove),
+                      ),
+                    ],
+                  ],
                 ),
                 const SizedBox(height: AppSpacing.md),
                 TextField(
@@ -408,20 +424,26 @@ class _ProfilePhotoAvatar extends StatelessWidget {
   const _ProfilePhotoAvatar({
     this.photoUrl = '',
     this.photoBytes,
+    required this.semanticLabel,
   });
 
   final String photoUrl;
   final Uint8List? photoBytes;
+  final String semanticLabel;
 
   @override
   Widget build(BuildContext context) {
     final imageProvider = _imageProvider();
-    return CircleAvatar(
-      radius: 36,
-      backgroundImage: imageProvider,
-      child: imageProvider == null
-          ? const Icon(Icons.person_outline, size: 32)
-          : null,
+    return Semantics(
+      image: true,
+      label: semanticLabel,
+      child: CircleAvatar(
+        radius: 36,
+        backgroundImage: imageProvider,
+        child: imageProvider == null
+            ? const Icon(Icons.person_outline, size: 32)
+            : null,
+      ),
     );
   }
 
@@ -433,5 +455,24 @@ class _ProfilePhotoAvatar extends StatelessWidget {
       return NetworkImage(photoUrl);
     }
     return null;
+  }
+}
+
+String _profilePhotoMessage(
+  BuildContext context,
+  ProfileEditorState editor,
+) {
+  final l10n = AppLocalizations.of(context);
+  switch (editor.profilePhotoIssue) {
+    case ProfilePhotoValidationIssue.empty:
+      return l10n.profilePhotoEmpty;
+    case ProfilePhotoValidationIssue.unsupportedType:
+      return l10n.profilePhotoUnsupportedType;
+    case ProfilePhotoValidationIssue.tooLarge:
+      return l10n.profilePhotoTooLarge;
+    case null:
+      return editor.profilePhotoUrl.isEmpty
+          ? l10n.profilePhotoSectionSubtitle
+          : l10n.profilePhotoReady;
   }
 }

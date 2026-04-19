@@ -1304,6 +1304,12 @@ abstract class AppLocalizations {
   /// **'Change photo'**
   String get profilePhotoChange;
 
+  /// No description provided for @profilePhotoEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a non-empty image file.'**
+  String get profilePhotoEmpty;
+
   /// No description provided for @profilePhotoFailed.
   ///
   /// In en, this message translates to:
@@ -1316,6 +1322,12 @@ abstract class AppLocalizations {
   /// **'Profile photo is ready to save.'**
   String get profilePhotoReady;
 
+  /// No description provided for @profilePhotoRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove photo'**
+  String get profilePhotoRemove;
+
   /// No description provided for @profilePhotoSectionSubtitle.
   ///
   /// In en, this message translates to:
@@ -1327,6 +1339,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Profile photo'**
   String get profilePhotoSectionTitle;
+
+  /// No description provided for @profilePhotoTooLarge.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose an image smaller than 5 MB.'**
+  String get profilePhotoTooLarge;
+
+  /// No description provided for @profilePhotoUnsupportedType.
+  ///
+  /// In en, this message translates to:
+  /// **'Use a JPG, PNG, or WebP image.'**
+  String get profilePhotoUnsupportedType;
 
   /// No description provided for @profilePhotoUpdated.
   ///
