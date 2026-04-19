@@ -1,4 +1,5 @@
 import 'package:aktivite/app/app_routes.dart';
+import 'package:aktivite/core/config/repository_source.dart';
 import 'package:aktivite/core/config/sample_ids.dart';
 import 'package:aktivite/core/constants/app_spacing.dart';
 import 'package:aktivite/core/enums/activity_category.dart';
@@ -65,17 +66,19 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
           requestId: request.id,
           status: JoinRequestStatus.approved,
         );
-    await ref.read(activityRepositoryProvider).incrementParticipantCount(
-          request.activityId,
-        );
-    await ref.read(chatRepositoryProvider).ensureThreadForActivity(
-          activityId: request.activityId,
-          participantIds: [
-            SampleIds.currentUser,
-            request.requesterId,
-          ],
-          initialMessagePreview: l10n.chatThreadCreatedPreview,
-        );
+    if (ref.read(repositorySourceProvider) == RepositorySource.inMemory) {
+      await ref.read(activityRepositoryProvider).incrementParticipantCount(
+            request.activityId,
+          );
+      await ref.read(chatRepositoryProvider).ensureThreadForActivity(
+            activityId: request.activityId,
+            participantIds: [
+              SampleIds.currentUser,
+              request.requesterId,
+            ],
+            initialMessagePreview: l10n.chatThreadCreatedPreview,
+          );
+    }
     await ref.read(analyticsServiceProvider).logEvent(
       name: AnalyticsEvents.joinRequestApproved,
       parameters: {'request_id': request.id},

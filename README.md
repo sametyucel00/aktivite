@@ -153,4 +153,5 @@ This repository contains the initial production-oriented scaffold:
 - Cloud Functions now include notification fanout helpers for join-request and chat workflows, plus basic notification-token normalization.
 - Join approval side effects now use workflow metadata inside the transaction so repeated trigger delivery stays idempotent.
 - Notification fanout now respects active block records for join-request and chat coordination workflows.
+- Firebase-backed chat writes now keep thread creation backend-owned and derive message senders from Firebase Auth.
 - The current code is structured to stay reviewable and CI-friendly on GitHub from day one.

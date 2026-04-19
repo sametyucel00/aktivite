@@ -27,7 +27,7 @@ This document captures the minimum Firestore and Storage rule boundaries that sh
 ### `chatThreads/{threadId}`
 
 - Read: only approved participants.
-- Create: only trusted backend logic or tightly validated client flows.
+- Create: only trusted backend logic through Cloud Functions.
 - Update: only approved participants, limited to coordination-safe fields.
 
 ### `chatThreads/{threadId}/messages/{messageId}`

@@ -62,34 +62,9 @@ class FirestoreChatRepository implements ChatRepository {
     required List<String> participantIds,
     required String initialMessagePreview,
   }) async {
-    final existing = await _threads
-        .where(FirebaseDocumentFields.activityId, isEqualTo: activityId)
-        .limit(1)
-        .get();
-    if (existing.docs.isNotEmpty) {
-      await existing.docs.single.reference.update({
-        FirebaseDocumentFields.participantIds: participantIds,
-        FirebaseDocumentFields.lastMessagePreview: initialMessagePreview,
-        FirebaseDocumentFields.updatedAt: FieldValue.serverTimestamp(),
-      });
-      return;
-    }
-
-    final document = _threads.doc();
-    final createdAt = FieldValue.serverTimestamp();
-    await document.set({
-      ...chatThreadToMap(
-        ChatThread(
-          id: document.id,
-          activityId: activityId,
-          participantIds: participantIds,
-          lastMessagePreview: initialMessagePreview,
-          safetyBannerVisible: true,
-        ),
-      ),
-      FirebaseDocumentFields.createdAt: createdAt,
-      FirebaseDocumentFields.updatedAt: createdAt,
-    });
+    throw UnsupportedError(
+      'Chat thread creation is owned by Cloud Functions for Firebase-backed repositories.',
+    );
   }
 
   @override
@@ -98,13 +73,20 @@ class FirestoreChatRepository implements ChatRepository {
     required String senderUserId,
     required String message,
   }) async {
+    final currentUserId = _auth().currentUser?.uid;
+    if (currentUserId == null) {
+      throw StateError(
+        'A signed-in Firebase user is required before sending a chat message.',
+      );
+    }
+
     final thread = _threads.doc(threadId);
     final messages = thread.collection(FirebaseCollectionPaths.messages);
     final sentAt = FieldValue.serverTimestamp();
 
     await messages.add({
       FirebaseDocumentFields.threadId: threadId,
-      FirebaseDocumentFields.senderUserId: senderUserId,
+      FirebaseDocumentFields.senderUserId: currentUserId,
       FirebaseDocumentFields.text: message,
       FirebaseDocumentFields.sentAt: sentAt,
     });

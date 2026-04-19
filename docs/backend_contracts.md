@@ -46,6 +46,7 @@ Expected query/index combinations for these paths are tracked in `docs/firestore
 - Activity documents may include approximate location, but not exact public live location by default.
 - Join request documents should be visible only to the requester and the activity owner.
 - Chat thread and message documents should be visible only to approved participants.
+- Chat thread creation is backend-owned after join approval; clients may only send messages as their authenticated user.
 - Reports and internal moderation events should not be publicly readable.
 - Trust events can include user-visible safety timeline records, but internal risk signals should stay private.
 
