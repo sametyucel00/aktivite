@@ -180,6 +180,8 @@
   "joinPlanFullNotice": "Bu plan dolu.",
   "joinRequestApprovedNotice": "Bu plan icin onaylandin.",
   "joinRequestAwaitingApproval": "Onay bekleniyor.",
+  "joinRequestCancel": "Istegi iptal et",
+  "joinRequestCancelled": "Katilim istegi iptal edildi.",
   "joinRequestDefaultMessage": "Merhaba, katilabilirim ve kolayca koordine olabilirim.",
   "joinRequestDialogHint": "Mesaji kisa ve pratik tut.",
   "joinRequestDialogTitle": "Katilim istegi gonder",

@@ -124,6 +124,7 @@ This repository contains the initial production-oriented scaffold:
 - Map privacy now uses a typed mode through remote config and providers instead of relying on raw string comparisons in UI code.
 - Join request models now expose shared status helpers and summary aggregation so owner approval flows do not duplicate status logic across providers and screens.
 - Join-plan status labels and submit gating now flow through one shared utility so map and explore surfaces stay aligned.
+- Join requests now guard duplicate active requests and expose requester-side cancellation for pending requests.
 - Join-request compose presets, default-message detection, and blank-submit validation now flow through one controller boundary.
 - In-memory join-request streams now emit an initial snapshot immediately so owner and plan surfaces do not wait for a mutation to show current request state.
 - In-memory activity streams now also emit an initial snapshot immediately so discovery and owned-plan surfaces have current plans before any mutation happens.

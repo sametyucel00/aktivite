@@ -64,6 +64,42 @@ void main() {
 
       expect(label, isEmpty);
     });
+
+    test('ignores cancelled requests so requester can submit again', () {
+      final label = joinPlanStatusLabel(
+        l10n: _englishL10n,
+        requests: const [
+          JoinRequest(
+            id: 'join-1',
+            activityId: 'activity-1',
+            requesterId: 'guest-1',
+            message: 'Joining',
+            status: JoinRequestStatus.cancelled,
+          ),
+        ],
+        userId: 'guest-1',
+        plan: _plan(),
+      );
+
+      expect(label, isEmpty);
+      expect(
+        canSubmitJoinRequest(
+          plan: _plan(),
+          requests: const [
+            JoinRequest(
+              id: 'join-1',
+              activityId: 'activity-1',
+              requesterId: 'guest-1',
+              message: 'Joining',
+              status: JoinRequestStatus.cancelled,
+            ),
+          ],
+          userId: 'guest-1',
+          canCreatePlans: true,
+        ),
+        isTrue,
+      );
+    });
   });
 
   group('canSubmitJoinRequest', () {
@@ -108,6 +144,40 @@ void main() {
           canCreatePlans: true,
         ),
         isTrue,
+      );
+    });
+  });
+
+  group('canCancelJoinRequest', () {
+    test('allows requester to cancel only pending requests', () {
+      const request = JoinRequest(
+        id: 'join-1',
+        activityId: 'activity-1',
+        requesterId: 'guest-1',
+        message: 'Joining',
+        status: JoinRequestStatus.pending,
+      );
+
+      expect(
+        canCancelJoinRequest(
+          request: request,
+          userId: 'guest-1',
+        ),
+        isTrue,
+      );
+      expect(
+        canCancelJoinRequest(
+          request: request,
+          userId: 'other-user',
+        ),
+        isFalse,
+      );
+      expect(
+        canCancelJoinRequest(
+          request: request.copyWith(status: JoinRequestStatus.approved),
+          userId: 'guest-1',
+        ),
+        isFalse,
       );
     });
   });

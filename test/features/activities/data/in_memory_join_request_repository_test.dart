@@ -36,6 +36,26 @@ void main() {
       expect(requests.first.status, JoinRequestStatus.pending);
     });
 
+    test('submitJoinRequest ignores duplicate active request by current user',
+        () async {
+      final repository = InMemoryJoinRequestRepository();
+
+      await repository.submitJoinRequest(
+        activityId: 'activity-duplicate',
+        message: 'First request.',
+      );
+      await repository.submitJoinRequest(
+        activityId: 'activity-duplicate',
+        message: 'Second request.',
+      );
+
+      final requests =
+          await repository.watchRequestsForActivity('activity-duplicate').first;
+
+      expect(requests, hasLength(1));
+      expect(requests.single.message, 'First request.');
+    });
+
     test('updateRequestStatus updates the matching request only', () async {
       final repository = InMemoryJoinRequestRepository();
 
@@ -64,6 +84,24 @@ void main() {
           .first;
 
       expect(requests.single.status, JoinRequestStatus.pending);
+    });
+
+    test('cancelJoinRequest marks matching request as cancelled', () async {
+      final repository = InMemoryJoinRequestRepository();
+
+      await repository.submitJoinRequest(
+        activityId: 'activity-cancel',
+        message: 'I can join.',
+      );
+      final created =
+          await repository.watchRequestsForActivity('activity-cancel').first;
+
+      await repository.cancelJoinRequest(requestId: created.single.id);
+
+      final requests =
+          await repository.watchRequestsForActivity('activity-cancel').first;
+
+      expect(requests.single.status, JoinRequestStatus.cancelled);
     });
   });
 }

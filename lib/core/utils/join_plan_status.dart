@@ -8,7 +8,7 @@ JoinRequest? currentUserJoinRequest(
     return null;
   }
   for (final request in requests) {
-    if (request.requesterId == userId) {
+    if (request.requesterId == userId && !request.isCancelled) {
       return request;
     }
   }
@@ -69,4 +69,11 @@ bool canSubmitJoinRequest({
   }
 
   return plan.hasCapacity;
+}
+
+bool canCancelJoinRequest({
+  required JoinRequest request,
+  required String? userId,
+}) {
+  return userId != null && request.requesterId == userId && request.isPending;
 }

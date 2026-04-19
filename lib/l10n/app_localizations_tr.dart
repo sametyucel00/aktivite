@@ -438,6 +438,12 @@ class AppLocalizationsTr extends AppLocalizations {
   String get joinRequestAwaitingApproval => 'Onay bekleniyor.';
 
   @override
+  String get joinRequestCancel => 'Istegi iptal et';
+
+  @override
+  String get joinRequestCancelled => 'Katilim istegi iptal edildi.';
+
+  @override
   String get joinRequestDefaultMessage =>
       'Merhaba, katilabilirim ve kolayca koordine olabilirim.';
 

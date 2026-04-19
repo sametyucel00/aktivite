@@ -437,6 +437,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get joinRequestAwaitingApproval => 'Awaiting approval.';
 
   @override
+  String get joinRequestCancel => 'Cancel request';
+
+  @override
+  String get joinRequestCancelled => 'Join request cancelled.';
+
+  @override
   String get joinRequestDefaultMessage =>
       'Hi, I can join and coordinate easily.';
 

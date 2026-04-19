@@ -93,6 +93,7 @@ lib/
 - Shared feedback helpers surface local success states, such as plan publishing, without duplicating snackbar setup in screens.
 - Firestore join-request, participant-count, report, and block writes include workflow metadata so Cloud Functions can distinguish server-side side effects from client fallback writes during migration.
 - Shared join-plan action widgets centralize request status, profile gating, join dialogs, analytics, and success feedback across discovery surfaces.
+- Join request repositories guard duplicate active requests, while shared utilities keep pending cancellation scoped to the requester.
 - Trust event factories and reason-code constants keep safety records consistent across settings, safety actions, providers, and formatting utilities.
 - Analytics event constants keep logging, readable signal formatting, and summary bucketing in sync across feature modules.
 - Remote Config key/default helpers keep rollout-controlled values typed and centralized across both in-memory and Firebase-backed service implementations.

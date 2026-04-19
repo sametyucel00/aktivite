@@ -13,4 +13,8 @@ abstract class JoinRequestRepository {
     required String requestId,
     required JoinRequestStatus status,
   });
+
+  Future<void> cancelJoinRequest({
+    required String requestId,
+  });
 }

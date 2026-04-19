@@ -36,8 +36,9 @@ service cloud.firestore {
       return signedIn() && resource.data.requesterId == uid();
     }
 
-    function createsOwnRequest(activityId) {
+    function createsOwnRequest(activityId, requestId) {
       return signedIn() &&
+        requestId == uid() &&
         request.resource.data.activityId == activityId &&
         request.resource.data.requesterId == uid() &&
         request.resource.data.status == 'pending';
@@ -88,7 +89,7 @@ service cloud.firestore {
 
       match /joinRequests/{requestId} {
         allow read: if isActivityOwner(activityId) || isRequester();
-        allow create: if createsOwnRequest(activityId);
+        allow create: if createsOwnRequest(activityId, requestId);
         allow update: if keepsRequestIdentity(activityId) && (
           (
             isActivityOwner(activityId) &&

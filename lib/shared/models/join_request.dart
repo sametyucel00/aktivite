@@ -19,6 +19,8 @@ class JoinRequest {
 
   bool get isApproved => status == JoinRequestStatus.approved;
 
+  bool get isCancelled => status == JoinRequestStatus.cancelled;
+
   bool get isRejected =>
       status == JoinRequestStatus.rejected ||
       status == JoinRequestStatus.cancelled;

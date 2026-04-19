@@ -1,9 +1,11 @@
+import 'package:aktivite/core/constants/app_spacing.dart';
 import 'package:aktivite/core/utils/app_feedback.dart';
 import 'package:aktivite/core/utils/join_plan_status.dart';
 import 'package:aktivite/features/activities/application/join_request_composer_controller.dart';
 import 'package:aktivite/features/auth/application/session_controller.dart';
 import 'package:aktivite/l10n/app_localizations.dart';
 import 'package:aktivite/shared/models/activity_plan.dart';
+import 'package:aktivite/shared/models/join_request.dart';
 import 'package:aktivite/shared/providers/app_providers.dart';
 import 'package:aktivite/shared/providers/repository_providers.dart';
 import 'package:aktivite/shared/widgets/async_value_view.dart';
@@ -89,9 +91,9 @@ class JoinPlanAction extends ConsumerWidget {
           if (!showStatus) {
             return const SizedBox.shrink();
           }
-          return Text(
-            statusLabel,
-            style: Theme.of(context).textTheme.bodySmall,
+          return _JoinRequestStatusActions(
+            label: statusLabel,
+            request: currentUserJoinRequest(requests, session.userId),
           );
         }
 
@@ -151,6 +153,57 @@ class JoinPlanAction extends ConsumerWidget {
       },
       loading: () => const AsyncLoadingView(),
       error: (error, stackTrace) => AsyncErrorView(message: error.toString()),
+    );
+  }
+}
+
+class _JoinRequestStatusActions extends ConsumerWidget {
+  const _JoinRequestStatusActions({
+    required this.label,
+    required this.request,
+  });
+
+  final String label;
+  final JoinRequest? request;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final session = ref.watch(sessionControllerProvider);
+    final canCancel = request != null &&
+        canCancelJoinRequest(
+          request: request!,
+          userId: session.userId,
+        );
+
+    if (!canCancel) {
+      return Text(
+        label,
+        style: Theme.of(context).textTheme.bodySmall,
+      );
+    }
+
+    final l10n = AppLocalizations.of(context);
+    return Wrap(
+      spacing: AppSpacing.sm,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      children: [
+        Text(
+          label,
+          style: Theme.of(context).textTheme.bodySmall,
+        ),
+        TextButton(
+          onPressed: () async {
+            await ref.read(joinRequestRepositoryProvider).cancelJoinRequest(
+                  requestId: request!.id,
+                );
+            if (!context.mounted) {
+              return;
+            }
+            showAppSnackBar(context, l10n.joinRequestCancelled);
+          },
+          child: Text(l10n.joinRequestCancel),
+        ),
+      ],
     );
   }
 }

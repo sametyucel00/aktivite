@@ -884,6 +884,18 @@ abstract class AppLocalizations {
   /// **'Awaiting approval.'**
   String get joinRequestAwaitingApproval;
 
+  /// No description provided for @joinRequestCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel request'**
+  String get joinRequestCancel;
+
+  /// No description provided for @joinRequestCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Join request cancelled.'**
+  String get joinRequestCancelled;
+
   /// No description provided for @joinRequestDefaultMessage.
   ///
   /// In en, this message translates to:

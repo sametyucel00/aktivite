@@ -48,7 +48,15 @@ class FirestoreJoinRequestRepository implements JoinRequestRepository {
     final requests = _activities
         .doc(activityId)
         .collection(FirebaseCollectionPaths.joinRequests);
-    final document = requests.doc();
+    final document = requests.doc(userId);
+    final snapshot = await document.get();
+    if (snapshot.exists) {
+      final existing = joinRequestFromMap(snapshot.id, snapshot.data()!);
+      if (existing.isPending || existing.isApproved) {
+        return;
+      }
+    }
+
     await document.set({
       ...joinRequestToMap(
         JoinRequest(
@@ -89,5 +97,15 @@ class FirestoreJoinRequestRepository implements JoinRequestRepository {
       },
       FirebaseDocumentFields.updatedAt: FieldValue.serverTimestamp(),
     });
+  }
+
+  @override
+  Future<void> cancelJoinRequest({
+    required String requestId,
+  }) {
+    return updateRequestStatus(
+      requestId: requestId,
+      status: JoinRequestStatus.cancelled,
+    );
   }
 }

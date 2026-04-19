@@ -180,6 +180,8 @@
   "joinPlanFullNotice": "This plan is already full.",
   "joinRequestApprovedNotice": "You are approved for this plan.",
   "joinRequestAwaitingApproval": "Awaiting approval.",
+  "joinRequestCancel": "Cancel request",
+  "joinRequestCancelled": "Join request cancelled.",
   "joinRequestDefaultMessage": "Hi, I can join and coordinate easily.",
   "joinRequestDialogHint": "Keep it short and practical.",
   "joinRequestDialogTitle": "Send a join request",

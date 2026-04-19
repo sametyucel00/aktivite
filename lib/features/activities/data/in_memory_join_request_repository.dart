@@ -28,6 +28,16 @@ class InMemoryJoinRequestRepository implements JoinRequestRepository {
     required String activityId,
     required String message,
   }) async {
+    final hasActiveRequest = _requests.any(
+      (request) =>
+          request.activityId == activityId &&
+          request.requesterId == SampleIds.currentUser &&
+          (request.isPending || request.isApproved),
+    );
+    if (hasActiveRequest) {
+      return;
+    }
+
     _requests.add(
       JoinRequest(
         id: AppIdFactory.sequenceId(
@@ -55,6 +65,16 @@ class InMemoryJoinRequestRepository implements JoinRequestRepository {
     final current = _requests[index];
     _requests[index] = current.copyWith(status: status);
     _controller.add(_snapshot());
+  }
+
+  @override
+  Future<void> cancelJoinRequest({
+    required String requestId,
+  }) {
+    return updateRequestStatus(
+      requestId: requestId,
+      status: JoinRequestStatus.cancelled,
+    );
   }
 
   @override
