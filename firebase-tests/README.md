@@ -1,20 +1,21 @@
-# Firebase Emulator Test Scaffold
+# Firebase Emulator Tests
 
-This folder is the starting point for fixture-oriented Firebase emulator tests.
+This folder now contains the dedicated Node-based rules test layer for Firestore and Storage.
 
-Current intent:
+Goals:
 
-- keep Firestore rules fixtures separate from Flutter unit tests
-- make it easy to add emulator-backed tests once JDK 21 is available locally and in CI
-- avoid mixing SDK-specific emulator setup into normal widget and model tests
+- keep Firebase emulator assertions separate from Flutter unit and widget tests
+- make rules coverage explicit, reviewable, and CI-friendly
+- keep fixture-path mapping deterministic across docs, rules, and emulator tests
 
-Planned first layers:
+## Files
 
-1. Firestore rules fixtures for activity, join request, chat, report, and block documents
-2. Rules tests that assert allow/deny behavior for authenticated actors
-3. Storage rules tests for profile photo and verification paths
+- `firestore.rules.test.js`: Firestore allow/deny assertions
+- `storage.rules.test.js`: Storage allow/deny assertions
+- `helpers/runtime.js`: fixture loading and local runtime checks
+- `fixtures/`: deterministic JSON seeds used by the rules suite
 
-Available fixture seeds:
+## Available fixture seeds
 
 - `fixtures/activity.json`
 - `fixtures/join_request.json`
@@ -23,7 +24,7 @@ Available fixture seeds:
 - `fixtures/block.json`
 - `fixtures/manifest.json`
 
-Suggested path mapping when emulator tests are added:
+## Fixture-to-path mapping
 
 - `activities/activity-1`
 - `activities/activity-1/joinRequests/guest-1`
@@ -33,8 +34,30 @@ Suggested path mapping when emulator tests are added:
 
 The same mapping is also stored in `fixtures/manifest.json` so future emulator setup can load fixture-path pairs programmatically.
 
-These fixture seeds should stay aligned with `firestore.rules`, `docs/security_rules.md`, and `docs/firestore_indexes.md`.
+## Commands
+
+Install test dependencies:
+
+```powershell
+npm --prefix firebase-tests install
+```
+
+Static syntax check without emulator runtime:
+
+```powershell
+npm --prefix firebase-tests run test:static
+```
+
+Run the emulator-backed rules suite:
+
+```powershell
+npm --prefix firebase-tests test
+```
+
+## Runtime requirement
+
+- Firebase CLI `15.11.0` currently needs JDK 21 or newer for emulator execution.
+- If local Java is older, use `test:static` first and let CI run the full emulator-backed suite.
 
 Use `docs/rules_checklist.md` as the source of truth for which rule boundaries already have named emulator placeholders and which ones still need scaffold coverage.
-
-This scaffold is present now, but emulator execution is still blocked locally until Java 21 is available for the current Firebase CLI.
+These tests should stay aligned with `firestore.rules`, `storage.rules`, `docs/security_rules.md`, and `docs/firestore_indexes.md`.

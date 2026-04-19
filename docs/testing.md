@@ -33,7 +33,8 @@ Optional builds:
 - In-memory repository/service tests for auth, profile, activities, join requests, chat, moderation, analytics, remote config, and safety bookkeeping
 - Provider seam tests for app-level derived state plus repository/provider source selection
 - Widget tests for safety, chat, join CTA, and owner request ordering regressions
-- Node unit tests for pure Cloud Functions helper logic in `functions/helpers.js`
+- Node unit tests for pure Cloud Functions helper logic in `functions/helpers/`
+- Firebase emulator tests in `firebase-tests/` for Firestore and Storage rules
 
 ## Manual Verification Priorities
 
@@ -60,18 +61,22 @@ After any Firebase-backed repository is introduced:
 
 Firebase emulator-based rule checks require JDK 21 or newer with the current Firebase CLI.
 
-## Emulator Scaffold
+## Emulator Tests
 
-- `firebase-tests/` contains the initial fixture-oriented scaffold for future Firestore rules tests.
-- `firebase-tests/fixtures/` stores minimal JSON fixtures for activity, join request, chat, report, and block cases so emulator tests can stay deterministic.
+- `firebase-tests/` contains the dedicated Node-based emulator suite.
+- `firebase-tests/fixtures/` stores minimal JSON fixtures for activity, join request, chat, report, and block cases so rules tests stay deterministic.
+- `npm --prefix firebase-tests run test:static` validates syntax without emulator runtime.
+- `npm --prefix firebase-tests test` runs the Firestore and Storage rules suite through `firebase emulators:exec`.
 - storage-rule scenarios are documented separately in `docs/storage_rules_scenarios.md`
 - `docs/rules_checklist.md` tracks which rule boundaries are already implemented vs still waiting on emulator assertions
-- The scaffold is intentionally lightweight until JDK 21 is available locally and the emulator job is wired into CI.
+- Full emulator execution still requires JDK 21 or newer with the current Firebase CLI.
 
 ## CI Expectation
 
 GitHub Actions should continue to cover:
 
+- functions lint and helper tests
+- firebase emulator-backed Firestore and Storage rules tests
 - format verification
 - static analysis
 - tests

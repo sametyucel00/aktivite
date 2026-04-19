@@ -7,6 +7,50 @@ on:
   pull_request:
 
 jobs:
+  functions-contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install functions dependencies
+        run: npm --prefix functions install
+
+      - name: Lint functions entrypoint
+        run: npm --prefix functions run lint
+
+      - name: Test functions helpers
+        run: npm --prefix functions test
+
+  firebase-rules:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Install Firebase CLI
+        run: npm install --global firebase-tools@15.11.0
+
+      - name: Install firebase test dependencies
+        run: npm --prefix firebase-tests install
+
+      - name: Syntax-check firebase tests
+        run: npm --prefix firebase-tests run test:static
+
+      - name: Run Firestore and Storage emulator tests
+        run: npm --prefix firebase-tests test
+
   analyze-and-test:
     runs-on: ubuntu-latest
     steps:

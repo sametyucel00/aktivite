@@ -61,13 +61,13 @@ Rules:
 - the app may show coarse verification level such as phone-verified
 - raw verification evidence stays private
 - verification should help safety posture, not publicly shame users with failure states
-- future expansion should prefer incremental trust signals over binary “good/bad user” messaging
+- future expansion should prefer incremental trust signals over binary "good/bad user" messaging
 
 ## Trusted Contact Placeholder
 
-Trusted contact remains planned architecture only for now.
+Trusted contact remains contract-only for the MVP and should not get a user-facing flow in this phase.
 
-When implemented:
+Future boundary when implemented:
 
 - it should be explicit opt-in
 - contact data should be private to the user and backend workflow
@@ -76,13 +76,14 @@ When implemented:
 
 ## Safe Return Placeholder
 
-Safe return also remains a planned placeholder for now.
+Safe return also remains contract-only for the MVP.
 
-When implemented:
+Future boundary when implemented:
 
 - keep the first version minimal: check-in state, due time, optional note
 - prefer operational reminders and internal safety handling over social visibility
-- avoid turning safe-return state into a public “last seen safe” feed
+- avoid turning safe-return state into a public "last seen safe" feed
+- do not add dashboard, profile, or public recap UI for safe-return state in the MVP
 
 ## Abuse And Rate-Limit Hooks
 
@@ -98,6 +99,17 @@ These hooks should:
 - stay internal to moderation or operational workflows
 - create private moderation signals rather than user-visible penalties by default
 - avoid storing unnecessary message content when metadata is enough
+
+For MVP, keep these hooks contract-level only; do not surface them as explicit UI warnings or public enforcement counters.
+
+## Finalized MVP Decisions
+
+- blocked threads stay hidden rather than rendering a dedicated safety-hidden thread row
+- verification remains coarse and low-visibility; do not add detailed failure states or public history
+- approximate location remains the only discovery-facing location signal; exact coordinates stay out of scope
+- activity update flows remain out of MVP scope
+- join summary data stays local to activity and safety surfaces, not dashboard or settings
+- deeper blocked or reported history views stay out of MVP scope
 
 ## Source Of Truth Split
 

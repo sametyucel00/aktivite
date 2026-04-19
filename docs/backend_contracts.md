@@ -58,40 +58,42 @@ Use `lib/shared/models/model_maps.dart` as the first mapping boundary between re
 
 Use constants and helpers from `FirebaseCollectionPaths` for collection paths:
 
-- Top-level collections such as `profiles`, `activities`, `chatThreads`, `reports`, and `blocks`
-- Activity-scoped join requests through `activityJoinRequests(activityId)`
-- Thread-scoped messages through `chatThreadMessages(threadId)`
-- User-scoped notification tokens through `userNotificationTokens(userId)`
+- top-level collections such as `profiles`, `activities`, `chatThreads`, `reports`, and `blocks`
+- activity-scoped join requests through `activityJoinRequests(activityId)`
+- thread-scoped messages through `chatThreadMessages(threadId)`
+- user-scoped notification tokens through `userNotificationTokens(userId)`
 
 Expected query/index combinations for these paths are tracked in `docs/firestore_indexes.md`.
 
 ## Privacy Boundaries
 
-- Activity documents may include approximate location, but not exact public live location by default.
-- Direct client activity updates are intentionally narrow and currently only cover owner-side participant-count/status fallback metadata.
-- Join request documents should be visible only to the requester and the activity owner.
-- Chat thread and message documents should be visible only to approved participants.
-- Chat thread creation is backend-owned after join approval; clients may only send messages as their authenticated user and update the thread preview metadata that mirrors their latest sent message.
-- Reports and internal moderation events should not be publicly readable.
-- Report writes should use a small canonical reason taxonomy so Cloud Functions and moderation tooling do not depend on arbitrary freeform strings.
-- The safety UI should present controlled report-reason choices that map directly to the canonical moderation taxonomy.
-- User-facing safety summaries may show counts, but should not expose public reporter-to-reported ledgers or reputation-style scorecards.
-- Trust events can include user-visible safety timeline records, but internal risk signals should stay private.
+- activity documents may include approximate location, but not exact public live location by default
+- direct client activity updates are intentionally narrow and currently only cover owner-side participant-count/status fallback metadata
+- join request documents should be visible only to the requester and the activity owner
+- chat thread and message documents should be visible only to approved participants
+- chat thread creation is backend-owned after join approval; clients may only send messages as their authenticated user and update the thread preview metadata that mirrors their latest sent message
+- reports and internal moderation events should not be publicly readable
+- report writes should use a small canonical reason taxonomy so Cloud Functions and moderation tooling do not depend on arbitrary freeform strings
+- the safety UI should present controlled report-reason choices that map directly to the canonical moderation taxonomy
+- user-facing safety summaries may show counts, but should not expose public reporter-to-reported ledgers or reputation-style scorecards
+- trust events can include user-visible safety timeline records, but internal risk signals should stay private
 
 ## Safety UX Notes
 
-- Blocked users should disappear consistently from explore, map, and chat coordination surfaces once the local trust-event stream reflects the block.
-- If a blocked relationship hides a chat thread, the chat empty state should explain that the thread is intentionally hidden instead of implying data loss.
-- Trusted contact and safe-return flows remain planned placeholder architecture only; when implemented they should stay private, opt-in, and operational rather than public-facing signals.
-- Verification state should remain a private trust indicator with room for expansion, not a public humiliation mechanic.
+- blocked users should disappear consistently from explore, map, and chat coordination surfaces once the local trust-event stream reflects the block
+- if a blocked relationship hides a chat thread, the chat empty state should explain that the thread is intentionally hidden instead of implying data loss
+- trusted contact and safe-return flows remain planned placeholder architecture only; when implemented they should stay private, opt-in, and operational rather than public-facing signals
+- verification state should remain a private trust indicator with room for expansion, not a public humiliation mechanic
+- for MVP, trusted contact and safe return stay contract-only rather than adding partial placeholder screens
+- for MVP, activity editing remains out of scope; creation and coordination quality take priority over mutable plan management
 
 ## Cloud Functions Hooks
 
-- On join request created: notify activity owner.
-- On join request approved: create or reveal chat thread and notify requester.
-- On report created: enqueue moderation review and optionally update internal trust events.
-- On block created: hide relevant plans and chats for the blocking user.
-- On message created: run lightweight moderation checks and notify other participants unless an active block exists between sender and recipient.
+- on join request created: notify activity owner
+- on join request approved: create or reveal chat thread and notify requester
+- on report created: enqueue moderation review and optionally update internal trust events
+- on block created: hide relevant plans and chats for the blocking user
+- on message created: run lightweight moderation checks and notify other participants unless an active block exists between sender and recipient
 
 Detailed trigger responsibilities and side effects are tracked in `docs/functions_contracts.md`.
 Cross-cutting block/report/trust behavior is tracked in `docs/safety_backend_contracts.md`.
