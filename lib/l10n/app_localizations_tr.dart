@@ -713,15 +713,15 @@ class AppLocalizationsTr extends AppLocalizations {
   String get profilePhotoUploading => 'Fotograf yukleniyor...';
 
   @override
-  String get profileGateAction => 'Profili tamamla';
+  String get profileGateAction => 'Birkaç detay ekle';
 
   @override
   String profileGateMessage(int completion) {
-    return 'Plan olusturmak ve katilmak icin profilinin en az %$completion tamamlanmis olmasi gerekiyor.';
+    return 'Profiline birkaç detay daha ekleyip %$completion seviyesine ulas, planlara daha rahat katil veya plan olustur.';
   }
 
   @override
-  String get profileGateTitle => 'Once profilini tamamla';
+  String get profileGateTitle => 'Profiline biraz daha detay ekle';
 
   @override
   String get profileGroupPreferenceTitle => 'Grup tercihi';

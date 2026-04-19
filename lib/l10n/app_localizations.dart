@@ -1397,19 +1397,19 @@ abstract class AppLocalizations {
   /// No description provided for @profileGateAction.
   ///
   /// In en, this message translates to:
-  /// **'Complete profile'**
+  /// **'Add a few details'**
   String get profileGateAction;
 
   /// No description provided for @profileGateMessage.
   ///
   /// In en, this message translates to:
-  /// **'Complete at least {completion}% of your profile to create and join plans confidently.'**
+  /// **'Add a few more profile details to reach {completion}% and start joining or creating plans more easily.'**
   String profileGateMessage(int completion);
 
   /// No description provided for @profileGateTitle.
   ///
   /// In en, this message translates to:
-  /// **'Complete your profile first'**
+  /// **'Add a little more to your profile'**
   String get profileGateTitle;
 
   /// No description provided for @profileGroupPreferenceTitle.

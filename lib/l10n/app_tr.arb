@@ -296,8 +296,8 @@
   "profilePhotoUnsupportedType": "JPG, PNG veya WebP gorsel kullan.",
   "profilePhotoUpdated": "Profil fotografi guncellendi.",
   "profilePhotoUploading": "Fotograf yukleniyor...",
-  "profileGateAction": "Profili tamamla",
-  "profileGateMessage": "Plan olusturmak ve katilmak icin profilinin en az %{completion} tamamlanmis olmasi gerekiyor.",
+  "profileGateAction": "Birkaç detay ekle",
+  "profileGateMessage": "Profiline birkaç detay daha ekleyip %{completion} seviyesine ulas, planlara daha rahat katil veya plan olustur.",
   "@profileGateMessage": {
     "placeholders": {
       "completion": {
@@ -305,7 +305,7 @@
       }
     }
   },
-  "profileGateTitle": "Once profilini tamamla",
+  "profileGateTitle": "Profiline biraz daha detay ekle",
   "profileGroupPreferenceTitle": "Grup tercihi",
   "profileMoodLabel": "Sosyal ruh hali: {mood}",
   "@profileMoodLabel": {

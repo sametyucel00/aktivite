@@ -712,15 +712,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profilePhotoUploading => 'Uploading photo...';
 
   @override
-  String get profileGateAction => 'Complete profile';
+  String get profileGateAction => 'Add a few details';
 
   @override
   String profileGateMessage(int completion) {
-    return 'Complete at least $completion% of your profile to create and join plans confidently.';
+    return 'Add a few more profile details to reach $completion% and start joining or creating plans more easily.';
   }
 
   @override
-  String get profileGateTitle => 'Complete your profile first';
+  String get profileGateTitle => 'Add a little more to your profile';
 
   @override
   String get profileGroupPreferenceTitle => 'Group preference';

@@ -296,8 +296,8 @@
   "profilePhotoUnsupportedType": "Use a JPG, PNG, or WebP image.",
   "profilePhotoUpdated": "Profile photo updated.",
   "profilePhotoUploading": "Uploading photo...",
-  "profileGateAction": "Complete profile",
-  "profileGateMessage": "Complete at least {completion}% of your profile to create and join plans confidently.",
+  "profileGateAction": "Add a few details",
+  "profileGateMessage": "Add a few more profile details to reach {completion}% and start joining or creating plans more easily.",
   "@profileGateMessage": {
     "placeholders": {
       "completion": {
@@ -305,7 +305,7 @@
       }
     }
   },
-  "profileGateTitle": "Complete your profile first",
+  "profileGateTitle": "Add a little more to your profile",
   "profileGroupPreferenceTitle": "Group preference",
   "profileMoodLabel": "Social mood: {mood}",
   "@profileMoodLabel": {
