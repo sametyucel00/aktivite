@@ -49,6 +49,7 @@ Expected query/index combinations for these paths are tracked in `docs/firestore
 - Chat thread and message documents should be visible only to approved participants.
 - Chat thread creation is backend-owned after join approval; clients may only send messages as their authenticated user and update the thread preview metadata that mirrors their latest sent message.
 - Reports and internal moderation events should not be publicly readable.
+- Report writes should use a small canonical reason taxonomy so Cloud Functions and moderation tooling do not depend on arbitrary freeform strings.
 - Trust events can include user-visible safety timeline records, but internal risk signals should stay private.
 
 ## Cloud Functions Hooks

@@ -161,6 +161,7 @@ This repository contains the initial production-oriented scaffold:
 - Activity create writes now normalize core text fields and ignore duplicate or blank required payloads before storage.
 - Join request writes now trim repository input and reject blank activity or message payloads before storage.
 - Safety report and block writes now ignore blank or self-targeted payloads before moderation side effects run.
+- Safety reports now normalize into a small canonical reason taxonomy before Firestore writes and moderation event fanout.
 - Join approval functions now block chat side effects when the activity is full, closed, or self-targeted.
 - Owner approval actions now show localized feedback for local and Firebase-backed chat readiness.
 - Join request rules now restrict owner/requester updates to status and workflow metadata only.

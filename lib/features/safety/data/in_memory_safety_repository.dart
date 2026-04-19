@@ -1,3 +1,4 @@
+import 'package:aktivite/core/constants/safety_report_reasons.dart';
 import 'package:aktivite/core/config/sample_ids.dart';
 import 'package:aktivite/features/safety/data/safety_repository.dart';
 
@@ -40,10 +41,10 @@ class InMemorySafetyRepository implements SafetyRepository {
     required String reason,
   }) async {
     final normalizedUserId = targetUserId.trim();
-    final normalizedReason = reason.trim();
+    final normalizedReason = SafetyReportReasons.normalize(reason);
     if (normalizedUserId.isEmpty ||
         normalizedUserId == SampleIds.currentUser ||
-        normalizedReason.isEmpty) {
+        normalizedReason == null) {
       return;
     }
 

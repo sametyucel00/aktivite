@@ -48,7 +48,7 @@ This document captures the minimum Firestore and Storage rule boundaries that sh
 ### `reports/{reportId}` and `blocks/{blockId}`
 
 - Read: only the reporting/blocking user and privileged backend/admin tooling.
-- Create: only authenticated users writing their own non-empty report or block action against another user; block document ids must be `userId-targetUserId`.
+- Create: only authenticated users writing their own canonical report reason or block action against another user; report reasons are limited to `spam`, `harassment`, `unsafe_meetup`, `fake_profile`, and `inappropriate_content`, while block document ids must be `userId-targetUserId`.
 - Public reads must stay denied.
 
 ### `moderationEvents/{eventId}`

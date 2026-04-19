@@ -80,6 +80,7 @@ Trigger:
 Function responsibilities:
 
 - validate minimum required report fields
+- validate the report reason against the supported moderation taxonomy
 - enqueue moderation review
 - append internal moderation event
 - optionally update internal trust risk state for the reported user
@@ -87,7 +88,7 @@ Function responsibilities:
 Outputs:
 
 - moderation queue record
-- internal moderation/trust updates
+- internal moderation/trust updates with canonical `report_<reason>` codes
 
 ## Block Created
 

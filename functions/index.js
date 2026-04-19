@@ -12,6 +12,13 @@ initializeApp();
 
 const db = getFirestore();
 const messaging = getMessaging();
+const allowedReportReasons = new Set([
+  'spam',
+  'harassment',
+  'unsafe_meetup',
+  'fake_profile',
+  'inappropriate_content',
+]);
 
 exports.onJoinRequestCreated = onDocumentCreated(
   'activities/{activityId}/joinRequests/{requestId}',
@@ -144,7 +151,7 @@ exports.onReportCreated = onDocumentCreated('reports/{reportId}', async (event) 
   }
 
   const report = snapshot.data();
-  if (!isValidUserAction(report)) {
+  if (!isValidUserAction(report) || !allowedReportReasons.has(report.reason)) {
     await snapshot.ref.update({
       workflowStatus: 'invalidReportPayload',
       updatedAt: FieldValue.serverTimestamp(),
@@ -155,8 +162,8 @@ exports.onReportCreated = onDocumentCreated('reports/{reportId}', async (event) 
 
   await db.collection('moderationEvents').add({
     subjectUserId: report.targetUserId,
-    reasonCode: 'report_created',
-    reason: report.reason || 'User report created',
+    reasonCode: `report_${report.reason}`,
+    reason: report.reason,
     isUserVisible: false,
     createdAt: FieldValue.serverTimestamp(),
     updatedAt: FieldValue.serverTimestamp(),

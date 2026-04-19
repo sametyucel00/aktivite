@@ -1,3 +1,4 @@
+import 'package:aktivite/core/constants/safety_report_reasons.dart';
 import 'package:aktivite/core/config/sample_ids.dart';
 import 'package:aktivite/features/safety/data/in_memory_safety_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -34,6 +35,10 @@ void main() {
       );
       await repository.reportUser(
         targetUserId: 'guest-2',
+        reason: 'Not a supported custom reason',
+      );
+      await repository.reportUser(
+        targetUserId: 'guest-2',
         reason: '   ',
       );
       await repository.reportUser(
@@ -43,7 +48,7 @@ void main() {
 
       expect(
         repository.reportedReasonsFor('guest-2'),
-        ['Spam', 'Unsafe meetup behavior'],
+        [SafetyReportReasons.spam, SafetyReportReasons.unsafeMeetup],
       );
       expect(repository.reportedReasonsFor(SampleIds.currentUser), isEmpty);
     });
@@ -58,7 +63,7 @@ void main() {
 
       final snapshot = repository.reportedReasonsByUser;
 
-      expect(snapshot['guest-3'], ['Harassment']);
+      expect(snapshot['guest-3'], [SafetyReportReasons.harassment]);
       expect(() => snapshot['guest-3']!.add('Extra'), throwsUnsupportedError);
     });
   });

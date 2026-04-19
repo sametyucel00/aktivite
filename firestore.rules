@@ -88,7 +88,13 @@ service cloud.firestore {
         request.resource.data.targetUserId is string &&
         request.resource.data.targetUserId != uid() &&
         request.resource.data.reason is string &&
-        request.resource.data.reason.size() > 0;
+        request.resource.data.reason in [
+          'spam',
+          'harassment',
+          'unsafe_meetup',
+          'fake_profile',
+          'inappropriate_content'
+        ];
     }
 
     function keepsBlockIdentity(blockId) {

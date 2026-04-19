@@ -1,3 +1,4 @@
+import 'package:aktivite/core/constants/safety_report_reasons.dart';
 import 'package:aktivite/core/config/firebase_collection_paths.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -27,11 +28,11 @@ class FirestoreSafetyRepository implements SafetyRepository {
   }) async {
     final currentUserId = _currentUserId;
     final normalizedTargetUserId = targetUserId.trim();
-    final normalizedReason = reason.trim();
+    final normalizedReason = SafetyReportReasons.normalize(reason);
     if (currentUserId == null ||
         normalizedTargetUserId.isEmpty ||
         normalizedTargetUserId == currentUserId ||
-        normalizedReason.isEmpty) {
+        normalizedReason == null) {
       return;
     }
 
