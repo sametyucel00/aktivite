@@ -18,6 +18,10 @@ function hasApprovedSideEffectsCompleted(request) {
   return request?.workflowStatus === 'approvalSideEffectsCompleted';
 }
 
+function hasApprovedJoinStatus(request) {
+  return request?.status === 'approved';
+}
+
 function getJoinApprovalOutcome({ activity, request }) {
   if (!activity || !request) {
     return { allowSideEffects: false, workflowStatus: 'invalidMissingActivity' };
@@ -44,6 +48,7 @@ function getJoinApprovalOutcome({ activity, request }) {
 module.exports = {
   buildApprovedParticipantIds,
   getJoinApprovalOutcome,
+  hasApprovedJoinStatus,
   hasJoinCapacity,
   hasApprovedSideEffectsCompleted,
 };

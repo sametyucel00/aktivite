@@ -23,12 +23,16 @@ const {
   collectInvalidTokenRefs,
   buildApprovedParticipantIds,
   getJoinApprovalOutcome,
+  getThreadRecipientIds,
+  hasApprovedJoinStatus,
   hasApprovedSideEffectsCompleted,
+  hasThreadParticipant,
   isActiveBlock,
   isAllowedReportReason,
   isInvalidMessagingTokenCode,
   isTokenNormalizationNoop,
-  isValidUserAction,
+  isValidBlockPayload,
+  isValidReportPayload,
   mapTokenDocs,
   normalizeNotificationTokenRecord,
   safeNotificationPreview,
@@ -164,7 +168,7 @@ exports.onReportCreated = onDocumentCreated('reports/{reportId}', async (event) 
   }
 
   const report = snapshot.data();
-  if (!isValidUserAction(report) || !isAllowedReportReason(report.reason)) {
+  if (!isValidReportPayload(report)) {
     await snapshot.ref.update({
       ...buildInvalidPayloadUpdate('invalidReportPayload'),
       updatedAt: FieldValue.serverTimestamp(),
@@ -191,7 +195,7 @@ exports.onBlockCreated = onDocumentCreated('blocks/{blockId}', async (event) => 
   }
 
   const block = snapshot.data();
-  if (!isValidUserAction(block)) {
+  if (!isValidBlockPayload(block)) {
     await snapshot.ref.update({
       ...buildInvalidPayloadUpdate('invalidBlockPayload'),
       updatedAt: FieldValue.serverTimestamp(),
@@ -225,7 +229,7 @@ exports.onMessageCreated = onDocumentCreated(
     }
 
     const thread = threadSnapshot.data();
-    if (!Array.isArray(thread.participantIds) || !thread.participantIds.includes(message.senderUserId)) {
+    if (!hasThreadParticipant(thread.participantIds, message.senderUserId)) {
       await event.data.ref.update({
         moderationStatus: 'invalidSender',
         updatedAt: FieldValue.serverTimestamp(),
@@ -240,7 +244,10 @@ exports.onMessageCreated = onDocumentCreated(
 
     const recipientIds = await filterBlockedNotificationRecipients({
       actorUserId: message.senderUserId,
-      recipientIds: thread.participantIds.filter((userId) => userId !== message.senderUserId),
+      recipientIds: getThreadRecipientIds(
+        thread.participantIds,
+        message.senderUserId,
+      ),
     });
     await sendNotificationToUsers({
       userIds: recipientIds,
@@ -314,7 +321,7 @@ async function handleJoinRequestApproved({ activityId, requestId, request, reque
     }
 
     const latestRequestData = latestRequest.data();
-    if (latestRequestData.status !== 'approved') {
+    if (!hasApprovedJoinStatus(latestRequestData)) {
       logger.warn('Approved join request side effects skipped for stale status.', {
         activityId,
         requestId,

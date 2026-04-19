@@ -35,9 +35,22 @@ function shouldDeleteNormalizedToken(normalizedRecord) {
   return !normalizedRecord?.token;
 }
 
+function getThreadRecipientIds(participantIds, senderUserId) {
+  if (!Array.isArray(participantIds)) {
+    return [];
+  }
+  return participantIds.filter((userId) => userId !== senderUserId);
+}
+
+function hasThreadParticipant(participantIds, senderUserId) {
+  return Array.isArray(participantIds) && participantIds.includes(senderUserId);
+}
+
 module.exports = {
   buildBlockedPairIds,
   collectInvalidTokenRefs,
+  getThreadRecipientIds,
+  hasThreadParticipant,
   mapTokenDocs,
   shouldDeleteNormalizedToken,
   uniqueUserIds,

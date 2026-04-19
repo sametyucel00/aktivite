@@ -27,10 +27,20 @@ function buildReportModerationReasonCode(reason) {
   return isAllowedReportReason(reason) ? `report_${reason}` : null;
 }
 
+function isValidReportPayload(report) {
+  return isValidUserAction(report) && isAllowedReportReason(report?.reason);
+}
+
+function isValidBlockPayload(block) {
+  return isValidUserAction(block);
+}
+
 module.exports = {
   buildReportModerationReasonCode,
   isActiveBlock,
   isActiveBlockData,
   isAllowedReportReason,
+  isValidBlockPayload,
+  isValidReportPayload,
   isValidUserAction,
 };

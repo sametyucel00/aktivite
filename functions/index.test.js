@@ -16,13 +16,18 @@ const {
   buildApprovedParticipantIds,
   collectInvalidTokenRefs,
   getJoinApprovalOutcome,
+  getThreadRecipientIds,
   hasJoinCapacity,
+  hasApprovedJoinStatus,
   hasApprovedSideEffectsCompleted,
   isActiveBlockData,
   isAllowedReportReason,
   isInvalidMessagingTokenCode,
   isTokenNormalizationNoop,
+  isValidBlockPayload,
+  isValidReportPayload,
   isValidUserAction,
+  hasThreadParticipant,
   mapTokenDocs,
   normalizeNotificationTokenRecord,
   safeNotificationPreview,
@@ -178,6 +183,13 @@ test('mapTokenDocs trims tokens and drops blanks', () => {
   ]);
 });
 
+test('thread recipient helpers validate membership and exclude sender', () => {
+  assert.equal(hasThreadParticipant(['owner', 'guest'], 'guest'), true);
+  assert.equal(hasThreadParticipant(['owner', 'guest'], 'other'), false);
+  assert.deepEqual(getThreadRecipientIds(['owner', 'guest'], 'guest'), ['owner']);
+  assert.deepEqual(getThreadRecipientIds(null, 'guest'), []);
+});
+
 test('collectInvalidTokenRefs returns refs for invalid token responses only', () => {
   const tokenRecords = [{ ref: { id: '1' } }, { ref: { id: '2' } }];
   const refs = collectInvalidTokenRefs(
@@ -270,6 +282,8 @@ test('hasJoinCapacity reflects closed and full activities', () => {
 
 test('join helpers build sorted participant ids and detect completed side effects', () => {
   assert.deepEqual(buildApprovedParticipantIds('owner', 'guest'), ['guest', 'owner']);
+  assert.equal(hasApprovedJoinStatus({ status: 'approved' }), true);
+  assert.equal(hasApprovedJoinStatus({ status: 'pending' }), false);
   assert.equal(
     hasApprovedSideEffectsCompleted({
       workflowStatus: 'approvalSideEffectsCompleted',
@@ -282,6 +296,32 @@ test('join helpers build sorted participant ids and detect completed side effect
 test('isAllowedReportReason only accepts canonical reasons', () => {
   assert.equal(isAllowedReportReason('harassment'), true);
   assert.equal(isAllowedReportReason('unknown'), false);
+});
+
+test('safety payload helpers validate report and block payloads', () => {
+  assert.equal(
+    isValidReportPayload({
+      userId: 'reporter',
+      targetUserId: 'guest',
+      reason: 'harassment',
+    }),
+    true,
+  );
+  assert.equal(
+    isValidReportPayload({
+      userId: 'reporter',
+      targetUserId: 'reporter',
+      reason: 'harassment',
+    }),
+    false,
+  );
+  assert.equal(
+    isValidBlockPayload({
+      userId: 'owner',
+      targetUserId: 'guest',
+    }),
+    true,
+  );
 });
 
 test('buildReportModerationReasonCode returns canonical moderation code', () => {
