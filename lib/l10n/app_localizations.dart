@@ -878,6 +878,18 @@ abstract class AppLocalizations {
   /// **'You are approved for this plan.'**
   String get joinRequestApprovedNotice;
 
+  /// No description provided for @joinRequestApprovedFirebaseNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Request approved. Chat will open after backend checks finish.'**
+  String get joinRequestApprovedFirebaseNotice;
+
+  /// No description provided for @joinRequestApprovedLocalNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Request approved. Coordination chat is ready.'**
+  String get joinRequestApprovedLocalNotice;
+
   /// No description provided for @joinRequestAwaitingApproval.
   ///
   /// In en, this message translates to:
@@ -949,6 +961,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This request was not approved.'**
   String get joinRequestRejectedNotice;
+
+  /// No description provided for @joinRequestRejectedLocalNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Request rejected.'**
+  String get joinRequestRejectedLocalNotice;
 
   /// No description provided for @joinRequestsEmpty.
   ///

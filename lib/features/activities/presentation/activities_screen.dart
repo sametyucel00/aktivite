@@ -83,9 +83,20 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
       name: AnalyticsEvents.joinRequestApproved,
       parameters: {'request_id': request.id},
     );
+    if (!mounted) {
+      return;
+    }
+    final approvalMessage =
+        ref.read(repositorySourceProvider) == RepositorySource.firebase
+            ? l10n.joinRequestApprovedFirebaseNotice
+            : l10n.joinRequestApprovedLocalNotice;
+    showAppSnackBar(context, approvalMessage);
   }
 
-  Future<void> _rejectJoinRequest(JoinRequest request) async {
+  Future<void> _rejectJoinRequest({
+    required JoinRequest request,
+    required AppLocalizations l10n,
+  }) async {
     await ref.read(joinRequestRepositoryProvider).updateRequestStatus(
           requestId: request.id,
           status: JoinRequestStatus.rejected,
@@ -94,6 +105,10 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
       name: AnalyticsEvents.joinRequestRejected,
       parameters: {'request_id': request.id},
     );
+    if (!mounted) {
+      return;
+    }
+    showAppSnackBar(context, l10n.joinRequestRejectedLocalNotice);
   }
 
   @override
@@ -416,7 +431,10 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
                                 ),
                                 OutlinedButton(
                                   onPressed: request.isPending
-                                      ? () => _rejectJoinRequest(request)
+                                      ? () => _rejectJoinRequest(
+                                            request: request,
+                                            l10n: l10n,
+                                          )
                                       : null,
                                   child: Text(l10n.rejectRequest),
                                 ),

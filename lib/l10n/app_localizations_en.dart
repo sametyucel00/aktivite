@@ -434,6 +434,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get joinRequestApprovedNotice => 'You are approved for this plan.';
 
   @override
+  String get joinRequestApprovedFirebaseNotice =>
+      'Request approved. Chat will open after backend checks finish.';
+
+  @override
+  String get joinRequestApprovedLocalNotice =>
+      'Request approved. Coordination chat is ready.';
+
+  @override
   String get joinRequestAwaitingApproval => 'Awaiting approval.';
 
   @override
@@ -470,6 +478,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get joinRequestRejectedNotice => 'This request was not approved.';
+
+  @override
+  String get joinRequestRejectedLocalNotice => 'Request rejected.';
 
   @override
   String get joinRequestsEmpty => 'No join requests yet.';

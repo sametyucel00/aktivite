@@ -160,4 +160,5 @@ This repository contains the initial production-oriented scaffold:
 - Join request writes now trim repository input and reject blank activity or message payloads before storage.
 - Safety report and block writes now ignore blank or self-targeted payloads before moderation side effects run.
 - Join approval functions now block chat side effects when the activity is full, closed, or self-targeted.
+- Owner approval actions now show localized feedback for local and Firebase-backed chat readiness.
 - The current code is structured to stay reviewable and CI-friendly on GitHub from day one.

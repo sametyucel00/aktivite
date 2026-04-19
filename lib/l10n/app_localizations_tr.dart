@@ -435,6 +435,14 @@ class AppLocalizationsTr extends AppLocalizations {
   String get joinRequestApprovedNotice => 'Bu plan icin onaylandin.';
 
   @override
+  String get joinRequestApprovedFirebaseNotice =>
+      'Istek onaylandi. Backend kontrolleri bitince sohbet acilacak.';
+
+  @override
+  String get joinRequestApprovedLocalNotice =>
+      'Istek onaylandi. Koordinasyon sohbeti hazir.';
+
+  @override
   String get joinRequestAwaitingApproval => 'Onay bekleniyor.';
 
   @override
@@ -471,6 +479,9 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get joinRequestRejectedNotice => 'Bu istek onaylanmadi.';
+
+  @override
+  String get joinRequestRejectedLocalNotice => 'Istek reddedildi.';
 
   @override
   String get joinRequestsEmpty => 'Henuz katilim istegi yok.';
