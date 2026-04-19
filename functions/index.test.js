@@ -18,6 +18,7 @@ test('isValidUserAction rejects self-targeted and blank actions', () => {
 test('safeNotificationPreview trims and clamps long messages', () => {
   assert.equal(safeNotificationPreview('   '), 'You have a new coordination message.');
   assert.equal(safeNotificationPreview(' hello '), 'hello');
+  assert.equal(safeNotificationPreview(null), 'You have a new coordination message.');
   assert.equal(safeNotificationPreview('a'.repeat(81)).length, 80);
 });
 
@@ -26,6 +27,7 @@ test('stringifyData coerces values into strings', () => {
     count: '2',
     flag: 'true',
   });
+  assert.deepEqual(stringifyData(), {});
 });
 
 test('join approval outcome blocks owner, full, and cancelled activities', () => {

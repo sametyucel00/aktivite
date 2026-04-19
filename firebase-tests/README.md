@@ -22,4 +22,14 @@ Available fixture seeds:
 - `fixtures/report.json`
 - `fixtures/block.json`
 
+Suggested path mapping when emulator tests are added:
+
+- `activities/activity-1`
+- `activities/activity-1/joinRequests/guest-1`
+- `chatThreads/thread-1`
+- `reports/report-1`
+- `blocks/owner-1-guest-1`
+
+These fixture seeds should stay aligned with `firestore.rules`, `docs/security_rules.md`, and `docs/firestore_indexes.md`.
+
 This scaffold is present now, but emulator execution is still blocked locally until Java 21 is available for the current Firebase CLI.

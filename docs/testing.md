@@ -55,6 +55,7 @@ After any Firebase-backed repository is introduced:
 3. verify collection/path constants are used
 4. verify no widget imports Firebase SDK directly
 5. document any new generated files or CLI steps
+6. verify the change still matches `docs/security_rules.md`, `docs/firestore_indexes.md`, and `docs/safety_backend_contracts.md`
 
 Firebase emulator-based rule checks require JDK 21 or newer with the current Firebase CLI.
 

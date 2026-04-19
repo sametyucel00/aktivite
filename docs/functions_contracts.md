@@ -9,6 +9,33 @@ This document describes the first backend workflows that should move to trusted 
 - centralize notification fanout and trust-event creation
 - keep workflows low-pressure, safety-aware, and activity-first
 
+## Current Status
+
+Implemented in the current scaffold:
+
+- join-request created trigger with owner notification fanout
+- join-request approved trigger with idempotent participant/chat side-effect guard
+- join-request rejected trigger with optional requester notification path
+- report-created trigger with canonical moderation validation
+- block-created trigger with block-aware coordination suppression hooks
+- message-created trigger with participant validation and block-aware notification fanout
+- notification-token normalization and cleanup helpers
+
+Covered by pure helper tests today:
+
+- join approval outcome guards
+- notification preview normalization
+- token error classification
+- user-action validation
+- active-block classification
+
+Still pending for deeper backend validation:
+
+- emulator-backed end-to-end trigger verification
+- fixture-backed Firestore rules tests
+- storage emulator coverage
+- richer function-level tests around Firestore writes and fanout side effects
+
 ## Join Request Created
 
 Trigger:

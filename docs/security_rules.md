@@ -102,3 +102,17 @@ Cross-surface safety behavior such as blocked discovery hiding, blocked chat vis
 4. Limit chat reads/writes to approved participants. Implemented in `firestore.rules`.
 5. Limit notification token writes to the owning user. Implemented in `firestore.rules`.
 6. Keep exact location fields out of public-readable documents. Implemented with write-time rejection for common exact-location field names.
+7. Restrict profile-photo uploads to the owning user and supported image types. Implemented in `storage.rules`.
+8. Deny normal-client reads for verification media while still allowing own uploads. Implemented in `storage.rules`.
+
+## Rules Alignment Notes
+
+Current rule/doc alignment that is already true in code:
+
+- join request document ids are user-scoped (`requestId == request.auth.uid`)
+- block document ids are deterministic (`userId-targetUserId`)
+- chat thread creation remains backend-owned
+- chat message writes require non-empty text and a 280-character cap
+- activity client updates are limited to narrow fallback metadata fields
+
+Future emulator assertions should mirror this checklist directly.

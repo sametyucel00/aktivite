@@ -2,6 +2,19 @@
 
 This document lists Firestore index needs based on the current discovery, ownership, join-request, chat, and safety seams. The first concrete index config lives in `firestore.indexes.json`.
 
+## Query Mapping Snapshot
+
+Current planned query families map to repository/provider seams like this:
+
+| Query family | Seam |
+| --- | --- |
+| discover plans by surface and status | `ActivityRepository.watchNearbyPlans` / featured discovery providers |
+| discover plans by surface, category, and status | filtered activity/discovery providers |
+| read owned plans by owner id | `ActivityRepository.watchOwnedPlans` |
+| read chat threads by participant | `ChatRepository.watchApprovedThreads` |
+| read trust or moderation events by subject user | `ModerationRepository.watchTrustEvents` |
+| read user-scoped reports or blocks | future Firebase `SafetyRepository` history reads |
+
 ## Activities
 
 Expected query families:
@@ -49,7 +62,9 @@ Likely index combinations:
 
 Notes:
 
-- Per-activity subcollection reads may not need a composite index until status filtering or ordering is added.
+- The current app reads per-activity join requests directly and sorts them client-side.
+- No join-request composite index is currently required in `firestore.indexes.json`.
+- Add the status index only when Firebase-backed filtering or ordering by status is introduced.
 
 ## Chat Threads
 
@@ -71,6 +86,7 @@ Notes:
 
 - The current in-memory seam filters blocked users after read.
 - If backend filtering becomes query-driven, additional fields and indexes may be required.
+- `firestore.indexes.json` already includes the participant + updatedAt index because that is the most likely first Firebase-backed thread query shape.
 
 ## Messages
 
@@ -86,6 +102,7 @@ Likely index combinations:
 Notes:
 
 - Single-field ordering may be enough unless moderation status or soft-delete flags are added.
+- No explicit message composite index is needed yet because thread-local ordering can usually rely on a single field.
 
 ## Trust Events And Moderation
 
