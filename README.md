@@ -55,6 +55,7 @@ If you are validating a larger feature or backend workflow manually after the sc
 - [Backend contracts](docs/backend_contracts.md)
 - [Safety backend contracts](docs/safety_backend_contracts.md)
 - [Security rules draft](docs/security_rules.md)
+- [Rules checklist](docs/rules_checklist.md)
 - [Storage rules scenarios](docs/storage_rules_scenarios.md)
 - [Testing guide](docs/testing.md)
 - [Manual QA checklist](docs/manual_qa_checklist.md)

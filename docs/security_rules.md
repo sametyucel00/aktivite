@@ -2,6 +2,8 @@
 
 This document captures the minimum Firestore and Storage rule boundaries that should exist before the in-memory repositories are replaced. The first concrete rules live in `firestore.rules` and `storage.rules`.
 
+For a line-by-line implementation checklist that maps directly to current rule files and emulator placeholders, use `docs/rules_checklist.md`.
+
 ## Firestore Collections
 
 ### `profiles/{userId}`
@@ -116,3 +118,5 @@ Current rule/doc alignment that is already true in code:
 - activity client updates are limited to narrow fallback metadata fields
 
 Future emulator assertions should mirror this checklist directly.
+
+The more operational implementation matrix lives in `docs/rules_checklist.md`.

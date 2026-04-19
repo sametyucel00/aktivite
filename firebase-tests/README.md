@@ -35,4 +35,6 @@ The same mapping is also stored in `fixtures/manifest.json` so future emulator s
 
 These fixture seeds should stay aligned with `firestore.rules`, `docs/security_rules.md`, and `docs/firestore_indexes.md`.
 
+Use `docs/rules_checklist.md` as the source of truth for which rule boundaries already have named emulator placeholders and which ones still need scaffold coverage.
+
 This scaffold is present now, but emulator execution is still blocked locally until Java 21 is available for the current Firebase CLI.

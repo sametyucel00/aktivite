@@ -56,6 +56,7 @@ After any Firebase-backed repository is introduced:
 4. verify no widget imports Firebase SDK directly
 5. document any new generated files or CLI steps
 6. verify the change still matches `docs/security_rules.md`, `docs/firestore_indexes.md`, and `docs/safety_backend_contracts.md`
+7. verify any changed rule boundary still matches `docs/rules_checklist.md`
 
 Firebase emulator-based rule checks require JDK 21 or newer with the current Firebase CLI.
 
@@ -64,6 +65,7 @@ Firebase emulator-based rule checks require JDK 21 or newer with the current Fir
 - `firebase-tests/` contains the initial fixture-oriented scaffold for future Firestore rules tests.
 - `firebase-tests/fixtures/` stores minimal JSON fixtures for activity, join request, chat, report, and block cases so emulator tests can stay deterministic.
 - storage-rule scenarios are documented separately in `docs/storage_rules_scenarios.md`
+- `docs/rules_checklist.md` tracks which rule boundaries are already implemented vs still waiting on emulator assertions
 - The scaffold is intentionally lightweight until JDK 21 is available locally and the emulator job is wired into CI.
 
 ## CI Expectation
