@@ -157,7 +157,7 @@ class JoinPlanAction extends ConsumerWidget {
   }
 }
 
-class _JoinRequestStatusActions extends ConsumerWidget {
+class _JoinRequestStatusActions extends ConsumerStatefulWidget {
   const _JoinRequestStatusActions({
     required this.label,
     required this.request,
@@ -167,17 +167,26 @@ class _JoinRequestStatusActions extends ConsumerWidget {
   final JoinRequest? request;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_JoinRequestStatusActions> createState() =>
+      _JoinRequestStatusActionsState();
+}
+
+class _JoinRequestStatusActionsState
+    extends ConsumerState<_JoinRequestStatusActions> {
+  bool _isCancelling = false;
+
+  @override
+  Widget build(BuildContext context) {
     final session = ref.watch(sessionControllerProvider);
-    final canCancel = request != null &&
+    final canCancel = widget.request != null &&
         canCancelJoinRequest(
-          request: request!,
+          request: widget.request!,
           userId: session.userId,
         );
 
     if (!canCancel) {
       return Text(
-        label,
+        widget.label,
         style: Theme.of(context).textTheme.bodySmall,
       );
     }
@@ -188,20 +197,41 @@ class _JoinRequestStatusActions extends ConsumerWidget {
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
         Text(
-          label,
+          widget.label,
           style: Theme.of(context).textTheme.bodySmall,
         ),
         TextButton(
-          onPressed: () async {
-            await ref.read(joinRequestRepositoryProvider).cancelJoinRequest(
-                  requestId: request!.id,
-                );
-            if (!context.mounted) {
-              return;
-            }
-            showAppSnackBar(context, l10n.joinRequestCancelled);
-          },
-          child: Text(l10n.joinRequestCancel),
+          onPressed: _isCancelling
+              ? null
+              : () async {
+                  setState(() {
+                    _isCancelling = true;
+                  });
+                  try {
+                    await ref
+                        .read(joinRequestRepositoryProvider)
+                        .cancelJoinRequest(
+                          requestId: widget.request!.id,
+                        );
+                    if (!context.mounted) {
+                      return;
+                    }
+                    showAppSnackBar(context, l10n.joinRequestCancelled);
+                  } finally {
+                    if (mounted) {
+                      setState(() {
+                        _isCancelling = false;
+                      });
+                    }
+                  }
+                },
+          child: _isCancelling
+              ? const SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : Text(l10n.joinRequestCancel),
         ),
       ],
     );
