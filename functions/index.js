@@ -329,14 +329,49 @@ async function handleJoinRequestApproved({ activityId, requestId, request, reque
     }
 
     const latestData = latestActivity.data();
+    if (latestData.ownerUserId === latestRequestData.requesterId) {
+      transaction.update(requestRef, {
+        status: 'cancelled',
+        workflowStatus: 'invalidOwnerRequest',
+        updatedAt: FieldValue.serverTimestamp(),
+      });
+      logger.warn('Approved join request tried to approve the activity owner.', {
+        activityId,
+        requestId,
+      });
+      return false;
+    }
+
+    const currentParticipantCount = latestData.participantCount || 0;
+    const maxParticipants = latestData.maxParticipants || 1;
+    if (
+      latestData.status === 'full' ||
+      latestData.status === 'cancelled' ||
+      latestData.status === 'completed' ||
+      currentParticipantCount >= maxParticipants
+    ) {
+      transaction.update(requestRef, {
+        workflowStatus: 'approvalCapacityBlocked',
+        updatedAt: FieldValue.serverTimestamp(),
+      });
+      logger.warn('Approved join request skipped because activity is not joinable.', {
+        activityId,
+        requestId,
+        activityStatus: latestData.status,
+        participantCount: currentParticipantCount,
+        maxParticipants,
+      });
+      return false;
+    }
+
     const participantCount = Math.min(
-      (latestData.participantCount || 0) + 1,
-      latestData.maxParticipants || 1,
+      currentParticipantCount + 1,
+      maxParticipants,
     );
 
     transaction.update(activityRef, {
       participantCount,
-      status: participantCount >= (latestData.maxParticipants || 1) ? 'full' : latestData.status,
+      status: participantCount >= maxParticipants ? 'full' : latestData.status,
       workflowSource: 'cloudFunction',
       updatedAt: FieldValue.serverTimestamp(),
     });

@@ -40,6 +40,7 @@ Function responsibilities:
 - verify the actor is allowed to approve
 - create or reveal the related chat thread
 - ensure participants are limited to owner + approved requester for the MVP path
+- stop side effects when the activity is full, cancelled, completed, or the requester is the owner
 - notify the requester
 - suppress requester notification if either side has an active block against the other
 - optionally append a user-visible trust event if that product decision is kept
@@ -51,6 +52,7 @@ Outputs:
 - optional trust event
 - participant count update through a Firestore transaction
 - workflow completion metadata on the join request
+- capacity-blocked workflow metadata when approval cannot safely create coordination access
 - idempotency guard so repeated trigger delivery does not increment participant count or fan out notifications twice
 
 ## Join Request Rejected
