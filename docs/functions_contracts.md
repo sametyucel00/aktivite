@@ -26,6 +26,7 @@ Outputs:
 
 - owner notification fanout
 - optional internal trust/moderation event
+- invalid self-join requests are cancelled with workflow metadata
 
 ## Join Request Approved
 
@@ -46,6 +47,8 @@ Outputs:
 - chat thread creation or reveal
 - requester notification
 - optional trust event
+- participant count update through a Firestore transaction
+- workflow completion metadata on the join request
 
 ## Join Request Rejected
 
@@ -112,6 +115,7 @@ Outputs:
 
 - participant notifications
 - optional moderation review signal
+- invalid sender marker if the message sender is no longer a participant
 
 ## Notification Token Updated
 
@@ -127,6 +131,7 @@ Function responsibilities:
 Outputs:
 
 - cleaned token registry for fanout workflows
+- empty tokens are deleted and token metadata is normalized on write
 
 ## Operational Rules
 
