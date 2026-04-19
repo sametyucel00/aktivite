@@ -1604,6 +1604,18 @@ abstract class AppLocalizations {
   /// **'Report submitted.'**
   String get safetyReportSubmittedToast;
 
+  /// No description provided for @safetyActionUnavailableToast.
+  ///
+  /// In en, this message translates to:
+  /// **'Safety tools need an active session right now.'**
+  String get safetyActionUnavailableToast;
+
+  /// No description provided for @safetyActionFailedToast.
+  ///
+  /// In en, this message translates to:
+  /// **'Safety action could not be completed right now.'**
+  String get safetyActionFailedToast;
+
   /// No description provided for @safetySummarySubtitle.
   ///
   /// In en, this message translates to:

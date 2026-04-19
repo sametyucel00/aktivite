@@ -359,6 +359,8 @@
     }
   },
   "safetyReportSubmittedToast": "Report submitted.",
+  "safetyActionUnavailableToast": "Safety tools need an active session right now.",
+  "safetyActionFailedToast": "Safety action could not be completed right now.",
   "safetySummarySubtitle": "A quick view of your recent trust actions.",
   "safetySummaryTitle": "Safety summary",
   "safetyTimelineEmpty": "No safety events yet.",

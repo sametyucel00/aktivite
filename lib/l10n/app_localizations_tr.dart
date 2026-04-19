@@ -829,6 +829,14 @@ class AppLocalizationsTr extends AppLocalizations {
   String get safetyReportSubmittedToast => 'Bildirim gonderildi.';
 
   @override
+  String get safetyActionUnavailableToast =>
+      'Guvenlik araclari su anda aktif bir oturum gerektiriyor.';
+
+  @override
+  String get safetyActionFailedToast =>
+      'Guvenlik eylemi su anda tamamlanamadi.';
+
+  @override
   String get safetySummarySubtitle => 'Son guven eylemlerinin hizli ozeti.';
 
   @override

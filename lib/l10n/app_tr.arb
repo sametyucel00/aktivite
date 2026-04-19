@@ -359,6 +359,8 @@
     }
   },
   "safetyReportSubmittedToast": "Bildirim gonderildi.",
+  "safetyActionUnavailableToast": "Guvenlik araclari su anda aktif bir oturum gerektiriyor.",
+  "safetyActionFailedToast": "Guvenlik eylemi su anda tamamlanamadi.",
   "safetySummarySubtitle": "Son guven eylemlerinin hizli ozeti.",
   "safetySummaryTitle": "Guvenlik ozeti",
   "safetyTimelineEmpty": "Henuz guvenlik olayi yok.",

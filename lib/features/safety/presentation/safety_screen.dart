@@ -1,4 +1,5 @@
 import 'package:aktivite/app/app_routes.dart';
+import 'package:aktivite/core/constants/safety_report_reasons.dart';
 import 'package:aktivite/core/constants/app_spacing.dart';
 import 'package:aktivite/core/utils/analytics_events.dart';
 import 'package:aktivite/core/utils/app_feedback.dart';
@@ -138,18 +139,44 @@ class SafetyScreen extends ConsumerWidget {
                 : () {
                     final userId = session.userId;
                     if (userId == null) {
+                      showAppSnackBar(
+                        context,
+                        l10n.safetyActionUnavailableToast,
+                      );
                       return;
                     }
-                    ref.read(moderationRepositoryProvider).createTrustEvent(
-                          createReportSubmittedTrustEvent(
-                            subjectUserId: userId,
-                            reportedUserId: TrustEventReasonCodes.guestUserId,
-                          ),
+                    () async {
+                      try {
+                        await ref.read(safetyRepositoryProvider).reportUser(
+                              targetUserId: TrustEventReasonCodes.guestUserId,
+                              reason: SafetyReportReasons.unsafeMeetup,
+                            );
+                        await ref
+                            .read(moderationRepositoryProvider)
+                            .createTrustEvent(
+                              createReportSubmittedTrustEvent(
+                                subjectUserId: userId,
+                                reportedUserId:
+                                    TrustEventReasonCodes.guestUserId,
+                              ),
+                            );
+                        await ref.read(analyticsServiceProvider).logEvent(
+                              name: AnalyticsEvents.safetyReportSubmitted,
+                            );
+                        if (!context.mounted) {
+                          return;
+                        }
+                        showAppSnackBar(
+                          context,
+                          l10n.safetyReportSubmittedToast,
                         );
-                    ref.read(analyticsServiceProvider).logEvent(
-                          name: AnalyticsEvents.safetyReportSubmitted,
-                        );
-                    showAppSnackBar(context, l10n.safetyReportSubmittedToast);
+                      } catch (_) {
+                        if (!context.mounted) {
+                          return;
+                        }
+                        showAppSnackBar(context, l10n.safetyActionFailedToast);
+                      }
+                    }();
                   },
             icon: const Icon(Icons.report_outlined),
             label: Text(
@@ -166,18 +193,40 @@ class SafetyScreen extends ConsumerWidget {
                 : () {
                     final userId = session.userId;
                     if (userId == null) {
+                      showAppSnackBar(
+                        context,
+                        l10n.safetyActionUnavailableToast,
+                      );
                       return;
                     }
-                    ref.read(moderationRepositoryProvider).createTrustEvent(
-                          createUserBlockedTrustEvent(
-                            subjectUserId: userId,
-                            blockedUserId: TrustEventReasonCodes.guestUserId,
-                          ),
-                        );
-                    ref.read(analyticsServiceProvider).logEvent(
-                          name: AnalyticsEvents.safetyUserBlocked,
-                        );
-                    showAppSnackBar(context, l10n.safetyUserBlockedToast);
+                    () async {
+                      try {
+                        await ref.read(safetyRepositoryProvider).blockUser(
+                              targetUserId: TrustEventReasonCodes.guestUserId,
+                            );
+                        await ref
+                            .read(moderationRepositoryProvider)
+                            .createTrustEvent(
+                              createUserBlockedTrustEvent(
+                                subjectUserId: userId,
+                                blockedUserId:
+                                    TrustEventReasonCodes.guestUserId,
+                              ),
+                            );
+                        await ref.read(analyticsServiceProvider).logEvent(
+                              name: AnalyticsEvents.safetyUserBlocked,
+                            );
+                        if (!context.mounted) {
+                          return;
+                        }
+                        showAppSnackBar(context, l10n.safetyUserBlockedToast);
+                      } catch (_) {
+                        if (!context.mounted) {
+                          return;
+                        }
+                        showAppSnackBar(context, l10n.safetyActionFailedToast);
+                      }
+                    }();
                   },
             icon: const Icon(Icons.block_outlined),
             label: Text(

@@ -828,6 +828,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get safetyReportSubmittedToast => 'Report submitted.';
 
   @override
+  String get safetyActionUnavailableToast =>
+      'Safety tools need an active session right now.';
+
+  @override
+  String get safetyActionFailedToast =>
+      'Safety action could not be completed right now.';
+
+  @override
   String get safetySummarySubtitle =>
       'A quick view of your recent trust actions.';
 
