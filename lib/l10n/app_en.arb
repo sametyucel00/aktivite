@@ -350,6 +350,13 @@
   "safetyEventUserBlocked": "User blocked",
   "safetyEventVisible": "Visible in your safety timeline",
   "safetyReportAlreadySubmitted": "Report already submitted",
+  "safetyReportReasonDialogHint": "Choose the closest reason so moderation and safety review stay consistent.",
+  "safetyReportReasonDialogTitle": "Why are you reporting this user?",
+  "safetyReportReasonFakeProfile": "Fake profile",
+  "safetyReportReasonHarassment": "Harassment",
+  "safetyReportReasonInappropriateContent": "Inappropriate content",
+  "safetyReportReasonSpam": "Spam",
+  "safetyReportReasonUnsafeMeetup": "Unsafe meetup behavior",
   "safetyReportedCount": "{count} reports",
   "@safetyReportedCount": {
     "placeholders": {

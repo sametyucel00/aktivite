@@ -350,6 +350,13 @@
   "safetyEventUserBlocked": "Kullanici engellendi",
   "safetyEventVisible": "Guvenlik zaman cizelgesinde gorunur",
   "safetyReportAlreadySubmitted": "Bildirim zaten gonderildi",
+  "safetyReportReasonDialogHint": "Moderasyon ve guvenlik incelemesi tutarli kalsin diye en yakin nedeni sec.",
+  "safetyReportReasonDialogTitle": "Bu kullaniciyi neden bildiriyorsun?",
+  "safetyReportReasonFakeProfile": "Sahte profil",
+  "safetyReportReasonHarassment": "Taciz",
+  "safetyReportReasonInappropriateContent": "Uygunsuz icerik",
+  "safetyReportReasonSpam": "Spam",
+  "safetyReportReasonUnsafeMeetup": "Guvensiz bulusma davranisi",
   "safetyReportedCount": "{count} bildirim",
   "@safetyReportedCount": {
     "placeholders": {

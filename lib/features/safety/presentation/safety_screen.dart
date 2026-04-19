@@ -20,6 +20,14 @@ class SafetyScreen extends ConsumerWidget {
 
   static const routePath = AppRoutes.safety;
 
+  static const _reportReasonOptions = <String>[
+    SafetyReportReasons.unsafeMeetup,
+    SafetyReportReasons.harassment,
+    SafetyReportReasons.spam,
+    SafetyReportReasons.fakeProfile,
+    SafetyReportReasons.inappropriateContent,
+  ];
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
@@ -136,7 +144,7 @@ class SafetyScreen extends ConsumerWidget {
             onPressed: safetySummaryAsync.valueOrNull?.hasReportedGuestUser ==
                     true
                 ? null
-                : () {
+                : () async {
                     final userId = session.userId;
                     if (userId == null) {
                       showAppSnackBar(
@@ -145,38 +153,39 @@ class SafetyScreen extends ConsumerWidget {
                       );
                       return;
                     }
-                    () async {
-                      try {
-                        await ref.read(safetyRepositoryProvider).reportUser(
-                              targetUserId: TrustEventReasonCodes.guestUserId,
-                              reason: SafetyReportReasons.unsafeMeetup,
-                            );
-                        await ref
-                            .read(moderationRepositoryProvider)
-                            .createTrustEvent(
-                              createReportSubmittedTrustEvent(
-                                subjectUserId: userId,
-                                reportedUserId:
-                                    TrustEventReasonCodes.guestUserId,
-                              ),
-                            );
-                        await ref.read(analyticsServiceProvider).logEvent(
-                              name: AnalyticsEvents.safetyReportSubmitted,
-                            );
-                        if (!context.mounted) {
-                          return;
-                        }
-                        showAppSnackBar(
-                          context,
-                          l10n.safetyReportSubmittedToast,
-                        );
-                      } catch (_) {
-                        if (!context.mounted) {
-                          return;
-                        }
-                        showAppSnackBar(context, l10n.safetyActionFailedToast);
+                    final reason = await _showReportReasonDialog(context, l10n);
+                    if (reason == null) {
+                      return;
+                    }
+                    try {
+                      await ref.read(safetyRepositoryProvider).reportUser(
+                            targetUserId: TrustEventReasonCodes.guestUserId,
+                            reason: reason,
+                          );
+                      await ref
+                          .read(moderationRepositoryProvider)
+                          .createTrustEvent(
+                            createReportSubmittedTrustEvent(
+                              subjectUserId: userId,
+                              reportedUserId: TrustEventReasonCodes.guestUserId,
+                            ),
+                          );
+                      await ref.read(analyticsServiceProvider).logEvent(
+                            name: AnalyticsEvents.safetyReportSubmitted,
+                          );
+                      if (!context.mounted) {
+                        return;
                       }
-                    }();
+                      showAppSnackBar(
+                        context,
+                        l10n.safetyReportSubmittedToast,
+                      );
+                    } catch (_) {
+                      if (!context.mounted) {
+                        return;
+                      }
+                      showAppSnackBar(context, l10n.safetyActionFailedToast);
+                    }
                   },
             icon: const Icon(Icons.report_outlined),
             label: Text(
@@ -238,5 +247,79 @@ class SafetyScreen extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  Future<String?> _showReportReasonDialog(
+    BuildContext context,
+    AppLocalizations l10n,
+  ) {
+    String? selectedReason = _reportReasonOptions.first;
+
+    return showDialog<String>(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) => AlertDialog(
+            title: Text(l10n.safetyReportReasonDialogTitle),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(l10n.safetyReportReasonDialogHint),
+                const SizedBox(height: AppSpacing.md),
+                RadioGroup<String>(
+                  groupValue: selectedReason,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedReason = value;
+                    });
+                  },
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: _reportReasonOptions
+                        .map(
+                          (reason) => RadioListTile<String>(
+                            value: reason,
+                            contentPadding: EdgeInsets.zero,
+                            title: Text(_reportReasonLabel(l10n, reason)),
+                          ),
+                        )
+                        .toList(growable: false),
+                  ),
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text(l10n.commonCancel),
+              ),
+              FilledButton(
+                onPressed: selectedReason == null
+                    ? null
+                    : () => Navigator.of(context).pop(selectedReason),
+                child: Text(l10n.reportUser),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  String _reportReasonLabel(AppLocalizations l10n, String reason) {
+    switch (reason) {
+      case SafetyReportReasons.spam:
+        return l10n.safetyReportReasonSpam;
+      case SafetyReportReasons.harassment:
+        return l10n.safetyReportReasonHarassment;
+      case SafetyReportReasons.unsafeMeetup:
+        return l10n.safetyReportReasonUnsafeMeetup;
+      case SafetyReportReasons.fakeProfile:
+        return l10n.safetyReportReasonFakeProfile;
+      case SafetyReportReasons.inappropriateContent:
+        return l10n.safetyReportReasonInappropriateContent;
+    }
+    return reason;
   }
 }

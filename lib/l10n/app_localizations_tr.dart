@@ -821,6 +821,29 @@ class AppLocalizationsTr extends AppLocalizations {
   String get safetyReportAlreadySubmitted => 'Bildirim zaten gonderildi';
 
   @override
+  String get safetyReportReasonDialogHint =>
+      'Moderasyon ve guvenlik incelemesi tutarli kalsin diye en yakin nedeni sec.';
+
+  @override
+  String get safetyReportReasonDialogTitle =>
+      'Bu kullaniciyi neden bildiriyorsun?';
+
+  @override
+  String get safetyReportReasonFakeProfile => 'Sahte profil';
+
+  @override
+  String get safetyReportReasonHarassment => 'Taciz';
+
+  @override
+  String get safetyReportReasonInappropriateContent => 'Uygunsuz icerik';
+
+  @override
+  String get safetyReportReasonSpam => 'Spam';
+
+  @override
+  String get safetyReportReasonUnsafeMeetup => 'Guvensiz bulusma davranisi';
+
+  @override
   String safetyReportedCount(int count) {
     return '$count bildirim';
   }

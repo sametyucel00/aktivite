@@ -1592,6 +1592,48 @@ abstract class AppLocalizations {
   /// **'Report already submitted'**
   String get safetyReportAlreadySubmitted;
 
+  /// No description provided for @safetyReportReasonDialogHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the closest reason so moderation and safety review stay consistent.'**
+  String get safetyReportReasonDialogHint;
+
+  /// No description provided for @safetyReportReasonDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Why are you reporting this user?'**
+  String get safetyReportReasonDialogTitle;
+
+  /// No description provided for @safetyReportReasonFakeProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Fake profile'**
+  String get safetyReportReasonFakeProfile;
+
+  /// No description provided for @safetyReportReasonHarassment.
+  ///
+  /// In en, this message translates to:
+  /// **'Harassment'**
+  String get safetyReportReasonHarassment;
+
+  /// No description provided for @safetyReportReasonInappropriateContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Inappropriate content'**
+  String get safetyReportReasonInappropriateContent;
+
+  /// No description provided for @safetyReportReasonSpam.
+  ///
+  /// In en, this message translates to:
+  /// **'Spam'**
+  String get safetyReportReasonSpam;
+
+  /// No description provided for @safetyReportReasonUnsafeMeetup.
+  ///
+  /// In en, this message translates to:
+  /// **'Unsafe meetup behavior'**
+  String get safetyReportReasonUnsafeMeetup;
+
   /// No description provided for @safetyReportedCount.
   ///
   /// In en, this message translates to:

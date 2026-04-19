@@ -820,6 +820,29 @@ class AppLocalizationsEn extends AppLocalizations {
   String get safetyReportAlreadySubmitted => 'Report already submitted';
 
   @override
+  String get safetyReportReasonDialogHint =>
+      'Choose the closest reason so moderation and safety review stay consistent.';
+
+  @override
+  String get safetyReportReasonDialogTitle =>
+      'Why are you reporting this user?';
+
+  @override
+  String get safetyReportReasonFakeProfile => 'Fake profile';
+
+  @override
+  String get safetyReportReasonHarassment => 'Harassment';
+
+  @override
+  String get safetyReportReasonInappropriateContent => 'Inappropriate content';
+
+  @override
+  String get safetyReportReasonSpam => 'Spam';
+
+  @override
+  String get safetyReportReasonUnsafeMeetup => 'Unsafe meetup behavior';
+
+  @override
   String safetyReportedCount(int count) {
     return '$count reports';
   }
