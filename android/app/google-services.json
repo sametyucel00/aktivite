@@ -1,0 +1,163 @@
+{
+  "project_info": {
+    "project_number": "310514488602",
+    "firebase_url": "https://nar-rehberi-default-rtdb.firebaseio.com",
+    "project_id": "nar-rehberi",
+    "storage_bucket": "nar-rehberi.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:310514488602:android:f260b933a0ecbaaa9a88a3",
+        "android_client_info": {
+          "package_name": "com.example.aktivite"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "310514488602-9fkq4mk55pcme1addu97arvftudtrskv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5acc2-V7kTa3eA3ehMeSVYpoSqdYvSOc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "310514488602-9fkq4mk55pcme1addu97arvftudtrskv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "310514488602-a3jfvp1f72vdusu6omfb2loatkcmgm7b.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.petracore.app"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:310514488602:android:2485248a4e7223949a88a3",
+        "android_client_info": {
+          "package_name": "com.hisle.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "310514488602-i77rlej2vq3jb6gk991o222lsgapdvro.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hisle.app",
+            "certificate_hash": "8a7f82a11900d7fcb25b2c829ecf1b82dcacf789"
+          }
+        },
+        {
+          "client_id": "310514488602-9fkq4mk55pcme1addu97arvftudtrskv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5acc2-V7kTa3eA3ehMeSVYpoSqdYvSOc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "310514488602-9fkq4mk55pcme1addu97arvftudtrskv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "310514488602-a3jfvp1f72vdusu6omfb2loatkcmgm7b.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.petracore.app"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:310514488602:android:efa5a1ce7ac5146c9a88a3",
+        "android_client_info": {
+          "package_name": "com.narrehberi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "310514488602-9fkq4mk55pcme1addu97arvftudtrskv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5acc2-V7kTa3eA3ehMeSVYpoSqdYvSOc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "310514488602-9fkq4mk55pcme1addu97arvftudtrskv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "310514488602-a3jfvp1f72vdusu6omfb2loatkcmgm7b.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.petracore.app"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:310514488602:android:a0347fff1a8d21879a88a3",
+        "android_client_info": {
+          "package_name": "com.petracore.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "310514488602-9fkq4mk55pcme1addu97arvftudtrskv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5acc2-V7kTa3eA3ehMeSVYpoSqdYvSOc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "310514488602-9fkq4mk55pcme1addu97arvftudtrskv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "310514488602-a3jfvp1f72vdusu6omfb2loatkcmgm7b.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.petracore.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,4 @@
+enum MapPrivacyMode {
+  approximate,
+  hidden,
+}

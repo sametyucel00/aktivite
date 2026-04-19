@@ -1,0 +1,390 @@
+{
+  "@@locale": "en",
+  "activePlansEmptyMessage": "Publish a simple plan to start coordinating nearby.",
+  "activePlansEmptyTitle": "No active plans yet",
+  "activePlansLimit": "You can keep up to {limit} active plans at once.",
+  "@activePlansLimit": {
+    "placeholders": {
+      "limit": {
+        "type": "int"
+      }
+    }
+  },
+  "activePlansTitle": "Your active plans",
+  "activitiesFocusSubtitle": "Keep the current plan visible while you review requests.",
+  "activitiesFocusTitle": "Primary plan",
+  "activitiesTitle": "Create a plan",
+  "activity": "Activity",
+  "activityChat": "Chat",
+  "activityCoffee": "Coffee",
+  "activityCowork": "Cowork",
+  "activityEvent": "Event",
+  "activityGames": "Games",
+  "activityIndoor": "Indoor",
+  "activityMovie": "Movie",
+  "activityOutdoor": "Outdoor",
+  "activitySports": "Sports",
+  "activityStatusCancelled": "Cancelled",
+  "activityStatusCompleted": "Completed",
+  "activityStatusDraft": "Draft",
+  "activityStatusFull": "Full",
+  "activityStatusOpen": "Open",
+  "activityDurationMinutes": "{minutes} min",
+  "@activityDurationMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "activityWalk": "Walk",
+  "analyticsAuthGuestPreviewSelected": "Guest preview selected",
+  "analyticsAuthPhoneSelected": "Phone sign-in selected",
+  "analyticsChatMessageSent": "Chat message sent",
+  "analyticsExploreCategorySelected": "Explore category selected",
+  "analyticsExploreSurfaceSelected": "Explore surface selected",
+  "analyticsJoinRequestApproved": "Join request approved",
+  "analyticsJoinRequestRejected": "Join request rejected",
+  "analyticsJoinRequestSubmitted": "Join request submitted",
+  "analyticsMapJoinRequestSubmitted": "Map join request submitted",
+  "analyticsMapNearbyJoinRequestSubmitted": "Nearby map join request submitted",
+  "analyticsOnboardingCompleted": "Onboarding completed",
+  "analyticsPlanPublished": "Plan published",
+  "analyticsProfileUpdated": "Profile updated",
+  "analyticsSafetyReportSubmitted": "Safety report submitted",
+  "analyticsSafetyUserBlocked": "User blocked",
+  "analyticsSessionSignedOut": "Signed out",
+  "analyticsSettingsLocationPrivacy": "Approximate location updated",
+  "analyticsSettingsNotifications": "Notifications updated",
+  "analyticsSettingsSafeMeetup": "Safe meetup reminders updated",
+  "analyticsSummaryAuth": "{count} auth actions",
+  "@analyticsSummaryAuth": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "analyticsSummaryCoordination": "{count} coordination actions",
+  "@analyticsSummaryCoordination": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "analyticsSummarySafety": "{count} safety actions",
+  "@analyticsSummarySafety": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "approveRequest": "Approve",
+  "authSubtitle": "Sign in to create nearby plans, join others, and coordinate in a low-pressure way.",
+  "authTitle": "Start with a simple plan",
+  "authPhoneEmpty": "Enter a phone number to continue.",
+  "authPhoneCodeSentMessage": "We sent a verification code. Enter it below to finish phone sign-in.",
+  "authPhoneCodeSentTitle": "Verification code sent",
+  "authCodeConfirm": "Confirm code",
+  "authCodeEmpty": "Enter the 6-digit verification code.",
+  "authCodeExpired": "This verification code expired. Start phone sign-in again.",
+  "authCodeFieldHint": "123456",
+  "authCodeFieldLabel": "Verification code",
+  "authCodeInvalid": "Enter the latest 6-digit code we sent.",
+  "authCodeSubmitting": "Verifying code...",
+  "authCodeTooManyRequests": "Too many attempts. Wait a bit and try again.",
+  "authPhoneFailed": "Phone sign-in could not start right now.",
+  "authPhoneFieldHelper": "Use a reachable number. Adding a country code like +90 keeps verification clearer.",
+  "authPhoneFieldHint": "+90 555 000 00 00",
+  "authPhoneFieldLabel": "Phone number",
+  "authPhoneInvalid": "Enter a valid phone number.",
+  "authPhoneSubmitting": "Starting phone sign-in...",
+  "authPhoneUnsupported": "Phone verification UI is not fully connected yet on this platform.",
+  "authPhoneVerificationPending": "Enter the code we sent to finish sign-in.",
+  "availabilityAfternoons": "Afternoons",
+  "availabilityEvenings": "Evenings",
+  "availabilityMornings": "Mornings",
+  "availabilityWeekends": "Weekends",
+  "blockUser": "Block user",
+  "chatActivityLabel": "Activity: {activityId}",
+  "@chatActivityLabel": {
+    "placeholders": {
+      "activityId": {
+        "type": "String"
+      }
+    }
+  },
+  "chatComposerHint": "Share a practical message",
+  "chatEmptyMessage": "Once a join request is approved, the conversation can stay focused on timing and meeting details.",
+  "chatEmptyTitle": "No approved chats yet",
+  "chatHistoryEmpty": "No messages yet.",
+  "chatHistoryTitle": "Recent messages",
+  "chatParticipantsCount": "{count} participants",
+  "@chatParticipantsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "chatPrimaryThreadEmpty": "Choose an approved thread to start coordinating.",
+  "chatPrimaryThreadSubtitle": "Your main coordination thread stays pinned here.",
+  "chatPrimaryThreadTitle": "Primary thread",
+  "chatQuickRepliesHint": "Use short coordination replies to keep plans moving.",
+  "chatQuickRepliesTitle": "Quick replies",
+  "chatSafetyBanner": "Meet in a public, easy-to-find place and keep exact details in approved chat only.",
+  "chatThreadCreatedPreview": "Approved request. You can coordinate here.",
+  "chatTitle": "Coordination chat",
+  "commonCancel": "Cancel",
+  "commonOff": "Off",
+  "commonOn": "On",
+  "continueAsGuestPreview": "Preview the experience",
+  "continueWithPhone": "Continue with phone",
+  "createPlanField": "Field",
+  "createPlanFieldCategory": "Category",
+  "createPlanFieldCity": "City",
+  "createPlanFieldDescription": "Description",
+  "createPlanFieldDuration": "Duration",
+  "createPlanFieldIndoor": "Indoor setting",
+  "createPlanFieldLocation": "Approximate location",
+  "createPlanFieldTime": "Date and time",
+  "createPlanFieldTitle": "Title",
+  "createPlanPickDateTime": "Pick date and time",
+  "createPlanSubtitle": "Keep the post short, specific, and easy to join.",
+  "createPlanTitle": "Plan details",
+  "exploreCategoryAll": "All",
+  "exploreCategoryFilters": "Categories",
+  "exploreCategoryHint": "Choose the kinds of plans you want to see first.",
+  "exploreDiscoveryHint": "Time and proximity lead the experience, not endless browsing.",
+  "exploreDiscoverySections": "Discovery surfaces",
+  "exploreEmptyMessage": "Try another surface or create a plan so people can find you.",
+  "exploreEmptyTitle": "No plans match this view",
+  "exploreReasonActivityMatch": "Matches your preferred activities",
+  "exploreReasonGroupMatch": "Fits your group preference",
+  "exploreReasonOpenNow": "Open for quick coordination",
+  "exploreReasonTimeMatch": "Fits your active time",
+  "exploreSafetyHint": "Privacy and trust should stay clear while people make quick plans.",
+  "exploreSuggestedPlans": "Suggested plans",
+  "exploreSuggestedReasonTitle": "Why this fits",
+  "exploreTitle": "Explore plans",
+  "finishSetup": "Finish setup",
+  "groupPreferenceFlexible": "Flexible",
+  "groupPreferenceOneOnOne": "One-on-one",
+  "groupPreferenceSmallGroup": "Small group",
+  "joinOwnPlanNotice": "This is your plan.",
+  "joinPlan": "Request to join",
+  "joinPlanFullNotice": "This plan is already full.",
+  "joinRequestApprovedNotice": "You are approved for this plan.",
+  "joinRequestAwaitingApproval": "Awaiting approval.",
+  "joinRequestDefaultMessage": "Hi, I can join and coordinate easily.",
+  "joinRequestDialogHint": "Keep it short and practical.",
+  "joinRequestDialogTitle": "Send a join request",
+  "joinRequestFieldLabel": "Message",
+  "joinRequestPresetFlexible": "I can adapt to the timing if needed.",
+  "joinRequestPresetNearby": "I am nearby and can get there easily.",
+  "joinRequestPresetTimeFit": "This time works well for me.",
+  "joinRequestPresetTitle": "Quick message ideas",
+  "joinRequestRejectedNotice": "This request was not approved.",
+  "joinRequestsEmpty": "No join requests yet.",
+  "joinRequestsNoPlanSelected": "Select or create a plan to review requests.",
+  "joinRequestsPendingCount": "{count} pending requests",
+  "@joinRequestsPendingCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "joinRequestsSubtitle": "Review requests and keep approvals lightweight.",
+  "joinRequestsTitle": "Join requests",
+  "joinRequestSend": "Send request",
+  "joinRequestSent": "Join request sent.",
+  "mapNearbyPlansTitle": "Nearby plans",
+  "mapPlaceholder": "Approximate activity map preview",
+  "mapPrivacyApproximate": "Approximate area visible",
+  "mapPrivacyHidden": "Map visibility is hidden right now.",
+  "mapPrivacyMessage": "Public maps should show area-level context, not exact meetup points.",
+  "mapPrivacyTitle": "Approximate map only",
+  "mapRecommendedEmpty": "No map suggestions yet.",
+  "mapRecommendedTitle": "Recommended nearby",
+  "mapTitle": "Nearby map",
+  "moodCalm": "Calm",
+  "moodCasual": "Casual",
+  "moodEnergetic": "Energetic",
+  "moodFocused": "Focused",
+  "moodGroupFriendly": "Group-friendly",
+  "navChat": "Chat",
+  "navExplore": "Explore",
+  "navMap": "Map",
+  "navPlans": "Plans",
+  "navProfile": "Profile",
+  "onboardingActivityPreferencesTitle": "Favorite activity types",
+  "onboardingAvailabilityTitle": "Availability",
+  "onboardingCompletionScore": "{score}% complete",
+  "@onboardingCompletionScore": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "onboardingCompletionTitle": "Profile completion",
+  "onboardingFieldBio": "Short bio",
+  "onboardingFieldCity": "City",
+  "onboardingFieldGroupPreference": "Group preference",
+  "onboardingFieldMood": "Social mood",
+  "onboardingFieldName": "Display name",
+  "onboardingItemAvailability": "Availability and notifications",
+  "onboardingItemBio": "Short bio and social style",
+  "onboardingItemIdentity": "Display name and city",
+  "onboardingItemInterests": "Interests and favorite activities",
+  "onboardingItemPhoto": "Profile photo",
+  "onboardingProfileHint": "Keep setup short, practical, and activity-first.",
+  "onboardingProfileSection": "Profile essentials",
+  "onboardingSafetyApproximateLocation": "Approximate location defaults",
+  "onboardingSafetyHint": "Trust tools should be visible before the first meetup.",
+  "onboardingSafetyReminder": "Meetup reminders",
+  "onboardingSafetyReportBlock": "Report and block tools",
+  "onboardingSafetyVerification": "Verification architecture",
+  "onboardingTitle": "Build a trustworthy profile",
+  "openExploreAction": "Open explore",
+  "openPlansAction": "Open plans",
+  "openProfileAction": "Open profile",
+  "openSafetyCenterAction": "Open safety center",
+  "openSettingsAction": "Open settings",
+  "peopleCount": "{current}/{max} people",
+  "@peopleCount": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "planPublishedToast": "Plan published.",
+  "profileAvailabilityTitle": "Active times",
+  "profileCompletion": "{percent}% complete",
+  "@profileCompletion": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "profileEditSubtitle": "Adjust details that help people coordinate with you.",
+  "profileEditTitle": "Edit profile",
+  "profilePhotoAdd": "Add photo",
+  "profilePhotoChange": "Change photo",
+  "profilePhotoFailed": "Profile photo could not be updated.",
+  "profilePhotoReady": "Profile photo is ready to save.",
+  "profilePhotoSectionSubtitle": "A clear, friendly photo helps people recognize you before a meetup.",
+  "profilePhotoSectionTitle": "Profile photo",
+  "profilePhotoUpdated": "Profile photo updated.",
+  "profilePhotoUploading": "Uploading photo...",
+  "profileGateAction": "Complete profile",
+  "profileGateMessage": "Complete at least {completion}% of your profile to create and join plans confidently.",
+  "@profileGateMessage": {
+    "placeholders": {
+      "completion": {
+        "type": "int"
+      }
+    }
+  },
+  "profileGateTitle": "Complete your profile first",
+  "profileGroupPreferenceTitle": "Group preference",
+  "profileMoodLabel": "Social mood: {mood}",
+  "@profileMoodLabel": {
+    "placeholders": {
+      "mood": {
+        "type": "String"
+      }
+    }
+  },
+  "profileQuickActionsSubtitle": "Jump to the trust and preference tools that matter most.",
+  "profileQuickActionsTitle": "Quick actions",
+  "profileSaved": "Profile saved.",
+  "profileTitle": "Your profile",
+  "publishPlan": "Publish plan",
+  "quickReplyConfirmTime": "Can we confirm the time?",
+  "quickReplyOnMyWay": "I am on my way.",
+  "quickReplyRunningLate": "Running a little late.",
+  "quickReplyShareArea": "I will share the approximate area.",
+  "rejectRequest": "Reject",
+  "reportUser": "Report user",
+  "requestStatusApproved": "Approved",
+  "requestStatusCancelled": "Cancelled",
+  "requestStatusPending": "Pending",
+  "requestStatusRejected": "Rejected",
+  "safetyBlockedCount": "{count} blocked",
+  "@safetyBlockedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "safetyBlockedUsersSubtitle": "Blocked users stay hidden from lightweight coordination surfaces.",
+  "safetyBlockedUsersTitle": "Blocked users",
+  "safetyCenterSubtitle": "Trust tools should be simple, direct, and never buried.",
+  "safetyCenterTitle": "Safety center",
+  "safetyEvent": "Safety event",
+  "safetyEventInternal": "Internal trust signal",
+  "safetyEventMeetupReminder": "Meetup reminder enabled",
+  "safetyEventPhoneVerified": "Phone verified",
+  "safetyEventReportSubmitted": "Report submitted",
+  "safetyEventUserBlocked": "User blocked",
+  "safetyEventVisible": "Visible in your safety timeline",
+  "safetyReportAlreadySubmitted": "Report already submitted",
+  "safetyReportedCount": "{count} reports",
+  "@safetyReportedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "safetyReportSubmittedToast": "Report submitted.",
+  "safetySummarySubtitle": "A quick view of your recent trust actions.",
+  "safetySummaryTitle": "Safety summary",
+  "safetyTimelineEmpty": "No safety events yet.",
+  "safetyTimelineSubtitle": "Important trust actions stay visible here.",
+  "safetyTimelineTitle": "Safety timeline",
+  "safetyTitle": "Safety",
+  "safetyUserAlreadyBlocked": "User already blocked",
+  "safetyUserBlockedToast": "User blocked.",
+  "saveProfile": "Save profile",
+  "settingsApproximateLocation": "Use approximate location",
+  "settingsNotifications": "Notifications",
+  "settingsPreferences": "Preferences",
+  "settingsPreferencesSubtitle": "Tune privacy, reminders, and coordination defaults.",
+  "settingsProfileShortcutSubtitle": "Open your profile and update visible details.",
+  "settingsSafeMeetupReminders": "Safe meetup reminders",
+  "settingsSafetyLinkSubtitle": "Open reporting, blocking, and trust timeline tools.",
+  "settingsSafetyLinkTitle": "Safety tools",
+  "settingsSignalsEmpty": "No recent signals yet.",
+  "settingsSignalsSubtitle": "Recent product and trust actions show up here.",
+  "settingsSignalsSummarySubtitle": "A quick count of recent auth, safety, and coordination actions.",
+  "settingsSignalsSummaryTitle": "Signals summary",
+  "settingsSignalsTitle": "Recent signals",
+  "settingsSummarySubtitle": "Review your current coordination preferences.",
+  "settingsSummaryTitle": "Current settings",
+  "settingsTitle": "Settings",
+  "signOut": "Sign out",
+  "surfaceGroups": "Groups",
+  "surfaceNearby": "Nearby",
+  "surfaceNow": "Now",
+  "surfaceTonight": "Tonight",
+  "surfaceWeekend": "Weekend",
+  "trustApprovalDescription": "Chat opens only after the plan owner approves the request.",
+  "trustApprovalLabel": "Approval before chat",
+  "trustApproximateLocationDescription": "Public discovery stays at area level by default.",
+  "trustApproximateLocationLabel": "Approximate location",
+  "trustApprovalDescription": "Chat opens only after the plan owner approves the request.",
+  "trustToolsDescription": "Report and block tools stay easy to reach.",
+  "trustToolsLabel": "Trust tools",
+  "verificationPhone": "Phone verified"
+}

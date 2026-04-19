@@ -1,0 +1,4 @@
+enum RepositorySource {
+  inMemory,
+  firebase,
+}

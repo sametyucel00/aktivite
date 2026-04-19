@@ -1,0 +1,389 @@
+{
+  "@@locale": "tr",
+  "activePlansEmptyMessage": "Yakininda koordinasyon baslatmak icin basit bir plan yayinla.",
+  "activePlansEmptyTitle": "Henuz aktif plan yok",
+  "activePlansLimit": "Ayni anda en fazla {limit} aktif plan acik tutabilirsin.",
+  "@activePlansLimit": {
+    "placeholders": {
+      "limit": {
+        "type": "int"
+      }
+    }
+  },
+  "activePlansTitle": "Aktif planlarin",
+  "activitiesFocusSubtitle": "Istekleri incelerken mevcut planini gorunur tut.",
+  "activitiesFocusTitle": "Odaktaki plan",
+  "activitiesTitle": "Plan olustur",
+  "activity": "Aktivite",
+  "activityChat": "Sohbet",
+  "activityCoffee": "Kahve",
+  "activityCowork": "Birlikte calisma",
+  "activityEvent": "Etkinlik",
+  "activityGames": "Oyun",
+  "activityIndoor": "Kapali mekan",
+  "activityMovie": "Film",
+  "activityOutdoor": "Acik hava",
+  "activitySports": "Spor",
+  "activityStatusCancelled": "Iptal edildi",
+  "activityStatusCompleted": "Tamamlandi",
+  "activityStatusDraft": "Taslak",
+  "activityStatusFull": "Dolu",
+  "activityStatusOpen": "Acik",
+  "activityDurationMinutes": "{minutes} dk",
+  "@activityDurationMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "activityWalk": "Yuruyus",
+  "analyticsAuthGuestPreviewSelected": "Misafir onizlemesi secildi",
+  "analyticsAuthPhoneSelected": "Telefonla giris secildi",
+  "analyticsChatMessageSent": "Sohbet mesaji gonderildi",
+  "analyticsExploreCategorySelected": "Kesif kategorisi secildi",
+  "analyticsExploreSurfaceSelected": "Kesif yuzeyi secildi",
+  "analyticsJoinRequestApproved": "Katilim istegi onaylandi",
+  "analyticsJoinRequestRejected": "Katilim istegi reddedildi",
+  "analyticsJoinRequestSubmitted": "Katilim istegi gonderildi",
+  "analyticsMapJoinRequestSubmitted": "Haritadan katilim istegi gonderildi",
+  "analyticsMapNearbyJoinRequestSubmitted": "Yakin haritadan katilim istegi gonderildi",
+  "analyticsOnboardingCompleted": "Onboarding tamamlandi",
+  "analyticsPlanPublished": "Plan yayinlandi",
+  "analyticsProfileUpdated": "Profil guncellendi",
+  "analyticsSafetyReportSubmitted": "Guvenlik bildirimi gonderildi",
+  "analyticsSafetyUserBlocked": "Kullanici engellendi",
+  "analyticsSessionSignedOut": "Cikis yapildi",
+  "analyticsSettingsLocationPrivacy": "Yaklasik konum ayari guncellendi",
+  "analyticsSettingsNotifications": "Bildirim ayari guncellendi",
+  "analyticsSettingsSafeMeetup": "Guvenli bulusma hatirlatmasi guncellendi",
+  "analyticsSummaryAuth": "{count} kimlik islemi",
+  "@analyticsSummaryAuth": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "analyticsSummaryCoordination": "{count} koordinasyon islemi",
+  "@analyticsSummaryCoordination": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "analyticsSummarySafety": "{count} guvenlik islemi",
+  "@analyticsSummarySafety": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "approveRequest": "Onayla",
+  "authSubtitle": "Yakin planlar olusturmak, baskalarina katilmak ve dusuk baskili sekilde koordine olmak icin giris yap.",
+  "authTitle": "Basit bir planla basla",
+  "authPhoneEmpty": "Devam etmek icin bir telefon numarasi gir.",
+  "authPhoneCodeSentMessage": "Bir dogrulama kodu gonderdik. Telefonla girisi tamamlamak icin asagida gir.",
+  "authPhoneCodeSentTitle": "Dogrulama kodu gonderildi",
+  "authCodeConfirm": "Kodu onayla",
+  "authCodeEmpty": "6 haneli dogrulama kodunu gir.",
+  "authCodeExpired": "Bu dogrulama kodunun suresi doldu. Telefonla girisi yeniden baslat.",
+  "authCodeFieldHint": "123456",
+  "authCodeFieldLabel": "Dogrulama kodu",
+  "authCodeInvalid": "Gonderdigimiz guncel 6 haneli kodu gir.",
+  "authCodeSubmitting": "Kod dogrulaniyor...",
+  "authCodeTooManyRequests": "Cok fazla deneme yapildi. Biraz bekleyip tekrar dene.",
+  "authPhoneFailed": "Telefonla giris su anda baslatilamadi.",
+  "authPhoneFieldHelper": "Ulasilabilir bir numara kullan. +90 gibi ulke kodu eklemek dogrulamayi netlestirir.",
+  "authPhoneFieldHint": "+90 555 000 00 00",
+  "authPhoneFieldLabel": "Telefon numarasi",
+  "authPhoneInvalid": "Gecerli bir telefon numarasi gir.",
+  "authPhoneSubmitting": "Telefonla giris baslatiliyor...",
+  "authPhoneUnsupported": "Telefon dogrulama arayuzu bu platformda henuz tam baglanmadi.",
+  "authPhoneVerificationPending": "Girisi tamamlamak icin gonderdigimiz kodu gir.",
+  "availabilityAfternoons": "Ogleden sonralari",
+  "availabilityEvenings": "Aksamlari",
+  "availabilityMornings": "Sabahlari",
+  "availabilityWeekends": "Hafta sonlari",
+  "blockUser": "Kullaniciyi engelle",
+  "chatActivityLabel": "Aktivite: {activityId}",
+  "@chatActivityLabel": {
+    "placeholders": {
+      "activityId": {
+        "type": "String"
+      }
+    }
+  },
+  "chatComposerHint": "Pratik bir mesaj yaz",
+  "chatEmptyMessage": "Bir katilim istegi onaylandiginda konusma zamanlama ve bulusma detaylarina odaklanabilir.",
+  "chatEmptyTitle": "Henuz onayli sohbet yok",
+  "chatHistoryEmpty": "Henuz mesaj yok.",
+  "chatHistoryTitle": "Son mesajlar",
+  "chatParticipantsCount": "{count} katilimci",
+  "@chatParticipantsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "chatPrimaryThreadEmpty": "Koordinasyona baslamak icin onayli bir sohbet sec.",
+  "chatPrimaryThreadSubtitle": "Ana koordinasyon sohbetin burada sabit kalir.",
+  "chatPrimaryThreadTitle": "Ana sohbet",
+  "chatQuickRepliesHint": "Plani ilerletmek icin kisa koordinasyon yanitlari kullan.",
+  "chatQuickRepliesTitle": "Hazir yanitlar",
+  "chatSafetyBanner": "Herkese acik ve kolay bulunur bir yerde bulus; tam detaylari sadece onayli sohbette paylas.",
+  "chatThreadCreatedPreview": "Istek onaylandi. Buradan koordine olabilirsiniz.",
+  "chatTitle": "Koordinasyon sohbeti",
+  "commonCancel": "Iptal",
+  "commonOff": "Kapali",
+  "commonOn": "Acik",
+  "continueAsGuestPreview": "Deneyimi incele",
+  "continueWithPhone": "Telefon ile devam et",
+  "createPlanField": "Alan",
+  "createPlanFieldCategory": "Kategori",
+  "createPlanFieldCity": "Sehir",
+  "createPlanFieldDescription": "Aciklama",
+  "createPlanFieldDuration": "Sure",
+  "createPlanFieldIndoor": "Kapali mekan tercihi",
+  "createPlanFieldLocation": "Yaklasik konum",
+  "createPlanFieldTime": "Tarih ve saat",
+  "createPlanFieldTitle": "Baslik",
+  "createPlanPickDateTime": "Tarih ve saat sec",
+  "createPlanSubtitle": "Ilani kisa, net ve katilmasi kolay tut.",
+  "createPlanTitle": "Plan detaylari",
+  "exploreCategoryAll": "Tumleri",
+  "exploreCategoryFilters": "Kategoriler",
+  "exploreCategoryHint": "Once gormek istedigin plan turlerini sec.",
+  "exploreDiscoveryHint": "Deneyimi sonsuz gezinme degil, zaman ve yakinlik yonlendirir.",
+  "exploreDiscoverySections": "Kesif yuzeyleri",
+  "exploreEmptyMessage": "Baska bir yuzey dene ya da insanlarin seni bulmasi icin plan olustur.",
+  "exploreEmptyTitle": "Bu gorunume uyan plan yok",
+  "exploreReasonActivityMatch": "Sevdigin aktivitelere uyuyor",
+  "exploreReasonGroupMatch": "Grup tercihine uyuyor",
+  "exploreReasonOpenNow": "Hizli koordinasyona acik",
+  "exploreReasonTimeMatch": "Musait zamanina uyuyor",
+  "exploreSafetyHint": "Insanlar hizli plan yaparken gizlilik ve guven net kalmali.",
+  "exploreSuggestedPlans": "Onerilen planlar",
+  "exploreSuggestedReasonTitle": "Neden uygun",
+  "exploreTitle": "Planlari kesfet",
+  "finishSetup": "Kurulumu bitir",
+  "groupPreferenceFlexible": "Esnek",
+  "groupPreferenceOneOnOne": "Bire bir",
+  "groupPreferenceSmallGroup": "Kucuk grup",
+  "joinOwnPlanNotice": "Bu plan sana ait.",
+  "joinPlan": "Katilim istegi gonder",
+  "joinPlanFullNotice": "Bu plan dolu.",
+  "joinRequestApprovedNotice": "Bu plan icin onaylandin.",
+  "joinRequestAwaitingApproval": "Onay bekleniyor.",
+  "joinRequestDefaultMessage": "Merhaba, katilabilirim ve kolayca koordine olabilirim.",
+  "joinRequestDialogHint": "Mesaji kisa ve pratik tut.",
+  "joinRequestDialogTitle": "Katilim istegi gonder",
+  "joinRequestFieldLabel": "Mesaj",
+  "joinRequestPresetFlexible": "Gerekirse saate uyum saglayabilirim.",
+  "joinRequestPresetNearby": "Yakinim ve kolayca gelebilirim.",
+  "joinRequestPresetTimeFit": "Bu saat benim icin uygun.",
+  "joinRequestPresetTitle": "Hazir mesaj fikirleri",
+  "joinRequestRejectedNotice": "Bu istek onaylanmadi.",
+  "joinRequestsEmpty": "Henuz katilim istegi yok.",
+  "joinRequestsNoPlanSelected": "Istekleri gormek icin bir plan sec veya olustur.",
+  "joinRequestsPendingCount": "{count} bekleyen istek",
+  "@joinRequestsPendingCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "joinRequestsSubtitle": "Istekleri incele ve onay surecini hafif tut.",
+  "joinRequestsTitle": "Katilim istekleri",
+  "joinRequestSend": "Istegi gonder",
+  "joinRequestSent": "Katilim istegi gonderildi.",
+  "mapNearbyPlansTitle": "Yakindaki planlar",
+  "mapPlaceholder": "Yaklasik aktivite haritasi onizlemesi",
+  "mapPrivacyApproximate": "Yaklasik alan gorunur",
+  "mapPrivacyHidden": "Harita gorunurlugu su an gizli.",
+  "mapPrivacyMessage": "Herkese acik haritalar tam bulusma noktasi degil, bolge duzeyi baglam gostermeli.",
+  "mapPrivacyTitle": "Sadece yaklasik harita",
+  "mapRecommendedEmpty": "Henuz harita onerisi yok.",
+  "mapRecommendedTitle": "Onerilen yakin planlar",
+  "mapTitle": "Yakinindaki harita",
+  "moodCalm": "Sakin",
+  "moodCasual": "Rahat",
+  "moodEnergetic": "Enerjik",
+  "moodFocused": "Odakli",
+  "moodGroupFriendly": "Grup uyumlu",
+  "navChat": "Sohbet",
+  "navExplore": "Kesfet",
+  "navMap": "Harita",
+  "navPlans": "Planlar",
+  "navProfile": "Profil",
+  "onboardingActivityPreferencesTitle": "Sevdigin aktivite turleri",
+  "onboardingAvailabilityTitle": "Musaitlik",
+  "onboardingCompletionScore": "%{score} tamamlandi",
+  "@onboardingCompletionScore": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "onboardingCompletionTitle": "Profil tamamlama",
+  "onboardingFieldBio": "Kisa biyografi",
+  "onboardingFieldCity": "Sehir",
+  "onboardingFieldGroupPreference": "Grup tercihi",
+  "onboardingFieldMood": "Sosyal ruh hali",
+  "onboardingFieldName": "Gorunen ad",
+  "onboardingItemAvailability": "Musaitlik ve bildirimler",
+  "onboardingItemBio": "Kisa biyografi ve sosyal stil",
+  "onboardingItemIdentity": "Gorunen ad ve sehir",
+  "onboardingItemInterests": "Ilgi alanlari ve sevdigi aktiviteler",
+  "onboardingItemPhoto": "Profil fotografi",
+  "onboardingProfileHint": "Kurulumu kisa, pratik ve aktivite odakli tut.",
+  "onboardingProfileSection": "Profil temelleri",
+  "onboardingSafetyApproximateLocation": "Yaklasik konum varsayilanlari",
+  "onboardingSafetyHint": "Ilk bulusmadan once guven araclari gorunur olmali.",
+  "onboardingSafetyReminder": "Guvenli bulusma hatirlatmalari",
+  "onboardingSafetyReportBlock": "Bildirme ve engelleme araclari",
+  "onboardingSafetyVerification": "Dogrulama mimarisi",
+  "onboardingTitle": "Guven veren bir profil olustur",
+  "openExploreAction": "Kesfi ac",
+  "openPlansAction": "Planlari ac",
+  "openProfileAction": "Profili ac",
+  "openSafetyCenterAction": "Guvenlik merkezini ac",
+  "openSettingsAction": "Ayarlari ac",
+  "peopleCount": "{current}/{max} kisi",
+  "@peopleCount": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "planPublishedToast": "Plan yayinlandi.",
+  "profileAvailabilityTitle": "Aktif zamanlar",
+  "profileCompletion": "%{percent} tamamlandi",
+  "@profileCompletion": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "profileEditSubtitle": "Insanlarin seninle kolay koordine olmasina yardim eden detaylari guncelle.",
+  "profileEditTitle": "Profili duzenle",
+  "profilePhotoAdd": "Fotograf ekle",
+  "profilePhotoChange": "Fotografi degistir",
+  "profilePhotoFailed": "Profil fotografi guncellenemedi.",
+  "profilePhotoReady": "Profil fotografi kaydetmeye hazir.",
+  "profilePhotoSectionSubtitle": "Net ve samimi bir fotograf, bulusma oncesinde insanlarin seni tanimasini kolaylastirir.",
+  "profilePhotoSectionTitle": "Profil fotografi",
+  "profilePhotoUpdated": "Profil fotografi guncellendi.",
+  "profilePhotoUploading": "Fotograf yukleniyor...",
+  "profileGateAction": "Profili tamamla",
+  "profileGateMessage": "Plan olusturmak ve katilmak icin profilinin en az %{completion} tamamlanmis olmasi gerekiyor.",
+  "@profileGateMessage": {
+    "placeholders": {
+      "completion": {
+        "type": "int"
+      }
+    }
+  },
+  "profileGateTitle": "Once profilini tamamla",
+  "profileGroupPreferenceTitle": "Grup tercihi",
+  "profileMoodLabel": "Sosyal ruh hali: {mood}",
+  "@profileMoodLabel": {
+    "placeholders": {
+      "mood": {
+        "type": "String"
+      }
+    }
+  },
+  "profileQuickActionsSubtitle": "Guven ve tercih araclarina hizlica gec.",
+  "profileQuickActionsTitle": "Hizli islevler",
+  "profileSaved": "Profil kaydedildi.",
+  "profileTitle": "Profilin",
+  "publishPlan": "Plani yayinla",
+  "quickReplyConfirmTime": "Saati netlestirebilir miyiz?",
+  "quickReplyOnMyWay": "Yoldayim.",
+  "quickReplyRunningLate": "Biraz gecikecegim.",
+  "quickReplyShareArea": "Yaklasik bolgeyi paylasacagim.",
+  "rejectRequest": "Reddet",
+  "reportUser": "Kullaniciyi bildir",
+  "requestStatusApproved": "Onaylandi",
+  "requestStatusCancelled": "Iptal edildi",
+  "requestStatusPending": "Bekliyor",
+  "requestStatusRejected": "Reddedildi",
+  "safetyBlockedCount": "{count} engelli",
+  "@safetyBlockedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "safetyBlockedUsersSubtitle": "Engelledigin kullanicilar hafif koordinasyon yuzeylerinden gizli kalir.",
+  "safetyBlockedUsersTitle": "Engellenen kullanicilar",
+  "safetyCenterSubtitle": "Guven araclari basit, dogrudan ve asla gizli olmamali.",
+  "safetyCenterTitle": "Guvenlik merkezi",
+  "safetyEvent": "Guvenlik olayi",
+  "safetyEventInternal": "Dahili guven sinyali",
+  "safetyEventMeetupReminder": "Bulusma hatirlatmasi etkin",
+  "safetyEventPhoneVerified": "Telefon dogrulandi",
+  "safetyEventReportSubmitted": "Bildirim gonderildi",
+  "safetyEventUserBlocked": "Kullanici engellendi",
+  "safetyEventVisible": "Guvenlik zaman cizelgesinde gorunur",
+  "safetyReportAlreadySubmitted": "Bildirim zaten gonderildi",
+  "safetyReportedCount": "{count} bildirim",
+  "@safetyReportedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "safetyReportSubmittedToast": "Bildirim gonderildi.",
+  "safetySummarySubtitle": "Son guven eylemlerinin hizli ozeti.",
+  "safetySummaryTitle": "Guvenlik ozeti",
+  "safetyTimelineEmpty": "Henuz guvenlik olayi yok.",
+  "safetyTimelineSubtitle": "Onemli guven eylemleri burada gorunur kalir.",
+  "safetyTimelineTitle": "Guvenlik zaman cizelgesi",
+  "safetyTitle": "Guvenlik",
+  "safetyUserAlreadyBlocked": "Kullanici zaten engelli",
+  "safetyUserBlockedToast": "Kullanici engellendi.",
+  "saveProfile": "Profili kaydet",
+  "settingsApproximateLocation": "Yaklasik konum kullan",
+  "settingsNotifications": "Bildirimler",
+  "settingsPreferences": "Tercihler",
+  "settingsPreferencesSubtitle": "Gizlilik, hatirlatma ve koordinasyon varsayilanlarini ayarla.",
+  "settingsProfileShortcutSubtitle": "Profilini ac ve gorunen detaylari guncelle.",
+  "settingsSafeMeetupReminders": "Guvenli bulusma hatirlatmalari",
+  "settingsSafetyLinkSubtitle": "Bildirme, engelleme ve guven zaman cizelgesi araclarini ac.",
+  "settingsSafetyLinkTitle": "Guvenlik araclari",
+  "settingsSignalsEmpty": "Henuz sinyal yok.",
+  "settingsSignalsSubtitle": "Son urun ve guven eylemleri burada gorunur.",
+  "settingsSignalsSummarySubtitle": "Son kimlik, guvenlik ve koordinasyon eylemlerinin hizli sayimi.",
+  "settingsSignalsSummaryTitle": "Sinyal ozeti",
+  "settingsSignalsTitle": "Son sinyaller",
+  "settingsSummarySubtitle": "Mevcut koordinasyon tercihlerini gozden gecir.",
+  "settingsSummaryTitle": "Mevcut ayarlar",
+  "settingsTitle": "Ayarlar",
+  "signOut": "Cikis yap",
+  "surfaceGroups": "Gruplar",
+  "surfaceNearby": "Yakininda",
+  "surfaceNow": "Simdi",
+  "surfaceTonight": "Bu aksam",
+  "surfaceWeekend": "Hafta sonu",
+  "trustApprovalDescription": "Sohbet ancak plan sahibi istegi onayladiktan sonra acilir.",
+  "trustApprovalLabel": "Sohbetten once onay",
+  "trustApproximateLocationDescription": "Herkese acik kesif varsayilan olarak bolge duzeyinde kalir.",
+  "trustApproximateLocationLabel": "Yaklasik konum",
+  "trustToolsDescription": "Bildirme ve engelleme araclari kolayca ulasilabilir kalir.",
+  "trustToolsLabel": "Guven araclari",
+  "verificationPhone": "Telefon dogrulandi"
+}
