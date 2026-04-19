@@ -28,9 +28,15 @@ class InMemoryJoinRequestRepository implements JoinRequestRepository {
     required String activityId,
     required String message,
   }) async {
+    final normalizedActivityId = activityId.trim();
+    final normalizedMessage = message.trim();
+    if (normalizedActivityId.isEmpty || normalizedMessage.isEmpty) {
+      return;
+    }
+
     final hasActiveRequest = _requests.any(
       (request) =>
-          request.activityId == activityId &&
+          request.activityId == normalizedActivityId &&
           request.requesterId == SampleIds.currentUser &&
           (request.isPending || request.isApproved),
     );
@@ -44,9 +50,9 @@ class InMemoryJoinRequestRepository implements JoinRequestRepository {
           prefix: 'join',
           nextNumber: _requests.length + 1,
         ),
-        activityId: activityId,
+        activityId: normalizedActivityId,
         requesterId: SampleIds.currentUser,
-        message: message,
+        message: normalizedMessage,
         status: JoinRequestStatus.pending,
       ),
     );

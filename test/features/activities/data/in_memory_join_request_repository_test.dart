@@ -23,17 +23,40 @@ void main() {
       final repository = InMemoryJoinRequestRepository();
 
       await repository.submitJoinRequest(
-        activityId: 'activity-2',
-        message: 'I can join after work.',
+        activityId: ' activity-2 ',
+        message: '  I can join after work.  ',
       );
 
       final requests =
           await repository.watchRequestsForActivity('activity-2').first;
 
       expect(requests, hasLength(1));
+      expect(requests.first.activityId, 'activity-2');
       expect(requests.first.requesterId, SampleIds.currentUser);
       expect(requests.first.message, 'I can join after work.');
       expect(requests.first.status, JoinRequestStatus.pending);
+    });
+
+    test('submitJoinRequest ignores blank activity ids or messages', () async {
+      final repository = InMemoryJoinRequestRepository();
+
+      await repository.submitJoinRequest(
+        activityId: 'activity-blank-message',
+        message: '   ',
+      );
+      await repository.submitJoinRequest(
+        activityId: '   ',
+        message: 'I can join.',
+      );
+
+      final blankMessageRequests = await repository
+          .watchRequestsForActivity('activity-blank-message')
+          .first;
+      final blankActivityRequests =
+          await repository.watchRequestsForActivity('').first;
+
+      expect(blankMessageRequests, isEmpty);
+      expect(blankActivityRequests, isEmpty);
     });
 
     test('submitJoinRequest ignores duplicate active request by current user',

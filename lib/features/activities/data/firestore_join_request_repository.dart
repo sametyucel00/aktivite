@@ -38,6 +38,12 @@ class FirestoreJoinRequestRepository implements JoinRequestRepository {
     required String activityId,
     required String message,
   }) async {
+    final normalizedActivityId = activityId.trim();
+    final normalizedMessage = message.trim();
+    if (normalizedActivityId.isEmpty || normalizedMessage.isEmpty) {
+      return;
+    }
+
     final userId = _auth().currentUser?.uid;
     if (userId == null) {
       throw StateError(
@@ -46,7 +52,7 @@ class FirestoreJoinRequestRepository implements JoinRequestRepository {
     }
 
     final requests = _activities
-        .doc(activityId)
+        .doc(normalizedActivityId)
         .collection(FirebaseCollectionPaths.joinRequests);
     final document = requests.doc(userId);
     final snapshot = await document.get();
@@ -61,9 +67,9 @@ class FirestoreJoinRequestRepository implements JoinRequestRepository {
       ...joinRequestToMap(
         JoinRequest(
           id: document.id,
-          activityId: activityId,
+          activityId: normalizedActivityId,
           requesterId: userId,
-          message: message,
+          message: normalizedMessage,
           status: JoinRequestStatus.pending,
         ),
       ),

@@ -20,7 +20,7 @@ This document captures the minimum Firestore and Storage rule boundaries that sh
 ### `activities/{activityId}/joinRequests/{requestId}`
 
 - Read: only the activity owner and the requester.
-- Create: only authenticated requester, with `requesterId == request.auth.uid` and `requestId == request.auth.uid` to enforce one active request document per user and activity.
+- Create: only authenticated requester, with `requesterId == request.auth.uid`, `requestId == request.auth.uid`, matching parent `activityId`, and a non-empty message to enforce one meaningful request document per user and activity.
 - Update: only the activity owner for approval/rejection, or the requester for cancellation if that flow is added.
 - Deny writes that change `activityId` or `requesterId` after creation.
 

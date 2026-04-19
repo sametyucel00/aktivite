@@ -41,6 +41,8 @@ service cloud.firestore {
         requestId == uid() &&
         request.resource.data.activityId == activityId &&
         request.resource.data.requesterId == uid() &&
+        request.resource.data.message is string &&
+        request.resource.data.message.size() > 0 &&
         request.resource.data.status == 'pending';
     }
 
