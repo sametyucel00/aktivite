@@ -18,6 +18,8 @@ This document maps current repository abstractions to the Firebase collections t
 
 The active backend mode is selected through `AppConfig.repositorySource` and exposed to Riverpod through `repositorySourceProvider`. Keep it on `RepositorySource.inMemory` until Firebase-backed implementations are added for the repositories and services behind `lib/shared/providers/repository_factories.dart`.
 
+For the short side-by-side reference, use `docs/repository_source_comparison.md`.
+
 ## Repository Behavior Matrix
 
 | Seam | In-memory behavior | Firebase behavior |

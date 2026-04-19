@@ -97,3 +97,4 @@ These assets are already available before the source flip:
 - `docs/manual_qa_checklist.md` for manual smoke coverage
 - `docs/storage_rules_scenarios.md` for future Storage emulator assertions
 - `docs/safety_backend_contracts.md` for cross-surface safety alignment
+- `docs/repository_source_comparison.md` for a short in-memory vs firebase seam comparison

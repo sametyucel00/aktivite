@@ -53,6 +53,7 @@ If you are validating a larger feature or backend workflow manually after the sc
 - [Architecture](docs/architecture.md)
 - [Firebase setup](docs/firebase.md)
 - [Backend contracts](docs/backend_contracts.md)
+- [Repository source comparison](docs/repository_source_comparison.md)
 - [Safety backend contracts](docs/safety_backend_contracts.md)
 - [Security rules draft](docs/security_rules.md)
 - [Rules checklist](docs/rules_checklist.md)
