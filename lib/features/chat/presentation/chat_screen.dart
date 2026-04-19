@@ -23,6 +23,7 @@ class ChatScreen extends ConsumerStatefulWidget {
 
 class _ChatScreenState extends ConsumerState<ChatScreen> {
   late final TextEditingController _messageController;
+  bool _isSendingMessage = false;
 
   @override
   void initState() {
@@ -45,6 +46,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     final currentUserId = ref.watch(currentUserIdProvider);
     final canSendToPrimary =
         primaryThread?.hasParticipant(currentUserId) ?? false;
+    final canSendMessage = canSendToPrimary && !_isSendingMessage;
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.chatTitle)),
@@ -121,6 +123,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                   child: _ThreadCard(
                     thread: thread,
                     isPrimary: thread.id == primaryThreadId,
+                    isSendingMessage: _isSendingMessage,
                     currentUserId: currentUserId,
                     draftController: thread.id == primaryThreadId
                         ? _messageController
@@ -150,7 +153,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             ),
             child: TextField(
               controller: _messageController,
-              enabled: canSendToPrimary,
+              enabled: canSendMessage,
               maxLength: ChatMessage.maxTextLength,
               onSubmitted: (value) async {
                 await _sendMessage(
@@ -164,18 +167,27 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                 hintText: canSendToPrimary
                     ? l10n.chatComposerHint
                     : l10n.chatPrimaryThreadEmpty,
-                suffixIcon: IconButton(
-                  onPressed: !canSendToPrimary
-                      ? null
-                      : () async {
-                          await _sendMessage(
-                            threadId: primaryThreadId,
-                            senderUserId: currentUserId,
-                            message: _messageController.text,
-                          );
-                        },
-                  icon: const Icon(Icons.send_outlined),
-                ),
+                suffixIcon: _isSendingMessage
+                    ? const Padding(
+                        padding: EdgeInsets.all(AppSpacing.md),
+                        child: SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        ),
+                      )
+                    : IconButton(
+                        onPressed: !canSendMessage
+                            ? null
+                            : () async {
+                                await _sendMessage(
+                                  threadId: primaryThreadId,
+                                  senderUserId: currentUserId,
+                                  message: _messageController.text,
+                                );
+                              },
+                        icon: const Icon(Icons.send_outlined),
+                      ),
               ),
             ),
           ),
@@ -199,19 +211,33 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     if (!draft.hasText || threadId == null || senderUserId == null) {
       return;
     }
+    if (_isSendingMessage) {
+      return;
+    }
     final trimmed = draft.normalizedText;
-    await ref.read(chatRepositoryProvider).sendMessage(
-          threadId: threadId,
-          senderUserId: senderUserId,
-          message: trimmed,
-        );
-    await ref.read(analyticsServiceProvider).logEvent(
-      name: AnalyticsEvents.chatMessageSent,
-      parameters: {
-        'thread_id': threadId,
-      },
-    );
-    _messageController.clear();
+    setState(() {
+      _isSendingMessage = true;
+    });
+    try {
+      await ref.read(chatRepositoryProvider).sendMessage(
+            threadId: threadId,
+            senderUserId: senderUserId,
+            message: trimmed,
+          );
+      await ref.read(analyticsServiceProvider).logEvent(
+        name: AnalyticsEvents.chatMessageSent,
+        parameters: {
+          'thread_id': threadId,
+        },
+      );
+      _messageController.clear();
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSendingMessage = false;
+        });
+      }
+    }
   }
 }
 
@@ -219,6 +245,7 @@ class _ThreadCard extends ConsumerWidget {
   const _ThreadCard({
     required this.thread,
     required this.isPrimary,
+    required this.isSendingMessage,
     required this.currentUserId,
     required this.onSendMessage,
     this.draftController,
@@ -226,6 +253,7 @@ class _ThreadCard extends ConsumerWidget {
 
   final ChatThread thread;
   final bool isPrimary;
+  final bool isSendingMessage;
   final String? currentUserId;
   final TextEditingController? draftController;
   final Future<void> Function(String message) onSendMessage;
@@ -319,12 +347,14 @@ class _ThreadCard extends ConsumerWidget {
                   .map(
                     (reply) => ActionChip(
                       label: Text(reply),
-                      onPressed: () async {
-                        if (draftController != null) {
-                          draftController!.text = reply;
-                        }
-                        await onSendMessage(reply);
-                      },
+                      onPressed: isSendingMessage
+                          ? null
+                          : () async {
+                              if (draftController != null) {
+                                draftController!.text = reply;
+                              }
+                              await onSendMessage(reply);
+                            },
                     ),
                   )
                   .toList(growable: false),
