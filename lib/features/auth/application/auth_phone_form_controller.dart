@@ -45,6 +45,8 @@ class AuthPhoneFormState {
       validateSmsCode(smsCode) == null &&
       !isSubmitting;
 
+  bool get canResendCode => pendingVerificationId != null && !isSubmitting;
+
   AuthPhoneFormState copyWith({
     String? phoneNumber,
     String? smsCode,
@@ -148,6 +150,13 @@ class AuthPhoneFormController extends Notifier<AuthPhoneFormState> {
       );
       return false;
     }
+  }
+
+  Future<bool> resendCode() {
+    if (!state.canResendCode) {
+      return Future<bool>.value(false);
+    }
+    return submit();
   }
 
   bool _applyResult(PhoneAuthResult result) {

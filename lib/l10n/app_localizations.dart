@@ -446,6 +446,18 @@ abstract class AppLocalizations {
   /// **'Enter the latest 6-digit code we sent.'**
   String get authCodeInvalid;
 
+  /// No description provided for @authCodeResend.
+  ///
+  /// In en, this message translates to:
+  /// **'Send code again'**
+  String get authCodeResend;
+
+  /// No description provided for @authCodeResent.
+  ///
+  /// In en, this message translates to:
+  /// **'We sent a new verification code.'**
+  String get authCodeResent;
+
   /// No description provided for @authCodeSubmitting.
   ///
   /// In en, this message translates to:

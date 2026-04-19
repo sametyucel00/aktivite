@@ -79,13 +79,16 @@ class _UnsupportedAuthRepository implements AuthRepository {
 }
 
 class _CodeSentAuthRepository implements AuthRepository {
+  int signInAttempts = 0;
+
   @override
   Stream<String?> authStateChanges() => Stream<String?>.value(null);
 
   @override
   Future<PhoneAuthResult> signInWithPhone({required String phoneNumber}) {
+    signInAttempts += 1;
     return Future<PhoneAuthResult>.value(
-      const PhoneAuthResult.codeSent(verificationId: 'verify-123'),
+      PhoneAuthResult.codeSent(verificationId: 'verify-$signInAttempts'),
     );
   }
 
@@ -201,11 +204,35 @@ void main() {
       expect(success, isFalse);
       expect(
         container.read(authPhoneFormControllerProvider).pendingVerificationId,
-        'verify-123',
+        'verify-1',
       );
       expect(
         container.read(authPhoneFormControllerProvider).error,
         isNull,
+      );
+    });
+
+    test('resendCode refreshes pending verification id', () async {
+      final authRepository = _CodeSentAuthRepository();
+      final container = ProviderContainer(
+        overrides: [
+          authRepositoryProvider.overrideWithValue(authRepository),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      final controller =
+          container.read(authPhoneFormControllerProvider.notifier);
+
+      controller.setPhoneNumber('+90 555 000 00 00');
+      await controller.submit();
+      final resent = await controller.resendCode();
+
+      expect(resent, isFalse);
+      expect(authRepository.signInAttempts, 2);
+      expect(
+        container.read(authPhoneFormControllerProvider).pendingVerificationId,
+        'verify-2',
       );
     });
 

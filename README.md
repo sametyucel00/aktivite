@@ -142,6 +142,7 @@ This repository contains the initial production-oriented scaffold:
 - Auth now collects a real phone number with local validation and submit-state handling before the platform-specific OTP verification UI is fully connected.
 - Auth repositories now return typed phone-verification results so immediate sign-in, code-sent, unsupported-platform, and failure states can share one contract.
 - Auth now includes a second-step SMS code confirmation flow with typed failure mapping for invalid, expired, or rate-limited verification attempts.
+- Auth SMS verification now exposes a resend action while preserving typed pending-verification state.
 - Profile and onboarding flows now share a picker/storage-based photo upload seam so profile media can move to Firebase Storage without leaking SDK code into widgets.
 - Profile media now has a shared file policy for supported image types, sanitized names, and a 5 MB safety limit before uploads reach Storage.
 - Activity creation now carries typed schedule, duration, and approximate-location metadata instead of relying only on a loose time label and city string.

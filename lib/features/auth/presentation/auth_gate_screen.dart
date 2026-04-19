@@ -134,6 +134,34 @@ class AuthGateScreen extends ConsumerWidget {
                                 : l10n.authCodeConfirm,
                           ),
                         ),
+                        const SizedBox(height: AppSpacing.xs),
+                        TextButton(
+                          onPressed: authPhoneState.canResendCode
+                              ? () async {
+                                  final success = await ref
+                                      .read(authPhoneFormControllerProvider
+                                          .notifier)
+                                      .resendCode();
+                                  if (!context.mounted || success) {
+                                    return;
+                                  }
+                                  final currentState = ref.read(
+                                    authPhoneFormControllerProvider,
+                                  );
+                                  showAppSnackBar(
+                                    context,
+                                    currentState.pendingVerificationId != null
+                                        ? l10n.authCodeResent
+                                        : _errorTextFor(
+                                              context,
+                                              currentState.error,
+                                            ) ??
+                                            l10n.authPhoneFailed,
+                                  );
+                                }
+                              : null,
+                          child: Text(l10n.authCodeResend),
+                        ),
                       ],
                     ),
                   ),

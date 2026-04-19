@@ -199,6 +199,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get authCodeInvalid => 'Enter the latest 6-digit code we sent.';
 
   @override
+  String get authCodeResend => 'Send code again';
+
+  @override
+  String get authCodeResent => 'We sent a new verification code.';
+
+  @override
   String get authCodeSubmitting => 'Verifying code...';
 
   @override

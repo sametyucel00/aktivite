@@ -202,6 +202,12 @@ class AppLocalizationsTr extends AppLocalizations {
   String get authCodeInvalid => 'Gonderdigimiz guncel 6 haneli kodu gir.';
 
   @override
+  String get authCodeResend => 'Kodu tekrar gonder';
+
+  @override
+  String get authCodeResent => 'Yeni bir dogrulama kodu gonderdik.';
+
+  @override
   String get authCodeSubmitting => 'Kod dogrulaniyor...';
 
   @override

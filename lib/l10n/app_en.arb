@@ -93,6 +93,8 @@
   "authCodeFieldHint": "123456",
   "authCodeFieldLabel": "Verification code",
   "authCodeInvalid": "Enter the latest 6-digit code we sent.",
+  "authCodeResend": "Send code again",
+  "authCodeResent": "We sent a new verification code.",
   "authCodeSubmitting": "Verifying code...",
   "authCodeTooManyRequests": "Too many attempts. Wait a bit and try again.",
   "authPhoneFailed": "Phone sign-in could not start right now.",

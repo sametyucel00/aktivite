@@ -93,6 +93,8 @@
   "authCodeFieldHint": "123456",
   "authCodeFieldLabel": "Dogrulama kodu",
   "authCodeInvalid": "Gonderdigimiz guncel 6 haneli kodu gir.",
+  "authCodeResend": "Kodu tekrar gonder",
+  "authCodeResent": "Yeni bir dogrulama kodu gonderdik.",
   "authCodeSubmitting": "Kod dogrulaniyor...",
   "authCodeTooManyRequests": "Cok fazla deneme yapildi. Biraz bekleyip tekrar dene.",
   "authPhoneFailed": "Telefonla giris su anda baslatilamadi.",
