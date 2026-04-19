@@ -91,6 +91,15 @@ class JoinPlanAction extends ConsumerWidget {
           if (!showStatus) {
             return const SizedBox.shrink();
           }
+          if (session.userId != null &&
+              plan.ownerUserId != session.userId &&
+              !plan.hasCapacity &&
+              currentUserJoinRequest(requests, session.userId) == null) {
+            return _JoinPlanUnavailableAction(
+              label: statusLabel,
+              style: style,
+            );
+          }
           return _JoinRequestStatusActions(
             label: statusLabel,
             request: currentUserJoinRequest(requests, session.userId),
@@ -153,6 +162,41 @@ class JoinPlanAction extends ConsumerWidget {
       },
       loading: () => const AsyncLoadingView(),
       error: (error, stackTrace) => AsyncErrorView(message: error.toString()),
+    );
+  }
+}
+
+class _JoinPlanUnavailableAction extends StatelessWidget {
+  const _JoinPlanUnavailableAction({
+    required this.label,
+    required this.style,
+  });
+
+  final String label;
+  final JoinPlanActionStyle style;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return Wrap(
+      spacing: AppSpacing.sm,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      children: [
+        Text(
+          label,
+          style: Theme.of(context).textTheme.bodySmall,
+        ),
+        switch (style) {
+          JoinPlanActionStyle.tonal => FilledButton.tonal(
+              onPressed: null,
+              child: Text(l10n.activityStatusFull),
+            ),
+          JoinPlanActionStyle.text => TextButton(
+              onPressed: null,
+              child: Text(l10n.activityStatusFull),
+            ),
+        },
+      ],
     );
   }
 }
