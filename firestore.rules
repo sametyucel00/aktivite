@@ -119,6 +119,45 @@ service cloud.firestore {
         publicActivityHasNoExactLocation();
     }
 
+    function updatesOnlyActivityClientFields() {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+        'participantCount',
+        'status',
+        'workflowSource',
+        'updatedAt'
+      ]);
+    }
+
+    function keepsActivityImmutableFields(activityId) {
+      return request.resource.data.id == activityId &&
+        request.resource.data.ownerUserId == resource.data.ownerUserId &&
+        request.resource.data.title == resource.data.title &&
+        request.resource.data.category == resource.data.category &&
+        request.resource.data.description == resource.data.description &&
+        request.resource.data.city == resource.data.city &&
+        request.resource.data.approximateLocation == resource.data.approximateLocation &&
+        request.resource.data.timeLabel == resource.data.timeLabel &&
+        request.resource.data.timeOption == resource.data.timeOption &&
+        request.resource.data.scheduledAt == resource.data.scheduledAt &&
+        request.resource.data.durationMinutes == resource.data.durationMinutes &&
+        request.resource.data.maxParticipants == resource.data.maxParticipants &&
+        request.resource.data.isIndoor == resource.data.isIndoor &&
+        request.resource.data.surfaces == resource.data.surfaces;
+    }
+
+    function updatesOnlyChatThreadClientFields() {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+        'lastMessagePreview',
+        'updatedAt'
+      ]);
+    }
+
+    function keepsChatThreadIdentity() {
+      return request.resource.data.activityId == resource.data.activityId &&
+        request.resource.data.participantIds == resource.data.participantIds &&
+        request.resource.data.safetyBannerVisible == resource.data.safetyBannerVisible;
+    }
+
     match /profiles/{userId} {
       allow read: if signedIn();
       allow create, update: if isSelf(userId) &&
@@ -135,6 +174,8 @@ service cloud.firestore {
       allow create: if createsOwnActivity(activityId);
       allow update: if signedIn() &&
         resource.data.ownerUserId == uid() &&
+        updatesOnlyActivityClientFields() &&
+        keepsActivityImmutableFields(activityId) &&
         request.resource.data.ownerUserId == resource.data.ownerUserId &&
         publicActivityHasNoExactLocation();
       allow delete: if signedIn() && resource.data.ownerUserId == uid();
@@ -163,7 +204,8 @@ service cloud.firestore {
       allow read: if isThreadParticipant();
       allow create: if false;
       allow update: if isThreadParticipant() &&
-        request.resource.data.participantIds == resource.data.participantIds;
+        updatesOnlyChatThreadClientFields() &&
+        keepsChatThreadIdentity();
       allow delete: if false;
 
       match /messages/{messageId} {

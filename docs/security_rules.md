@@ -15,6 +15,8 @@ This document captures the minimum Firestore and Storage rule boundaries that sh
 - Read: authenticated users can read discoverable activity documents.
 - Create: only authenticated users, with `ownerUserId == request.auth.uid`, `id == activityId`, non-empty core text fields, and no exact public location fields.
 - Update/Delete: only the owner.
+- Update is further limited to client fallback fields: `participantCount`, `status`, `workflowSource`, and `updatedAt`.
+- Activity identity and plan-definition fields such as title, schedule, surfaces, and approximate location remain immutable through direct client updates.
 - Exact live location fields must not be publicly readable.
 
 ### `activities/{activityId}/joinRequests/{requestId}`
@@ -28,7 +30,8 @@ This document captures the minimum Firestore and Storage rule boundaries that sh
 
 - Read: only approved participants.
 - Create: only trusted backend logic through Cloud Functions.
-- Update: only approved participants, limited to coordination-safe fields.
+- Update: only approved participants, limited to `lastMessagePreview` and `updatedAt`.
+- `activityId`, `participantIds`, and `safetyBannerVisible` stay immutable for direct client writes.
 
 ### `chatThreads/{threadId}/messages/{messageId}`
 
