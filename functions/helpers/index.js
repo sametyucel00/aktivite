@@ -3,4 +3,5 @@ module.exports = {
   ...require('./notification_flow_helpers'),
   ...require('./notification_helpers'),
   ...require('./safety_helpers'),
+  ...require('./workflow_helpers'),
 };

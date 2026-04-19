@@ -3,6 +3,14 @@ const assert = require('node:assert/strict');
 const {
   buildReportModerationReasonCode,
   buildBlockedPairIds,
+  buildClosedJoinRequestUpdate,
+  buildInvalidPayloadUpdate,
+  buildJoinRequestApprovedNotificationData,
+  buildJoinRequestCreatedNotificationData,
+  buildJoinRequestRejectedNotificationData,
+  buildMessageCreatedNotificationData,
+  buildApprovedThreadId,
+  buildApprovedThreadPreview,
   collectInvalidTokenRefs,
   getJoinApprovalOutcome,
   hasJoinCapacity,
@@ -73,6 +81,71 @@ test('buildBlockedPairIds returns both block directions', () => {
     'owner-guest',
     'guest-owner',
   ]);
+});
+
+test('workflow helpers build deterministic metadata payloads', () => {
+  assert.deepEqual(buildInvalidPayloadUpdate('invalidReportPayload'), {
+    workflowStatus: 'invalidReportPayload',
+    updatedAt: '<server-timestamp>',
+  });
+  assert.deepEqual(buildClosedJoinRequestUpdate('rejected'), {
+    workflowStatus: 'closedRejected',
+    updatedAt: '<server-timestamp>',
+  });
+  assert.equal(buildApprovedThreadId('activity-1', 'guest-1'), 'activity-activity-1-guest-1');
+  assert.equal(
+    buildApprovedThreadPreview(),
+    'Join request approved. Coordinate the meetup safely.',
+  );
+});
+
+test('workflow helpers build notification payloads', () => {
+  assert.deepEqual(
+    buildJoinRequestCreatedNotificationData({
+      activityId: 'activity-1',
+      requestId: 'guest-1',
+    }),
+    {
+      type: 'join_request_created',
+      activityId: 'activity-1',
+      requestId: 'guest-1',
+    },
+  );
+  assert.deepEqual(
+    buildJoinRequestRejectedNotificationData({
+      activityId: 'activity-1',
+      requestId: 'guest-1',
+    }),
+    {
+      type: 'join_request_rejected',
+      activityId: 'activity-1',
+      requestId: 'guest-1',
+    },
+  );
+  assert.deepEqual(
+    buildJoinRequestApprovedNotificationData({
+      activityId: 'activity-1',
+      requestId: 'guest-1',
+      threadId: 'thread-1',
+    }),
+    {
+      type: 'join_request_approved',
+      activityId: 'activity-1',
+      requestId: 'guest-1',
+      threadId: 'thread-1',
+    },
+  );
+  assert.deepEqual(
+    buildMessageCreatedNotificationData({
+      threadId: 'thread-1',
+      messageId: 'message-1',
+    }),
+    {
+      type: 'message_created',
+      threadId: 'thread-1',
+      messageId: 'message-1',
+    },
+  );
 });
 
 test('mapTokenDocs trims tokens and drops blanks', () => {

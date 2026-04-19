@@ -10,6 +10,14 @@ const { logger } = require('firebase-functions');
 const {
   buildReportModerationReasonCode,
   buildBlockedPairIds,
+  buildClosedJoinRequestUpdate,
+  buildInvalidPayloadUpdate,
+  buildJoinRequestApprovedNotificationData,
+  buildJoinRequestCreatedNotificationData,
+  buildJoinRequestRejectedNotificationData,
+  buildMessageCreatedNotificationData,
+  buildApprovedThreadId,
+  buildApprovedThreadPreview,
   collectInvalidTokenRefs,
   getJoinApprovalOutcome,
   isActiveBlock,
@@ -42,7 +50,7 @@ exports.onJoinRequestCreated = onDocumentCreated(
     if (!activitySnapshot.exists) {
       logger.warn('Join request references missing activity.', { activityId, requestId });
       await snapshot.ref.update({
-        workflowStatus: 'invalidMissingActivity',
+        ...buildInvalidPayloadUpdate('invalidMissingActivity'),
         updatedAt: FieldValue.serverTimestamp(),
       });
       return;
@@ -53,7 +61,7 @@ exports.onJoinRequestCreated = onDocumentCreated(
       logger.warn('Owner attempted to join own activity.', { activityId, requestId });
       await snapshot.ref.update({
         status: 'cancelled',
-        workflowStatus: 'invalidOwnerRequest',
+        ...buildInvalidPayloadUpdate('invalidOwnerRequest'),
         updatedAt: FieldValue.serverTimestamp(),
       });
       return;
@@ -67,11 +75,7 @@ exports.onJoinRequestCreated = onDocumentCreated(
       userIds: ownerRecipients,
       title: 'New join request',
       body: 'Someone wants to join your plan.',
-      data: {
-        type: 'join_request_created',
-        activityId,
-        requestId,
-      },
+      data: buildJoinRequestCreatedNotificationData({ activityId, requestId }),
     });
 
     logger.info('Join request created; owner notification fanout attempted.', {
@@ -124,11 +128,7 @@ exports.onJoinRequestStatusUpdated = onDocumentUpdated(
         userIds: requesterRecipients,
         title: 'Plan request update',
         body: 'Your join request was not approved this time.',
-        data: {
-          type: 'join_request_rejected',
-          activityId,
-          requestId,
-        },
+        data: buildJoinRequestRejectedNotificationData({ activityId, requestId }),
       });
 
       logger.info('Join request rejected; requester notification attempted.', {
@@ -137,7 +137,7 @@ exports.onJoinRequestStatusUpdated = onDocumentUpdated(
         requesterId: after.requesterId,
       });
       await event.data.after.ref.update({
-        workflowStatus: 'closedRejected',
+        ...buildClosedJoinRequestUpdate('rejected'),
         updatedAt: FieldValue.serverTimestamp(),
       });
       return;
@@ -145,7 +145,7 @@ exports.onJoinRequestStatusUpdated = onDocumentUpdated(
 
     if (after.status === 'cancelled') {
       await event.data.after.ref.update({
-        workflowStatus: 'closedCancelled',
+        ...buildClosedJoinRequestUpdate('cancelled'),
         updatedAt: FieldValue.serverTimestamp(),
       });
     }
@@ -161,7 +161,7 @@ exports.onReportCreated = onDocumentCreated('reports/{reportId}', async (event) 
   const report = snapshot.data();
   if (!isValidUserAction(report) || !isAllowedReportReason(report.reason)) {
     await snapshot.ref.update({
-      workflowStatus: 'invalidReportPayload',
+      ...buildInvalidPayloadUpdate('invalidReportPayload'),
       updatedAt: FieldValue.serverTimestamp(),
     });
     logger.warn('Report created with invalid payload.', { reportId: event.params.reportId });
@@ -188,7 +188,7 @@ exports.onBlockCreated = onDocumentCreated('blocks/{blockId}', async (event) => 
   const block = snapshot.data();
   if (!isValidUserAction(block)) {
     await snapshot.ref.update({
-      workflowStatus: 'invalidBlockPayload',
+      ...buildInvalidPayloadUpdate('invalidBlockPayload'),
       updatedAt: FieldValue.serverTimestamp(),
     });
     logger.warn('Block created with invalid payload.', { blockId: event.params.blockId });
@@ -241,11 +241,10 @@ exports.onMessageCreated = onDocumentCreated(
       userIds: recipientIds,
       title: 'New coordination message',
       body: safeNotificationPreview(message.text),
-      data: {
-        type: 'message_created',
+      data: buildMessageCreatedNotificationData({
         threadId: event.params.threadId,
         messageId: event.params.messageId,
-      },
+      }),
     });
 
     logger.info('Message created; notification fanout attempted.', {
@@ -293,7 +292,7 @@ async function handleJoinRequestApproved({ activityId, requestId, request, reque
 
   const activity = activitySnapshot.data();
   const participantIds = [activity.ownerUserId, request.requesterId].filter(Boolean).sort();
-  const threadId = `activity-${activityId}-${request.requesterId}`;
+  const threadId = buildApprovedThreadId(activityId, request.requesterId);
   const threadRef = db.collection('chatThreads').doc(threadId);
 
   const sideEffectsApplied = await db.runTransaction(async (transaction) => {
@@ -388,7 +387,7 @@ async function handleJoinRequestApproved({ activityId, requestId, request, reque
         id: threadId,
         activityId,
         participantIds,
-        lastMessagePreview: 'Join request approved. Coordinate the meetup safely.',
+        lastMessagePreview: buildApprovedThreadPreview(),
         safetyBannerVisible: true,
         createdAt: FieldValue.serverTimestamp(),
         updatedAt: FieldValue.serverTimestamp(),
@@ -416,12 +415,11 @@ async function handleJoinRequestApproved({ activityId, requestId, request, reque
     userIds: requesterRecipients,
     title: 'Your plan request was approved',
     body: 'You can now coordinate the meetup in chat.',
-    data: {
-      type: 'join_request_approved',
+    data: buildJoinRequestApprovedNotificationData({
       activityId,
       requestId,
       threadId,
-    },
+    }),
   });
 
   logger.info('Join request approved side effects completed.', {
