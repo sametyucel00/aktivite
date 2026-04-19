@@ -1,6 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const {
+  buildApprovedThreadDocument,
   buildReportModerationReasonCode,
   buildBlockedPairIds,
   buildOwnerInvalidApprovalUpdate,
@@ -13,6 +14,7 @@ const {
   buildMessageCreatedNotificationData,
   buildApprovedThreadId,
   buildApprovedThreadPreview,
+  buildJoinRequestApprovedNotification,
   buildApprovedParticipantIds,
   collectInvalidTokenRefs,
   getJoinApprovalOutcome,
@@ -34,6 +36,9 @@ const {
   shouldDeleteNormalizedToken,
   stringifyData,
   uniqueUserIds,
+  buildJoinRequestCreatedNotification,
+  buildJoinRequestRejectedNotification,
+  buildMessageCreatedNotification,
 } = require('./helpers');
 
 test('isValidUserAction rejects self-targeted and blank actions', () => {
@@ -116,6 +121,44 @@ test('workflow helpers build deterministic metadata payloads', () => {
     workflowStatus: 'approvalSideEffectsCompleted',
     updatedAt: '<server-timestamp>',
   });
+});
+
+test('notification payload helpers build stable title and body copy', () => {
+  assert.deepEqual(buildJoinRequestCreatedNotification(), {
+    title: 'New join request',
+    body: 'Someone wants to join your plan.',
+  });
+  assert.deepEqual(buildJoinRequestRejectedNotification(), {
+    title: 'Plan request update',
+    body: 'Your join request was not approved this time.',
+  });
+  assert.deepEqual(buildJoinRequestApprovedNotification(), {
+    title: 'Your plan request was approved',
+    body: 'You can now coordinate the meetup in chat.',
+  });
+  assert.deepEqual(buildMessageCreatedNotification('See you soon'), {
+    title: 'New coordination message',
+    body: 'See you soon',
+  });
+});
+
+test('notification payload helpers build approved thread documents', () => {
+  assert.deepEqual(
+    buildApprovedThreadDocument({
+      threadId: 'thread-1',
+      activityId: 'activity-1',
+      participantIds: ['guest', 'owner'],
+    }),
+    {
+      id: 'thread-1',
+      activityId: 'activity-1',
+      participantIds: ['guest', 'owner'],
+      lastMessagePreview: buildApprovedThreadPreview(),
+      safetyBannerVisible: true,
+      createdAt: '<server-timestamp>',
+      updatedAt: '<server-timestamp>',
+    },
+  );
 });
 
 test('workflow helpers build notification payloads', () => {

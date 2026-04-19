@@ -8,6 +8,7 @@ const {
 } = require('firebase-functions/v2/firestore');
 const { logger } = require('firebase-functions');
 const {
+  buildApprovedThreadDocument,
   buildReportModerationReasonCode,
   buildBlockedPairIds,
   buildOwnerInvalidApprovalUpdate,
@@ -19,7 +20,10 @@ const {
   buildJoinRequestRejectedNotificationData,
   buildMessageCreatedNotificationData,
   buildApprovedThreadId,
-  buildApprovedThreadPreview,
+  buildJoinRequestApprovedNotification,
+  buildJoinRequestCreatedNotification,
+  buildJoinRequestRejectedNotification,
+  buildMessageCreatedNotification,
   collectInvalidTokenRefs,
   buildApprovedParticipantIds,
   getJoinApprovalOutcome,
@@ -80,10 +84,11 @@ exports.onJoinRequestCreated = onDocumentCreated(
       actorUserId: request.requesterId,
       recipientIds: [activity.ownerUserId],
     });
+    const ownerNotification = buildJoinRequestCreatedNotification();
     await sendNotificationToUsers({
       userIds: ownerRecipients,
-      title: 'New join request',
-      body: 'Someone wants to join your plan.',
+      title: ownerNotification.title,
+      body: ownerNotification.body,
       data: buildJoinRequestCreatedNotificationData({ activityId, requestId }),
     });
 
@@ -133,10 +138,11 @@ exports.onJoinRequestStatusUpdated = onDocumentUpdated(
         actorUserId: activity.ownerUserId,
         recipientIds: [after.requesterId],
       });
+      const requesterNotification = buildJoinRequestRejectedNotification();
       await sendNotificationToUsers({
         userIds: requesterRecipients,
-        title: 'Plan request update',
-        body: 'Your join request was not approved this time.',
+        title: requesterNotification.title,
+        body: requesterNotification.body,
         data: buildJoinRequestRejectedNotificationData({ activityId, requestId }),
       });
 
@@ -249,10 +255,13 @@ exports.onMessageCreated = onDocumentCreated(
         message.senderUserId,
       ),
     });
+    const messageNotification = buildMessageCreatedNotification(
+      safeNotificationPreview(message.text),
+    );
     await sendNotificationToUsers({
       userIds: recipientIds,
-      title: 'New coordination message',
-      body: safeNotificationPreview(message.text),
+      title: messageNotification.title,
+      body: messageNotification.body,
       data: buildMessageCreatedNotificationData({
         threadId: event.params.threadId,
         messageId: event.params.messageId,
@@ -398,11 +407,11 @@ async function handleJoinRequestApproved({ activityId, requestId, request, reque
     transaction.set(
       threadRef,
       {
-        id: threadId,
-        activityId,
-        participantIds,
-        lastMessagePreview: buildApprovedThreadPreview(),
-        safetyBannerVisible: true,
+        ...buildApprovedThreadDocument({
+          threadId,
+          activityId,
+          participantIds,
+        }),
         createdAt: FieldValue.serverTimestamp(),
         updatedAt: FieldValue.serverTimestamp(),
       },
@@ -425,10 +434,11 @@ async function handleJoinRequestApproved({ activityId, requestId, request, reque
     actorUserId: activity.ownerUserId,
     recipientIds: [request.requesterId],
   });
+  const requesterNotification = buildJoinRequestApprovedNotification();
   await sendNotificationToUsers({
     userIds: requesterRecipients,
-    title: 'Your plan request was approved',
-    body: 'You can now coordinate the meetup in chat.',
+    title: requesterNotification.title,
+    body: requesterNotification.body,
     data: buildJoinRequestApprovedNotificationData({
       activityId,
       requestId,
