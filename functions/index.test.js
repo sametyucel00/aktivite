@@ -2,6 +2,8 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const {
   buildReportModerationReasonCode,
+  buildBlockedPairIds,
+  collectInvalidTokenRefs,
   getJoinApprovalOutcome,
   hasJoinCapacity,
   isActiveBlockData,
@@ -9,9 +11,11 @@ const {
   isInvalidMessagingTokenCode,
   isTokenNormalizationNoop,
   isValidUserAction,
+  mapTokenDocs,
   normalizeNotificationTokenRecord,
   safeNotificationPreview,
   stringifyData,
+  uniqueUserIds,
 } = require('./helpers');
 
 test('isValidUserAction rejects self-targeted and blank actions', () => {
@@ -58,6 +62,46 @@ test('isTokenNormalizationNoop matches already-normalized writes', () => {
     ),
     false,
   );
+});
+
+test('uniqueUserIds de-duplicates and drops falsy values', () => {
+  assert.deepEqual(uniqueUserIds(['a', 'b', 'a', '', null]), ['a', 'b']);
+});
+
+test('buildBlockedPairIds returns both block directions', () => {
+  assert.deepEqual(buildBlockedPairIds('owner', 'guest'), [
+    'owner-guest',
+    'guest-owner',
+  ]);
+});
+
+test('mapTokenDocs trims tokens and drops blanks', () => {
+  const docs = [
+    {
+      ref: { path: 'users/a/token/1' },
+      data: () => ({ token: ' abc ' }),
+    },
+    {
+      ref: { path: 'users/a/token/2' },
+      data: () => ({ token: '   ' }),
+    },
+  ];
+  assert.deepEqual(mapTokenDocs(docs), [
+    { ref: docs[0].ref, token: 'abc' },
+  ]);
+});
+
+test('collectInvalidTokenRefs returns refs for invalid token responses only', () => {
+  const tokenRecords = [{ ref: { id: '1' } }, { ref: { id: '2' } }];
+  const refs = collectInvalidTokenRefs(
+    tokenRecords,
+    [
+      { error: { code: 'messaging/registration-token-not-registered' } },
+      { error: { code: 'messaging/internal-error' } },
+    ],
+    isInvalidMessagingTokenCode,
+  );
+  assert.deepEqual(refs, [{ id: '1' }]);
 });
 
 test('join approval outcome blocks owner, full, and cancelled activities', () => {

@@ -9,15 +9,19 @@ const {
 const { logger } = require('firebase-functions');
 const {
   buildReportModerationReasonCode,
+  buildBlockedPairIds,
+  collectInvalidTokenRefs,
   getJoinApprovalOutcome,
   isActiveBlock,
   isAllowedReportReason,
   isInvalidMessagingTokenCode,
   isTokenNormalizationNoop,
   isValidUserAction,
+  mapTokenDocs,
   normalizeNotificationTokenRecord,
   safeNotificationPreview,
   stringifyData,
+  uniqueUserIds,
 } = require('./helpers');
 
 initializeApp();
@@ -428,14 +432,14 @@ async function handleJoinRequestApproved({ activityId, requestId, request, reque
 }
 
 async function sendNotificationToUsers({ userIds, title, body, data }) {
-  const uniqueUserIds = [...new Set((userIds || []).filter(Boolean))];
-  if (uniqueUserIds.length === 0) {
+  const recipientUserIds = uniqueUserIds(userIds);
+  if (recipientUserIds.length === 0) {
     return;
   }
 
-  const tokenRecords = await collectNotificationTokens(uniqueUserIds);
+  const tokenRecords = await collectNotificationTokens(recipientUserIds);
   if (tokenRecords.length === 0) {
-    logger.info('No notification tokens found for fanout.', { userIds: uniqueUserIds });
+    logger.info('No notification tokens found for fanout.', { userIds: recipientUserIds });
     return;
   }
 
@@ -452,16 +456,20 @@ async function sendNotificationToUsers({ userIds, title, body, data }) {
 }
 
 async function filterBlockedNotificationRecipients({ actorUserId, recipientIds }) {
-  const uniqueRecipientIds = [...new Set((recipientIds || []).filter(Boolean))];
+  const uniqueRecipientIds = uniqueUserIds(recipientIds);
   if (!actorUserId || uniqueRecipientIds.length === 0) {
     return uniqueRecipientIds;
   }
 
   const checks = await Promise.all(
     uniqueRecipientIds.map(async (recipientId) => {
+      const [actorBlockedRecipientId, recipientBlockedActorId] = buildBlockedPairIds(
+        actorUserId,
+        recipientId,
+      );
       const [actorBlockedRecipient, recipientBlockedActor] = await Promise.all([
-        db.collection('blocks').doc(`${actorUserId}-${recipientId}`).get(),
-        db.collection('blocks').doc(`${recipientId}-${actorUserId}`).get(),
+        db.collection('blocks').doc(actorBlockedRecipientId).get(),
+        db.collection('blocks').doc(recipientBlockedActorId).get(),
       ]);
 
       return isActiveBlock(actorBlockedRecipient) || isActiveBlock(recipientBlockedActor)
@@ -480,25 +488,16 @@ async function collectNotificationTokens(userIds) {
     ),
   );
 
-  return snapshots.flatMap((snapshot) =>
-    snapshot.docs
-      .map((doc) => ({
-        ref: doc.ref,
-        token: typeof doc.data().token === 'string' ? doc.data().token.trim() : '',
-      }))
-      .filter((record) => record.token),
-  );
+  return snapshots.flatMap((snapshot) => mapTokenDocs(snapshot.docs));
 }
 
 async function cleanupInvalidTokens(tokenRecords, responses) {
-  const deletes = [];
-
-  responses.forEach((response, index) => {
-    const code = response.error && response.error.code;
-    if (code && isInvalidMessagingTokenCode(code)) {
-      deletes.push(tokenRecords[index].ref.delete());
-    }
-  });
+  const refsToDelete = collectInvalidTokenRefs(
+    tokenRecords,
+    responses,
+    isInvalidMessagingTokenCode,
+  );
+  const deletes = refsToDelete.map((ref) => ref.delete());
 
   if (deletes.length > 0) {
     await Promise.all(deletes);
