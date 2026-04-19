@@ -80,6 +80,19 @@ test('join approval outcome allows normal side effects', () => {
   );
 });
 
+test('join approval outcome rejects missing activity or request payloads', () => {
+  assert.deepEqual(
+    getJoinApprovalOutcome({
+      activity: null,
+      request: { requesterId: 'guest' },
+    }),
+    {
+      allowSideEffects: false,
+      workflowStatus: 'invalidMissingActivity',
+    },
+  );
+});
+
 test('invalid messaging token codes are recognized', () => {
   assert.equal(
     isInvalidMessagingTokenCode('messaging/registration-token-not-registered'),
@@ -92,4 +105,5 @@ test('active block data requires active status', () => {
   assert.equal(isActiveBlockData({ status: 'active' }), true);
   assert.equal(isActiveBlockData({ status: 'inactive' }), false);
   assert.equal(isActiveBlockData(null), false);
+  assert.equal(isActiveBlockData({}), false);
 });

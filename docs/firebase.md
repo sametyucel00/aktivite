@@ -35,6 +35,7 @@ Use `docs/migration_checklist.md` as the step-by-step playbook when replacing in
 - Repository-to-collection ownership is documented in `docs/backend_contracts.md`.
 - Expected Firestore query/index shapes are tracked in `docs/firestore_indexes.md`.
 - Cloud Functions workflow contracts are tracked in `docs/functions_contracts.md`.
+- Cross-cutting trust-and-safety visibility rules are tracked in `docs/safety_backend_contracts.md`.
 
 ## Initial Data Boundaries
 

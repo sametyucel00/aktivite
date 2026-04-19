@@ -92,6 +92,7 @@ Expected query/index combinations for these paths are tracked in `docs/firestore
 - On message created: run lightweight moderation checks and notify other participants unless an active block exists between sender and recipient.
 
 Detailed trigger responsibilities and side effects are tracked in `docs/functions_contracts.md`.
+Cross-cutting block/report/trust behavior is tracked in `docs/safety_backend_contracts.md`.
 
 ## Migration Discipline
 

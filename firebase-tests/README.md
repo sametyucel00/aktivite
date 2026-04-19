@@ -14,4 +14,12 @@ Planned first layers:
 2. Rules tests that assert allow/deny behavior for authenticated actors
 3. Storage rules tests for profile photo and verification paths
 
+Available fixture seeds:
+
+- `fixtures/activity.json`
+- `fixtures/join_request.json`
+- `fixtures/chat_thread.json`
+- `fixtures/report.json`
+- `fixtures/block.json`
+
 This scaffold is present now, but emulator execution is still blocked locally until Java 21 is available for the current Firebase CLI.

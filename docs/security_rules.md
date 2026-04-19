@@ -90,6 +90,8 @@ Prefer Cloud Functions or server-trusted paths for:
 - internal trust-event writes
 - notification fanout
 
+Cross-surface safety behavior such as blocked discovery hiding, blocked chat visibility, and private moderation placeholders is tracked in `docs/safety_backend_contracts.md`.
+
 ## MVP Rule Checklist
 
 1. Lock down public reads for reports, blocks, and moderation events. Implemented in `firestore.rules`.

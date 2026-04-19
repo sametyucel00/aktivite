@@ -1,0 +1,7 @@
+{
+  "id": "guest-1",
+  "activityId": "activity-1",
+  "requesterId": "guest-1",
+  "message": "I can join for coffee.",
+  "status": "pending"
+}

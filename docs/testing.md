@@ -60,6 +60,7 @@ Firebase emulator-based rule checks require JDK 21 or newer with the current Fir
 ## Emulator Scaffold
 
 - `firebase-tests/` contains the initial fixture-oriented scaffold for future Firestore rules tests.
+- `firebase-tests/fixtures/` stores minimal JSON fixtures for activity, join request, chat, report, and block cases so emulator tests can stay deterministic.
 - The scaffold is intentionally lightweight until JDK 21 is available locally and the emulator job is wired into CI.
 
 ## CI Expectation

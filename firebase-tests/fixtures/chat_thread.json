@@ -1,0 +1,7 @@
+{
+  "id": "thread-1",
+  "activityId": "activity-1",
+  "participantIds": ["owner-1", "guest-1"],
+  "lastMessagePreview": "See you at 19:00",
+  "safetyBannerVisible": true
+}

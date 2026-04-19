@@ -58,6 +58,7 @@ After each repository/service migration, verify:
 2. Add required Firestore indexes in line with `docs/firestore_indexes.md`.
 3. Add or stub Cloud Functions in line with `docs/functions_contracts.md`.
 4. Verify device token ownership and notification fanout assumptions.
+5. Keep block/report/trust visibility behavior aligned with `docs/safety_backend_contracts.md`.
 
 ## Phase 6: Source Flip Readiness
 
@@ -74,5 +75,16 @@ After each repository/service migration, verify:
 
 1. Remove only the in-memory seams that are no longer needed.
 2. Preserve test coverage around domain helpers and provider seams.
-3. Update `README.md`, `docs/backend_contracts.md`, and `docs/firebase.md`.
+3. Update `README.md`, `docs/backend_contracts.md`, `docs/firebase.md`, and `docs/safety_backend_contracts.md`.
 4. Keep review diffs scoped by dependency or workflow, not by broad rewrite.
+
+## Current Scaffold Snapshot
+
+The repository already has these migration-prep pieces in place:
+
+- Firebase config is tracked through `lib/firebase_options.dart`
+- Firestore index plan exists in `firestore.indexes.json` and `docs/firestore_indexes.md`
+- initial Cloud Functions scaffold exists in `functions/index.js`
+- pure Cloud Functions helper tests exist in `functions/index.test.js`
+- emulator-focused Firestore rules scaffold exists in `firebase-tests/`
+- widget/provider/model coverage already protects join, chat, safety, and blocked-visibility regressions before the source flip

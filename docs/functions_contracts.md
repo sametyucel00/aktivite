@@ -155,4 +155,4 @@ Outputs:
 
 1. Implement one workflow at a time.
 2. Keep the related repository/service seam testable in `RepositorySource.inMemory`.
-3. Update `docs/backend_contracts.md`, `docs/security_rules.md`, and `docs/migration_checklist.md` when a contract changes.
+3. Update `docs/backend_contracts.md`, `docs/security_rules.md`, `docs/safety_backend_contracts.md`, and `docs/migration_checklist.md` when a contract changes.

@@ -1,0 +1,11 @@
+{
+  "id": "activity-1",
+  "ownerUserId": "owner-1",
+  "title": "Coffee after work",
+  "description": "Short low-pressure meetup",
+  "city": "Istanbul",
+  "approximateLocation": "Moda",
+  "status": "open",
+  "participantCount": 1,
+  "maxParticipants": 4
+}
