@@ -410,9 +410,18 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              '${request.requesterId} - ${_requestStatusLabel(l10n, request.status)}',
-                              style: Theme.of(context).textTheme.titleSmall,
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    request.requesterId,
+                                    style:
+                                        Theme.of(context).textTheme.titleSmall,
+                                  ),
+                                ),
+                                const SizedBox(width: AppSpacing.sm),
+                                _JoinRequestStatusBadge(status: request.status),
+                              ],
                             ),
                             const SizedBox(height: AppSpacing.xs),
                             Text(request.message),
@@ -497,18 +506,69 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
   }
 }
 
-String _requestStatusLabel(
-  AppLocalizations l10n,
-  JoinRequestStatus status,
-) {
-  switch (status) {
-    case JoinRequestStatus.pending:
-      return l10n.requestStatusPending;
-    case JoinRequestStatus.approved:
-      return l10n.requestStatusApproved;
-    case JoinRequestStatus.rejected:
-      return l10n.requestStatusRejected;
-    case JoinRequestStatus.cancelled:
-      return l10n.requestStatusCancelled;
+class _JoinRequestStatusBadge extends StatelessWidget {
+  const _JoinRequestStatusBadge({
+    required this.status,
+  });
+
+  final JoinRequestStatus status;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final scheme = Theme.of(context).colorScheme;
+    final (label, icon, backgroundColor, foregroundColor) =
+        switch (status) {
+      JoinRequestStatus.pending => (
+          l10n.requestStatusPending,
+          Icons.schedule_outlined,
+          scheme.secondaryContainer,
+          scheme.onSecondaryContainer,
+        ),
+      JoinRequestStatus.approved => (
+          l10n.requestStatusApproved,
+          Icons.check_circle_outline,
+          scheme.primaryContainer,
+          scheme.onPrimaryContainer,
+        ),
+      JoinRequestStatus.rejected => (
+          l10n.requestStatusRejected,
+          Icons.close_rounded,
+          scheme.errorContainer,
+          scheme.onErrorContainer,
+        ),
+      JoinRequestStatus.cancelled => (
+          l10n.requestStatusCancelled,
+          Icons.remove_circle_outline,
+          scheme.surfaceContainerHighest,
+          scheme.onSurfaceVariant,
+        ),
+    };
+
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.sm,
+          vertical: 6,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 16, color: foregroundColor),
+            const SizedBox(width: AppSpacing.xs),
+            Text(
+              label,
+              style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                    color: foregroundColor,
+                  ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
