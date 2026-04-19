@@ -28,9 +28,20 @@ class FirestoreActivityRepository implements ActivityRepository {
   }
 
   @override
-  Future<void> createPlan(ActivityPlan plan) {
-    return _activities.doc(plan.id).set({
-      ...activityPlanToMap(plan),
+  Future<void> createPlan(ActivityPlan plan) async {
+    final normalizedPlan = _normalizedCreatePlan(plan);
+    if (normalizedPlan == null) {
+      return;
+    }
+
+    final document = _activities.doc(normalizedPlan.id);
+    final snapshot = await document.get();
+    if (snapshot.exists) {
+      return;
+    }
+
+    await document.set({
+      ...activityPlanToMap(normalizedPlan),
       FirebaseDocumentFields.createdAt: FieldValue.serverTimestamp(),
       FirebaseDocumentFields.updatedAt: FieldValue.serverTimestamp(),
     });
@@ -63,5 +74,30 @@ class FirestoreActivityRepository implements ActivityRepository {
         FirebaseDocumentFields.updatedAt: FieldValue.serverTimestamp(),
       });
     });
+  }
+
+  ActivityPlan? _normalizedCreatePlan(ActivityPlan plan) {
+    final title = plan.title.trim();
+    final description = plan.description.trim();
+    final city = plan.city.trim();
+    final approximateLocation = plan.approximateLocation.trim();
+    if (plan.id.trim().isEmpty ||
+        plan.ownerUserId.trim().isEmpty ||
+        title.isEmpty ||
+        description.isEmpty ||
+        city.isEmpty ||
+        approximateLocation.isEmpty) {
+      return null;
+    }
+
+    return plan.copyWith(
+      id: plan.id.trim(),
+      ownerUserId: plan.ownerUserId.trim(),
+      title: title,
+      description: description,
+      city: city,
+      approximateLocation: approximateLocation,
+      timeLabel: plan.timeLabel.trim(),
+    );
   }
 }

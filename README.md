@@ -156,4 +156,5 @@ This repository contains the initial production-oriented scaffold:
 - Firebase-backed chat writes now keep thread creation backend-owned and derive message senders from Firebase Auth.
 - Block records now use rule-enforced deterministic ids and preserve blocker/target identity on update.
 - Chat message writes now trim repository input and reject empty payloads before coordination records are stored.
+- Activity create writes now normalize core text fields and ignore duplicate or blank required payloads before storage.
 - The current code is structured to stay reviewable and CI-friendly on GitHub from day one.

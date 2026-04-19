@@ -49,6 +49,79 @@ void main() {
       expect(plans.map((plan) => plan.id), contains('activity-99'));
     });
 
+    test('createPlan trims text fields and ignores duplicate ids', () async {
+      final repository = InMemoryActivityRepository();
+      final newPlan = ActivityPlan(
+        id: ' activity-normalized ',
+        ownerUserId: SampleIds.currentUser,
+        title: '  Board games tonight  ',
+        category: ActivityCategory.games,
+        description: '  Short casual game session.  ',
+        city: '  Istanbul  ',
+        approximateLocation: '  Kadikoy center  ',
+        timeLabel: '  Tonight  ',
+        timeOption: PlanTimeOption.tonight,
+        scheduledAt: DateTime(2026, 4, 19, 20, 0),
+        durationMinutes: 90,
+        participantCount: 1,
+        maxParticipants: 4,
+        isIndoor: true,
+        status: ActivityStatus.open,
+        surfaces: [
+          DiscoverySurface.tonight,
+          DiscoverySurface.groups,
+        ],
+      );
+
+      await repository.createPlan(newPlan);
+      await repository.createPlan(
+        newPlan.copyWith(title: 'Duplicate should not replace'),
+      );
+
+      final plans = await repository.watchNearbyPlans().first;
+      final created =
+          plans.singleWhere((plan) => plan.id == 'activity-normalized');
+
+      expect(created.title, 'Board games tonight');
+      expect(created.description, 'Short casual game session.');
+      expect(created.city, 'Istanbul');
+      expect(created.approximateLocation, 'Kadikoy center');
+      expect(created.timeLabel, 'Tonight');
+    });
+
+    test('createPlan ignores plans with blank required text fields', () async {
+      final repository = InMemoryActivityRepository();
+
+      await repository.createPlan(
+        ActivityPlan(
+          id: 'activity-blank',
+          ownerUserId: SampleIds.currentUser,
+          title: '   ',
+          category: ActivityCategory.games,
+          description: 'Short casual game session.',
+          city: 'Istanbul',
+          approximateLocation: 'Kadikoy center',
+          timeLabel: 'Tonight',
+          timeOption: PlanTimeOption.tonight,
+          scheduledAt: DateTime(2026, 4, 19, 20, 0),
+          durationMinutes: 90,
+          participantCount: 1,
+          maxParticipants: 4,
+          isIndoor: true,
+          status: ActivityStatus.open,
+          surfaces: [
+            DiscoverySurface.tonight,
+            DiscoverySurface.groups,
+          ],
+        ),
+      );
+
+      final plans = await repository.watchNearbyPlans().first;
+
+      expect(plans.map((plan) => plan.id), isNot(contains('activity-blank')));
+      expect(plans.length, 3);
+    });
+
     test('incrementParticipantCount fills the plan when capacity is reached',
         () async {
       final repository = InMemoryActivityRepository();

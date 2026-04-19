@@ -13,7 +13,7 @@ This document captures the minimum Firestore and Storage rule boundaries that sh
 ### `activities/{activityId}`
 
 - Read: authenticated users can read discoverable activity documents.
-- Create: only authenticated users, with `ownerUserId == request.auth.uid`.
+- Create: only authenticated users, with `ownerUserId == request.auth.uid`, `id == activityId`, non-empty core text fields, and no exact public location fields.
 - Update/Delete: only the owner.
 - Exact live location fields must not be publicly readable.
 
