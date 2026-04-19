@@ -7,6 +7,8 @@ class ChatMessage {
     required this.sentAt,
   });
 
+  static const maxTextLength = 280;
+
   final String id;
   final String threadId;
   final String senderUserId;
@@ -15,5 +17,20 @@ class ChatMessage {
 
   String get trimmedText => text.trim();
 
-  bool get hasText => trimmedText.isNotEmpty;
+  String get normalizedText => normalizeText(text);
+
+  bool get hasText => normalizedText.isNotEmpty;
+
+  bool get exceedsMaxLength => trimmedText.length > maxTextLength;
+
+  static String normalizeText(String value) {
+    final trimmed = value.trim();
+    if (trimmed.isEmpty) {
+      return '';
+    }
+    if (trimmed.length <= maxTextLength) {
+      return trimmed;
+    }
+    return trimmed.substring(0, maxTextLength);
+  }
 }

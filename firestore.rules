@@ -69,7 +69,8 @@ service cloud.firestore {
         request.resource.data.threadId == threadId &&
         request.resource.data.senderUserId == uid() &&
         request.resource.data.text is string &&
-        request.resource.data.text.size() > 0;
+        request.resource.data.text.size() > 0 &&
+        request.resource.data.text.size() <= 280;
     }
 
     function isOwnBlock(blockId) {

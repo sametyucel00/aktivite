@@ -151,6 +151,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             child: TextField(
               controller: _messageController,
               enabled: canSendToPrimary,
+              maxLength: ChatMessage.maxTextLength,
               onSubmitted: (value) async {
                 await _sendMessage(
                   threadId: primaryThreadId,
@@ -198,7 +199,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     if (!draft.hasText || threadId == null || senderUserId == null) {
       return;
     }
-    final trimmed = draft.trimmedText;
+    final trimmed = draft.normalizedText;
     await ref.read(chatRepositoryProvider).sendMessage(
           threadId: threadId,
           senderUserId: senderUserId,

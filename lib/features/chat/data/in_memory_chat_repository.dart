@@ -95,7 +95,7 @@ class InMemoryChatRepository implements ChatRepository {
     required String senderUserId,
     required String message,
   }) async {
-    final normalizedMessage = message.trim();
+    final normalizedMessage = ChatMessage.normalizeText(message);
     if (normalizedMessage.isEmpty) {
       return;
     }

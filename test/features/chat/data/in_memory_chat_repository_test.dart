@@ -81,5 +81,26 @@ void main() {
       expect(thread.lastMessagePreview, 'See you near the ferry entrance.');
       expect(messages, hasLength(2));
     });
+
+    test('sendMessage clamps long messages to coordination limit', () async {
+      final repository = InMemoryChatRepository();
+      final longMessage = ' ${'a' * 400} ';
+
+      await repository.sendMessage(
+        threadId: SampleIds.primaryThread,
+        senderUserId: SampleIds.currentUser,
+        message: longMessage,
+      );
+
+      final threads = await repository.watchApprovedThreads().first;
+      final thread =
+          threads.singleWhere((item) => item.id == SampleIds.primaryThread);
+      final messages =
+          await repository.watchMessages(SampleIds.primaryThread).first;
+
+      expect(thread.lastMessagePreview.length, 280);
+      expect(messages.last.text.length, 280);
+      expect(messages, hasLength(3));
+    });
   });
 }

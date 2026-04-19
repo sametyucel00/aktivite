@@ -44,6 +44,19 @@ void main() {
       expect(message.hasText, isTrue);
     });
 
+    test('normalizedText trims and clamps long messages', () {
+      final long = ChatMessage(
+        id: 'message-3',
+        threadId: 'thread-1',
+        senderUserId: 'user-1',
+        text: ' ${'a' * 400} ',
+        sentAt: DateTime.utc(2026, 4, 18, 18, 47),
+      );
+
+      expect(long.normalizedText.length, ChatMessage.maxTextLength);
+      expect(long.exceedsMaxLength, isTrue);
+    });
+
     test('hasText is false for blank messages', () {
       final blank = ChatMessage(
         id: 'message-2',
