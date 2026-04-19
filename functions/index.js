@@ -144,6 +144,15 @@ exports.onReportCreated = onDocumentCreated('reports/{reportId}', async (event) 
   }
 
   const report = snapshot.data();
+  if (!isValidUserAction(report)) {
+    await snapshot.ref.update({
+      workflowStatus: 'invalidReportPayload',
+      updatedAt: FieldValue.serverTimestamp(),
+    });
+    logger.warn('Report created with invalid payload.', { reportId: event.params.reportId });
+    return;
+  }
+
   await db.collection('moderationEvents').add({
     subjectUserId: report.targetUserId,
     reasonCode: 'report_created',
@@ -162,6 +171,15 @@ exports.onBlockCreated = onDocumentCreated('blocks/{blockId}', async (event) => 
   }
 
   const block = snapshot.data();
+  if (!isValidUserAction(block)) {
+    await snapshot.ref.update({
+      workflowStatus: 'invalidBlockPayload',
+      updatedAt: FieldValue.serverTimestamp(),
+    });
+    logger.warn('Block created with invalid payload.', { blockId: event.params.blockId });
+    return;
+  }
+
   logger.info('Block created; visibility suppression pending.', {
     blockId: event.params.blockId,
     userId: block.userId,
@@ -420,6 +438,13 @@ async function filterBlockedNotificationRecipients({ actorUserId, recipientIds }
 
 function isActiveBlock(snapshot) {
   return snapshot.exists && snapshot.data().status === 'active';
+}
+
+function isValidUserAction(action) {
+  const userId = typeof action.userId === 'string' ? action.userId.trim() : '';
+  const targetUserId =
+    typeof action.targetUserId === 'string' ? action.targetUserId.trim() : '';
+  return Boolean(userId && targetUserId && userId !== targetUserId);
 }
 
 async function collectNotificationTokens(userIds) {

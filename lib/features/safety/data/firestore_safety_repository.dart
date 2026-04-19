@@ -30,6 +30,7 @@ class FirestoreSafetyRepository implements SafetyRepository {
     final normalizedReason = reason.trim();
     if (currentUserId == null ||
         normalizedTargetUserId.isEmpty ||
+        normalizedTargetUserId == currentUserId ||
         normalizedReason.isEmpty) {
       return;
     }
@@ -51,7 +52,9 @@ class FirestoreSafetyRepository implements SafetyRepository {
   }) async {
     final currentUserId = _currentUserId;
     final normalizedTargetUserId = targetUserId.trim();
-    if (currentUserId == null || normalizedTargetUserId.isEmpty) {
+    if (currentUserId == null ||
+        normalizedTargetUserId.isEmpty ||
+        normalizedTargetUserId == currentUserId) {
       return;
     }
 

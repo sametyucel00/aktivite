@@ -73,6 +73,15 @@ service cloud.firestore {
         request.resource.data.status == 'active';
     }
 
+    function createsOwnReport() {
+      return signedIn() &&
+        request.resource.data.userId == uid() &&
+        request.resource.data.targetUserId is string &&
+        request.resource.data.targetUserId != uid() &&
+        request.resource.data.reason is string &&
+        request.resource.data.reason.size() > 0;
+    }
+
     function keepsBlockIdentity(blockId) {
       return isOwnBlock(blockId) &&
         request.resource.data.userId == resource.data.userId &&
@@ -168,10 +177,7 @@ service cloud.firestore {
 
     match /reports/{reportId} {
       allow read: if signedIn() && resource.data.userId == uid();
-      allow create: if signedIn() &&
-        request.resource.data.userId == uid() &&
-        request.resource.data.targetUserId is string &&
-        request.resource.data.reason is string;
+      allow create: if createsOwnReport();
       allow update, delete: if false;
     }
 

@@ -1,3 +1,4 @@
+import 'package:aktivite/core/config/sample_ids.dart';
 import 'package:aktivite/features/safety/data/safety_repository.dart';
 
 class InMemorySafetyRepository implements SafetyRepository {
@@ -27,7 +28,7 @@ class InMemorySafetyRepository implements SafetyRepository {
     required String targetUserId,
   }) async {
     final normalizedUserId = targetUserId.trim();
-    if (normalizedUserId.isEmpty) {
+    if (normalizedUserId.isEmpty || normalizedUserId == SampleIds.currentUser) {
       return;
     }
     _blockedUserIds.add(normalizedUserId);
@@ -40,7 +41,9 @@ class InMemorySafetyRepository implements SafetyRepository {
   }) async {
     final normalizedUserId = targetUserId.trim();
     final normalizedReason = reason.trim();
-    if (normalizedUserId.isEmpty || normalizedReason.isEmpty) {
+    if (normalizedUserId.isEmpty ||
+        normalizedUserId == SampleIds.currentUser ||
+        normalizedReason.isEmpty) {
       return;
     }
 

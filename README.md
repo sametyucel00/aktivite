@@ -158,4 +158,5 @@ This repository contains the initial production-oriented scaffold:
 - Chat message writes now trim repository input and reject empty payloads before coordination records are stored.
 - Activity create writes now normalize core text fields and ignore duplicate or blank required payloads before storage.
 - Join request writes now trim repository input and reject blank activity or message payloads before storage.
+- Safety report and block writes now ignore blank or self-targeted payloads before moderation side effects run.
 - The current code is structured to stay reviewable and CI-friendly on GitHub from day one.
