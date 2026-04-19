@@ -26,9 +26,16 @@ void main() {
 
     expect(plan.hasValidIdentity, isTrue);
     expect(plan.hasValidCreateDetails, isTrue);
+    expect(plan.hasValidParticipantConfiguration, isTrue);
+    expect(plan.canPublish, isTrue);
+    expect(plan.normalizedTitle, 'Coffee');
     expect(plan.canAcceptJoinRequests, isTrue);
     expect(
       plan.copyWith(participantCount: 4).canAcceptJoinRequests,
+      isFalse,
+    );
+    expect(
+      plan.copyWith(maxParticipants: 0).hasValidParticipantConfiguration,
       isFalse,
     );
   });

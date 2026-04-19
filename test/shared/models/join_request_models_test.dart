@@ -46,8 +46,12 @@ void main() {
       expect(rejected.isRejected, isTrue);
       expect(cancelled.isRejected, isTrue);
       expect(pending.needsOwnerReview, isTrue);
+      expect(pending.canOwnerDecide, isTrue);
+      expect(pending.canRequesterCancel, isTrue);
       expect(cancelled.isClosed, isTrue);
       expect(approved.isTerminal, isFalse);
+      expect(pending.hasValidIdentity, isTrue);
+      expect(pending.normalizedMessage, 'Available now');
     });
 
     test('copyWith preserves unspecified values and updates status', () {

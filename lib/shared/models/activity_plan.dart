@@ -42,6 +42,14 @@ class ActivityPlan {
   final ActivityStatus status;
   final List<DiscoverySurface> surfaces;
 
+  String get normalizedTitle => title.trim();
+
+  String get normalizedDescription => description.trim();
+
+  String get normalizedCity => city.trim();
+
+  String get normalizedApproximateLocation => approximateLocation.trim();
+
   bool get isFull =>
       status == ActivityStatus.full || participantCount >= maxParticipants;
 
@@ -54,10 +62,20 @@ class ActivityPlan {
       id.trim().isNotEmpty && ownerUserId.trim().isNotEmpty;
 
   bool get hasValidCreateDetails =>
-      title.trim().isNotEmpty &&
-      description.trim().isNotEmpty &&
-      city.trim().isNotEmpty &&
-      approximateLocation.trim().isNotEmpty;
+      normalizedTitle.isNotEmpty &&
+      normalizedDescription.isNotEmpty &&
+      normalizedCity.isNotEmpty &&
+      normalizedApproximateLocation.isNotEmpty;
+
+  bool get hasValidParticipantConfiguration =>
+      participantCount >= 0 &&
+      maxParticipants > 0 &&
+      participantCount <= maxParticipants;
+
+  bool get canPublish =>
+      hasValidIdentity &&
+      hasValidCreateDetails &&
+      hasValidParticipantConfiguration;
 
   bool get canAcceptJoinRequests =>
       status == ActivityStatus.open && participantCount < maxParticipants;

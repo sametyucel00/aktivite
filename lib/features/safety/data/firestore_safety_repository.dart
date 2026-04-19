@@ -26,7 +26,7 @@ class FirestoreSafetyRepository implements SafetyRepository {
     required String targetUserId,
     required String reason,
   }) async {
-    final currentUserId = _currentUserId;
+    final currentUserId = normalizeSafetyCurrentUserId(_currentUserId);
     final normalizedTargetUserId = normalizeSafetyTargetUserId(
       targetUserId,
       currentUserId: currentUserId,
@@ -51,16 +51,20 @@ class FirestoreSafetyRepository implements SafetyRepository {
   Future<void> blockUser({
     required String targetUserId,
   }) async {
-    final currentUserId = _currentUserId;
+    final currentUserId = normalizeSafetyCurrentUserId(_currentUserId);
     final normalizedTargetUserId = normalizeSafetyTargetUserId(
       targetUserId,
       currentUserId: currentUserId,
     );
-    if (normalizedTargetUserId == null) {
+    final blockDocumentId = buildSafetyBlockDocumentId(
+      targetUserId: targetUserId,
+      currentUserId: currentUserId,
+    );
+    if (normalizedTargetUserId == null || currentUserId == null || blockDocumentId == null) {
       return;
     }
 
-    await _blocks.doc('$currentUserId-$normalizedTargetUserId').set({
+    await _blocks.doc(blockDocumentId).set({
       FirebaseDocumentFields.userId: currentUserId,
       FirebaseDocumentFields.targetUserId: normalizedTargetUserId,
       FirebaseDocumentFields.status: 'active',

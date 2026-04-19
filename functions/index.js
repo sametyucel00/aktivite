@@ -10,6 +10,7 @@ const { logger } = require('firebase-functions');
 const {
   getJoinApprovalOutcome,
   isActiveBlock,
+  isAllowedReportReason,
   isInvalidMessagingTokenCode,
   isValidUserAction,
   safeNotificationPreview,
@@ -20,14 +21,6 @@ initializeApp();
 
 const db = getFirestore();
 const messaging = getMessaging();
-const allowedReportReasons = new Set([
-  'spam',
-  'harassment',
-  'unsafe_meetup',
-  'fake_profile',
-  'inappropriate_content',
-]);
-
 exports.onJoinRequestCreated = onDocumentCreated(
   'activities/{activityId}/joinRequests/{requestId}',
   async (event) => {
@@ -159,7 +152,7 @@ exports.onReportCreated = onDocumentCreated('reports/{reportId}', async (event) 
   }
 
   const report = snapshot.data();
-  if (!isValidUserAction(report) || !allowedReportReasons.has(report.reason)) {
+  if (!isValidUserAction(report) || !isAllowedReportReason(report.reason)) {
     await snapshot.ref.update({
       workflowStatus: 'invalidReportPayload',
       updatedAt: FieldValue.serverTimestamp(),

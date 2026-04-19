@@ -34,6 +34,28 @@ function isInvalidMessagingTokenCode(code) {
   ]).has(code);
 }
 
+function isAllowedReportReason(reason) {
+  return new Set([
+    'spam',
+    'harassment',
+    'unsafe_meetup',
+    'fake_profile',
+    'inappropriate_content',
+  ]).has(reason);
+}
+
+function hasJoinCapacity(activity) {
+  const currentParticipantCount = activity?.participantCount || 0;
+  const maxParticipants = activity?.maxParticipants || 1;
+  return (
+    activity &&
+    activity.status !== 'full' &&
+    activity.status !== 'cancelled' &&
+    activity.status !== 'completed' &&
+    currentParticipantCount < maxParticipants
+  );
+}
+
 function getJoinApprovalOutcome({ activity, request }) {
   if (!activity || !request) {
     return { allowSideEffects: false, workflowStatus: 'invalidMissingActivity' };
@@ -47,14 +69,7 @@ function getJoinApprovalOutcome({ activity, request }) {
     };
   }
 
-  const currentParticipantCount = activity.participantCount || 0;
-  const maxParticipants = activity.maxParticipants || 1;
-  if (
-    activity.status === 'full' ||
-    activity.status === 'cancelled' ||
-    activity.status === 'completed' ||
-    currentParticipantCount >= maxParticipants
-  ) {
+  if (!hasJoinCapacity(activity)) {
     return {
       allowSideEffects: false,
       workflowStatus: 'approvalCapacityBlocked',
@@ -66,8 +81,10 @@ function getJoinApprovalOutcome({ activity, request }) {
 
 module.exports = {
   getJoinApprovalOutcome,
+  hasJoinCapacity,
   isActiveBlock,
   isActiveBlockData,
+  isAllowedReportReason,
   isInvalidMessagingTokenCode,
   isValidUserAction,
   safeNotificationPreview,

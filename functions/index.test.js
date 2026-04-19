@@ -2,7 +2,9 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const {
   getJoinApprovalOutcome,
+  hasJoinCapacity,
   isActiveBlockData,
+  isAllowedReportReason,
   isInvalidMessagingTokenCode,
   isValidUserAction,
   safeNotificationPreview,
@@ -80,6 +82,31 @@ test('join approval outcome allows normal side effects', () => {
       allowSideEffects: true,
     },
   );
+});
+
+test('hasJoinCapacity reflects closed and full activities', () => {
+  assert.equal(
+    hasJoinCapacity({
+      participantCount: 1,
+      maxParticipants: 4,
+      status: 'open',
+    }),
+    true,
+  );
+  assert.equal(
+    hasJoinCapacity({
+      participantCount: 4,
+      maxParticipants: 4,
+      status: 'open',
+    }),
+    false,
+  );
+  assert.equal(hasJoinCapacity({ status: 'cancelled' }), false);
+});
+
+test('isAllowedReportReason only accepts canonical reasons', () => {
+  assert.equal(isAllowedReportReason('harassment'), true);
+  assert.equal(isAllowedReportReason('unknown'), false);
 });
 
 test('join approval outcome rejects missing activity or request payloads', () => {

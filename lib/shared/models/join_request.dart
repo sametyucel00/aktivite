@@ -15,6 +15,13 @@ class JoinRequest {
   final String message;
   final JoinRequestStatus status;
 
+  String get normalizedMessage => message.trim();
+
+  bool get hasValidIdentity =>
+      id.trim().isNotEmpty &&
+      activityId.trim().isNotEmpty &&
+      requesterId.trim().isNotEmpty;
+
   bool get isPending => status == JoinRequestStatus.pending;
 
   bool get isApproved => status == JoinRequestStatus.approved;
@@ -34,6 +41,10 @@ class JoinRequest {
   bool get isTerminal =>
       status == JoinRequestStatus.rejected ||
       status == JoinRequestStatus.cancelled;
+
+  bool get canOwnerDecide => isPending;
+
+  bool get canRequesterCancel => isPending;
 
   bool canTransitionTo(JoinRequestStatus nextStatus) {
     if (status == nextStatus) {
