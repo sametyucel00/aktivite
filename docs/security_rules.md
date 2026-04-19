@@ -33,7 +33,7 @@ This document captures the minimum Firestore and Storage rule boundaries that sh
 ### `chatThreads/{threadId}/messages/{messageId}`
 
 - Read: only approved participants of the parent thread.
-- Create: only approved participants with `senderUserId == request.auth.uid`.
+- Create: only approved participants with `senderUserId == request.auth.uid`, matching parent `threadId`, and non-empty message text.
 - Update/Delete: deny by default for MVP unless an edit/delete product flow is intentionally added.
 
 ### `trustEvents/{eventId}`

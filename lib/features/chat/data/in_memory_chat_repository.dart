@@ -95,13 +95,18 @@ class InMemoryChatRepository implements ChatRepository {
     required String senderUserId,
     required String message,
   }) async {
+    final normalizedMessage = message.trim();
+    if (normalizedMessage.isEmpty) {
+      return;
+    }
+
     final index = _threads.indexWhere((thread) => thread.id == threadId);
     if (index < 0) {
       return;
     }
     final current = _threads[index];
     _threads[index] = current.copyWith(
-      lastMessagePreview: message,
+      lastMessagePreview: normalizedMessage,
     );
     final messages = [...?_messagesByThread[threadId]];
     final sentAt = AppClock.now();
@@ -110,7 +115,7 @@ class InMemoryChatRepository implements ChatRepository {
         id: AppIdFactory.timestampId(prefix: 'message', now: sentAt),
         threadId: threadId,
         senderUserId: senderUserId,
-        text: message,
+        text: normalizedMessage,
         sentAt: sentAt,
       ),
     );

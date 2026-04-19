@@ -49,7 +49,7 @@ void main() {
       await repository.sendMessage(
         threadId: SampleIds.primaryThread,
         senderUserId: SampleIds.currentUser,
-        message: 'Running five minutes late.',
+        message: '  Running five minutes late.  ',
       );
 
       final threads = await repository.watchApprovedThreads().first;
@@ -61,6 +61,25 @@ void main() {
       expect(thread.lastMessagePreview, 'Running five minutes late.');
       expect(messages.last.text, 'Running five minutes late.');
       expect(messages, hasLength(3));
+    });
+
+    test('sendMessage ignores blank messages', () async {
+      final repository = InMemoryChatRepository();
+
+      await repository.sendMessage(
+        threadId: SampleIds.primaryThread,
+        senderUserId: SampleIds.currentUser,
+        message: '   ',
+      );
+
+      final threads = await repository.watchApprovedThreads().first;
+      final thread =
+          threads.singleWhere((item) => item.id == SampleIds.primaryThread);
+      final messages =
+          await repository.watchMessages(SampleIds.primaryThread).first;
+
+      expect(thread.lastMessagePreview, 'See you near the ferry entrance.');
+      expect(messages, hasLength(2));
     });
   });
 }

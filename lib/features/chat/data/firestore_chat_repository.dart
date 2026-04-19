@@ -73,6 +73,11 @@ class FirestoreChatRepository implements ChatRepository {
     required String senderUserId,
     required String message,
   }) async {
+    final normalizedMessage = message.trim();
+    if (normalizedMessage.isEmpty) {
+      return;
+    }
+
     final currentUserId = _auth().currentUser?.uid;
     if (currentUserId == null) {
       throw StateError(
@@ -87,11 +92,11 @@ class FirestoreChatRepository implements ChatRepository {
     await messages.add({
       FirebaseDocumentFields.threadId: threadId,
       FirebaseDocumentFields.senderUserId: currentUserId,
-      FirebaseDocumentFields.text: message,
+      FirebaseDocumentFields.text: normalizedMessage,
       FirebaseDocumentFields.sentAt: sentAt,
     });
     await thread.update({
-      FirebaseDocumentFields.lastMessagePreview: message,
+      FirebaseDocumentFields.lastMessagePreview: normalizedMessage,
       FirebaseDocumentFields.updatedAt: sentAt,
     });
   }

@@ -53,6 +53,15 @@ service cloud.firestore {
       return signedIn() && uid() in resource.data.participantIds;
     }
 
+    function createsOwnMessage(threadId) {
+      return signedIn() &&
+        uid() in get(/databases/$(database)/documents/chatThreads/$(threadId)).data.participantIds &&
+        request.resource.data.threadId == threadId &&
+        request.resource.data.senderUserId == uid() &&
+        request.resource.data.text is string &&
+        request.resource.data.text.size() > 0;
+    }
+
     function isOwnBlock(blockId) {
       return signedIn() &&
         request.resource.data.userId == uid() &&
@@ -127,9 +136,7 @@ service cloud.firestore {
       match /messages/{messageId} {
         allow read: if signedIn() &&
           uid() in get(/databases/$(database)/documents/chatThreads/$(threadId)).data.participantIds;
-        allow create: if signedIn() &&
-          uid() in get(/databases/$(database)/documents/chatThreads/$(threadId)).data.participantIds &&
-          request.resource.data.senderUserId == uid();
+        allow create: if createsOwnMessage(threadId);
         allow update, delete: if false;
       }
     }
