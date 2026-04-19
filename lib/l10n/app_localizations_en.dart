@@ -259,6 +259,13 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get chatBlockedThreadsEmptyMessage =>
+      'Chats connected to blocked users stay hidden from your coordination space.';
+
+  @override
+  String get chatBlockedThreadsEmptyTitle => 'Blocked chats stay hidden';
+
+  @override
   String get chatComposerHint => 'Share a practical message';
 
   @override

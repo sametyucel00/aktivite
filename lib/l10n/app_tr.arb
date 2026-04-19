@@ -118,6 +118,8 @@
       }
     }
   },
+  "chatBlockedThreadsEmptyMessage": "Engelledigin kullanicilarla baglantili sohbetler koordinasyon alaninda gizli kalir.",
+  "chatBlockedThreadsEmptyTitle": "Engellenen sohbetler gizli kalir",
   "chatComposerHint": "Pratik bir mesaj yaz",
   "chatEmptyMessage": "Bir katilim istegi onaylandiginda konusma zamanlama ve bulusma detaylarina odaklanabilir.",
   "chatEmptyTitle": "Henuz onayli sohbet yok",

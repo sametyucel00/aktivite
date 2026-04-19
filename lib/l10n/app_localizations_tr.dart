@@ -262,6 +262,13 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
+  String get chatBlockedThreadsEmptyMessage =>
+      'Engelledigin kullanicilarla baglantili sohbetler koordinasyon alaninda gizli kalir.';
+
+  @override
+  String get chatBlockedThreadsEmptyTitle => 'Engellenen sohbetler gizli kalir';
+
+  @override
   String get chatComposerHint => 'Pratik bir mesaj yaz';
 
   @override

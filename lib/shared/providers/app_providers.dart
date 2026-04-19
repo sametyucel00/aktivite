@@ -205,21 +205,44 @@ final analyticsSignalSummaryProvider =
   });
 });
 
-final chatThreadsProvider = StreamProvider<List<ChatThread>>((ref) {
+final rawChatThreadsProvider = StreamProvider<List<ChatThread>>((ref) {
   final repository = ref.watch(chatRepositoryProvider);
+  return repository.watchApprovedThreads();
+});
+
+final chatThreadsProvider = Provider<AsyncValue<List<ChatThread>>>((ref) {
+  final threadsAsync = ref.watch(rawChatThreadsProvider);
   final blockedUserIds = ref.watch(blockedUserIdsProvider).valueOrNull ?? {};
   final currentUserId = ref.watch(currentUserIdProvider);
-  return repository.watchApprovedThreads().map(
-        (threads) => threads
-            .where(
-              (thread) => !thread.participantIds.any(
-                (participantId) =>
-                    participantId != currentUserId &&
-                    blockedUserIds.contains(participantId),
-              ),
-            )
-            .toList(growable: false),
-      );
+  return threadsAsync.whenData(
+    (threads) => threads
+        .where(
+          (thread) => !thread.participantIds.any(
+            (participantId) =>
+                participantId != currentUserId &&
+                blockedUserIds.contains(participantId),
+          ),
+        )
+        .toList(growable: false),
+  );
+});
+
+final blockedChatThreadsCountProvider = Provider<AsyncValue<int>>((ref) {
+  final rawThreadsAsync = ref.watch(rawChatThreadsProvider);
+  final visibleThreadsAsync = ref.watch(chatThreadsProvider);
+
+  return switch ((rawThreadsAsync, visibleThreadsAsync)) {
+    (
+      AsyncData(value: final rawThreads),
+      AsyncData(value: final visibleThreads)
+    ) =>
+      AsyncValue.data(rawThreads.length - visibleThreads.length),
+    (AsyncError(:final error, :final stackTrace), _) =>
+      AsyncValue.error(error, stackTrace),
+    (_, AsyncError(:final error, :final stackTrace)) =>
+      AsyncValue.error(error, stackTrace),
+    _ => const AsyncValue.loading(),
+  };
 });
 
 final chatMessagesProvider =

@@ -42,6 +42,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final threadsAsync = ref.watch(chatThreadsProvider);
+    final blockedChatThreadsCount =
+        ref.watch(blockedChatThreadsCountProvider).valueOrNull ?? 0;
     final primaryThreadId = ref.watch(primaryChatThreadIdProvider);
     final primaryThread = ref.watch(primaryChatThreadProvider);
     final currentUserId = ref.watch(currentUserIdProvider);
@@ -55,8 +57,12 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         data: (threads) {
           if (threads.isEmpty) {
             return EmptyStateView(
-              title: l10n.chatEmptyTitle,
-              message: l10n.chatEmptyMessage,
+              title: blockedChatThreadsCount > 0
+                  ? l10n.chatBlockedThreadsEmptyTitle
+                  : l10n.chatEmptyTitle,
+              message: blockedChatThreadsCount > 0
+                  ? l10n.chatBlockedThreadsEmptyMessage
+                  : l10n.chatEmptyMessage,
               action: RouteActionButton(
                 label: l10n.openExploreAction,
                 route: AppRoutes.explore,

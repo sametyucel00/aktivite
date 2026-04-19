@@ -118,6 +118,8 @@
       }
     }
   },
+  "chatBlockedThreadsEmptyMessage": "Chats connected to blocked users stay hidden from your coordination space.",
+  "chatBlockedThreadsEmptyTitle": "Blocked chats stay hidden",
   "chatComposerHint": "Share a practical message",
   "chatEmptyMessage": "Once a join request is approved, the conversation can stay focused on timing and meeting details.",
   "chatEmptyTitle": "No approved chats yet",

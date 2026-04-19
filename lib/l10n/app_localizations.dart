@@ -554,6 +554,18 @@ abstract class AppLocalizations {
   /// **'Activity: {activityId}'**
   String chatActivityLabel(String activityId);
 
+  /// No description provided for @chatBlockedThreadsEmptyMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Chats connected to blocked users stay hidden from your coordination space.'**
+  String get chatBlockedThreadsEmptyMessage;
+
+  /// No description provided for @chatBlockedThreadsEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Blocked chats stay hidden'**
+  String get chatBlockedThreadsEmptyTitle;
+
   /// No description provided for @chatComposerHint.
   ///
   /// In en, this message translates to:
