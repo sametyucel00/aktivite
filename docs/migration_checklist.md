@@ -84,10 +84,10 @@ After each repository/service migration, verify:
 - Firestore index plan exists in `firestore.indexes.json` and `docs/firestore_indexes.md`
 - initial Cloud Functions scaffold exists in `functions/index.js`
 - pure Cloud Functions helper tests exist in `functions/index.test.js`
-- emulator-focused Firestore rules scaffold exists in `firebase-tests/`
+- emulator-focused Firestore rules suite exists in `firebase-tests/`
 - widget/provider/model coverage already protects join, chat, safety, and blocked-visibility regressions before the source flip
 - `.\tool\check.ps1` for the local scripted quality gate
 - `docs/manual_qa_checklist.md` for manual smoke coverage
-- `docs/storage_rules_scenarios.md` for future Storage emulator assertions
+- `docs/storage_rules_scenarios.md` for expanding Storage emulator assertions
 - `docs/safety_backend_contracts.md` for cross-surface safety alignment
 - `docs/repository_source_comparison.md` for a short in-memory vs firebase seam comparison

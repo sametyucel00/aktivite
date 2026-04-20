@@ -74,7 +74,7 @@ If you are validating a larger feature or backend workflow manually after the sc
 - Keep changes small enough for review and run `.\tool\check.ps1` or the equivalent Flutter commands before opening a PR.
 - Use local web build verification when needed; Android and iOS release-oriented builds are expected to run through GitHub workflows rather than local daily checks.
 - Install JDK 21 or newer before running Firebase emulator-based rule checks.
-- Use the `firebase-tests/` scaffold and fixtures once JDK 21 is available locally.
+- Use the `firebase-tests/` suite and fixtures for Firestore and Storage rules verification.
 
 ## Current Repository State
 
@@ -84,7 +84,7 @@ This repository already includes:
 - in-memory repository seams that mirror Firebase boundaries for auth, profile, activities, join requests, chat, moderation, analytics, remote config, and safety
 - activity-first user flows for explore, map, owned activities, join requests, coordination chat, safety center, profile, and settings
 - shared domain helpers for profile gating, join-request status, activity invariants, chat normalization, trust-event creation, enum parsing, ids, and timestamps
-- Firebase migration prep through field/path constants, Firestore index planning, Functions workflow contracts, security-rule docs, and emulator test scaffolding
+- Firebase migration prep through field/path constants, Firestore index planning, Functions workflow contracts, security-rule docs, and emulator-backed rules tests
 - regression coverage for widget, provider, repository, model, and Cloud Functions helper behavior across join, chat, blocked visibility, and safety flows
 
 ## Notes

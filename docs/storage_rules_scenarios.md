@@ -47,7 +47,7 @@ If the product later adds report attachments or trusted-contact/safe-return medi
 
 ## Test Guidance
 
-When emulator-backed Storage tests are added, start with:
+When expanding emulator-backed Storage tests, continue with:
 
 1. own profile-photo upload allowed
 2. cross-user profile-photo upload denied

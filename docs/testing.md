@@ -68,7 +68,7 @@ Firebase emulator-based rule checks require JDK 21 or newer with the current Fir
 - `npm --prefix firebase-tests run test:static` validates syntax without emulator runtime.
 - `npm --prefix firebase-tests test` runs the Firestore and Storage rules suite through `firebase emulators:exec`.
 - storage-rule scenarios are documented separately in `docs/storage_rules_scenarios.md`
-- `docs/rules_checklist.md` tracks which rule boundaries are already implemented vs still waiting on emulator assertions
+- `docs/rules_checklist.md` tracks which rule boundaries are already implemented vs still waiting on expanded emulator assertions
 - Full emulator execution still requires JDK 21 or newer with the current Firebase CLI.
 
 ## CI Expectation
