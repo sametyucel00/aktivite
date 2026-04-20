@@ -10,10 +10,10 @@ Run the standard local check first:
 .\tool\check.ps1
 ```
 
-Optional builds:
+Optional local build:
 
 ```powershell
-.\tool\check.ps1 -BuildWeb -BuildWindows -BuildAndroid
+.\tool\check.ps1 -BuildWeb
 ```
 
 ## Expected Order
@@ -23,7 +23,7 @@ Optional builds:
 3. format verification
 4. `flutter analyze`
 5. `flutter test`
-6. optional platform builds
+6. optional web build
 7. manual QA using `docs/manual_qa_checklist.md` for higher-risk changes
 
 ## Current Test Layers
@@ -81,6 +81,6 @@ GitHub Actions should continue to cover:
 - static analysis
 - tests
 - web build
-- Android debug build
+- mobile builds as GitHub-managed platform jobs when required
 
-Windows build can remain a local-first verification step until CI capacity requires it.
+Local Windows or Android build commands are intentionally optional and do not need to be part of the default daily check flow.

@@ -1,7 +1,5 @@
 param(
-  [switch]$BuildWeb,
-  [switch]$BuildWindows,
-  [switch]$BuildAndroid
+  [switch]$BuildWeb
 )
 
 $ErrorActionPreference = 'Stop'
@@ -50,18 +48,6 @@ Invoke-Step 'Test' {
 if ($BuildWeb) {
   Invoke-Step 'Build web' {
     flutter build web
-  }
-}
-
-if ($BuildWindows) {
-  Invoke-Step 'Build Windows' {
-    flutter build windows
-  }
-}
-
-if ($BuildAndroid) {
-  Invoke-Step 'Build Android debug APK' {
-    flutter build apk --debug
   }
 }
 

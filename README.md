@@ -26,7 +26,7 @@ Aktivite is a Flutter + Firebase social activity app focused on helping people m
 3. Run `flutterfire configure` again only when Firebase app configuration changes.
 4. Run `flutter gen-l10n`.
 5. Run `dart run build_runner build --delete-conflicting-outputs` when Freezed/json models are added.
-6. Use `.\tool\check.ps1` locally, and include `-BuildWeb`, `-BuildWindows`, or `-BuildAndroid` when those platform toolchains are available.
+6. Use `.\tool\check.ps1` locally, and include `-BuildWeb` when you want a local web build verification.
 
 If the platform folders are still missing because the repository was bootstrapped before Flutter was installed locally, run `tool/bootstrap_windows.ps1` or `flutter create --platforms=android,ios,web,windows .` once before your first build.
 
@@ -38,10 +38,10 @@ Use the Windows-first check script for the normal local quality gate:
 .\tool\check.ps1
 ```
 
-Optional build checks can be enabled when the relevant platform toolchains are installed:
+Optional local build verification can be enabled for web:
 
 ```powershell
-.\tool\check.ps1 -BuildWeb -BuildWindows -BuildAndroid
+.\tool\check.ps1 -BuildWeb
 ```
 
 The script runs dependency restore, localization generation, format verification, static analysis, and tests before any optional builds.
@@ -72,6 +72,7 @@ If you are validating a larger feature or backend workflow manually after the sc
 - Firebase client config is tracked because the app imports it during analysis and build.
 - Do not commit service accounts, private keys, signing credentials, local emulator exports, or `.env` files.
 - Keep changes small enough for review and run `.\tool\check.ps1` or the equivalent Flutter commands before opening a PR.
+- Use local web build verification when needed; Android and iOS release-oriented builds are expected to run through GitHub workflows rather than local daily checks.
 - Install JDK 21 or newer before running Firebase emulator-based rule checks.
 - Use the `firebase-tests/` scaffold and fixtures once JDK 21 is available locally.
 
