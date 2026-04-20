@@ -10,7 +10,13 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('profile media providers', () {
     test('default source resolves image picker and in-memory storage', () {
-      final container = ProviderContainer();
+      final container = ProviderContainer(
+        overrides: [
+          repositorySourceProvider.overrideWith((ref) {
+            return RepositorySource.inMemory;
+          }),
+        ],
+      );
       addTearDown(container.dispose);
 
       expect(

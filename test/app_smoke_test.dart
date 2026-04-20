@@ -1,11 +1,18 @@
 import 'package:aktivite/app/app.dart';
+import 'package:aktivite/core/config/repository_source.dart';
+import 'package:aktivite/shared/providers/repository_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   testWidgets('renders app shell', (tester) async {
     await tester.pumpWidget(
-      const ProviderScope(
+      ProviderScope(
+        overrides: [
+          repositorySourceProvider.overrideWith(
+            (ref) => RepositorySource.inMemory,
+          ),
+        ],
         child: AktiviteApp(),
       ),
     );

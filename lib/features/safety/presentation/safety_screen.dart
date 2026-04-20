@@ -1,12 +1,12 @@
 import 'package:aktivite/app/app_routes.dart';
-import 'package:aktivite/core/constants/safety_report_reasons.dart';
 import 'package:aktivite/core/constants/app_spacing.dart';
+import 'package:aktivite/core/constants/safety_report_reasons.dart';
 import 'package:aktivite/core/utils/analytics_events.dart';
 import 'package:aktivite/core/utils/app_feedback.dart';
 import 'package:aktivite/core/utils/event_formatters.dart';
-import 'package:aktivite/core/utils/trust_event_factory.dart';
 import 'package:aktivite/features/auth/application/session_controller.dart';
 import 'package:aktivite/l10n/app_localizations.dart';
+import 'package:aktivite/shared/models/safety_action_summary.dart';
 import 'package:aktivite/shared/providers/app_providers.dart';
 import 'package:aktivite/shared/providers/repository_providers.dart';
 import 'package:aktivite/shared/widgets/app_section_card.dart';
@@ -15,11 +15,16 @@ import 'package:aktivite/shared/widgets/trust_signal_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class SafetyScreen extends ConsumerWidget {
+class SafetyScreen extends ConsumerStatefulWidget {
   const SafetyScreen({super.key});
 
   static const routePath = AppRoutes.safety;
 
+  @override
+  ConsumerState<SafetyScreen> createState() => _SafetyScreenState();
+}
+
+class _SafetyScreenState extends ConsumerState<SafetyScreen> {
   static const _reportReasonOptions = <String>[
     SafetyReportReasons.unsafeMeetup,
     SafetyReportReasons.harassment,
@@ -28,14 +33,31 @@ class SafetyScreen extends ConsumerWidget {
     SafetyReportReasons.inappropriateContent,
   ];
 
+  String? _selectedTargetUserId;
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final session = ref.watch(sessionControllerProvider);
     final trustSignals = ref.watch(trustSignalsProvider);
     final trustEventsAsync = ref.watch(currentUserModerationEventsProvider);
     final blockedUserIdsAsync = ref.watch(blockedUserIdsProvider);
+    final reportedReasonsByUserAsync = ref.watch(reportedReasonsByUserProvider);
     final safetySummaryAsync = ref.watch(safetyActionSummaryProvider);
+    final targetUserIdsAsync = ref.watch(safetyTargetUserIdsProvider);
+
+    final targetUserIds = targetUserIdsAsync.valueOrNull ?? const <String>[];
+    _syncSelectedTarget(targetUserIds);
+
+    final selectedTargetUserId = _selectedTargetUserId;
+    final blockedUserIds = blockedUserIdsAsync.valueOrNull ?? const <String>{};
+    final reportedReasonsByUser = reportedReasonsByUserAsync.valueOrNull ??
+        const <String, List<String>>{};
+    final hasSelectedTarget = selectedTargetUserId != null;
+    final isSelectedTargetBlocked =
+        hasSelectedTarget && blockedUserIds.contains(selectedTargetUserId);
+    final hasReportedSelectedTarget = hasSelectedTarget &&
+        (reportedReasonsByUser[selectedTargetUserId]?.isNotEmpty ?? false);
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.safetyTitle)),
@@ -53,35 +75,49 @@ class SafetyScreen extends ConsumerWidget {
           const SizedBox(height: AppSpacing.md),
           ...safetySummaryAsync.when(
             data: (summary) => [
-              AppSectionCard(
-                title: l10n.safetySummaryTitle,
-                subtitle: l10n.safetySummarySubtitle,
-                child: Wrap(
-                  spacing: AppSpacing.sm,
-                  runSpacing: AppSpacing.sm,
-                  children: [
-                    Chip(
-                      label: Text(
-                        l10n.safetyBlockedCount(summary.blockedCount),
-                      ),
-                    ),
-                    Chip(
-                      label: Text(
-                        l10n.safetyReportedCount(summary.reportCount),
-                      ),
-                    ),
-                    if (summary.reportCount > 0)
-                      Chip(
-                        label: Text(l10n.safetyReportsPrivateLabel),
-                      ),
-                  ],
-                ),
+              _SafetySummaryCard(
+                l10n: l10n,
+                summary: summary,
               ),
               const SizedBox(height: AppSpacing.md),
             ],
             loading: () => const <Widget>[],
             error: (error, stackTrace) => const <Widget>[],
           ),
+          AppSectionCard(
+            title: l10n.safetyTargetTitle,
+            subtitle: l10n.safetyTargetSubtitle,
+            child: targetUserIdsAsync.when(
+              data: (targetUserIds) {
+                if (targetUserIds.isEmpty) {
+                  return Text(l10n.safetyTargetEmpty);
+                }
+                return DropdownButtonFormField<String>(
+                  initialValue: _selectedTargetUserId,
+                  decoration: InputDecoration(
+                    labelText: l10n.safetyTargetFieldLabel,
+                  ),
+                  items: targetUserIds
+                      .map(
+                        (userId) => DropdownMenuItem<String>(
+                          value: userId,
+                          child: Text(_safetyUserLabel(l10n, userId)),
+                        ),
+                      )
+                      .toList(growable: false),
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedTargetUserId = value;
+                    });
+                  },
+                );
+              },
+              loading: () => const AsyncLoadingView(),
+              error: (error, stackTrace) =>
+                  AsyncErrorView(message: error.toString()),
+            ),
+          ),
+          const SizedBox(height: AppSpacing.md),
           AppSectionCard(
             title: l10n.safetyTimelineTitle,
             subtitle: l10n.safetyTimelineSubtitle,
@@ -163,8 +199,7 @@ class SafetyScreen extends ConsumerWidget {
           ),
           const SizedBox(height: AppSpacing.md),
           FilledButton.tonalIcon(
-            onPressed: safetySummaryAsync.valueOrNull?.hasReportedGuestUser ==
-                    true
+            onPressed: !hasSelectedTarget || hasReportedSelectedTarget
                 ? null
                 : () async {
                     final userId = session.userId;
@@ -181,20 +216,13 @@ class SafetyScreen extends ConsumerWidget {
                     }
                     try {
                       await ref.read(safetyRepositoryProvider).reportUser(
-                            targetUserId: TrustEventReasonCodes.guestUserId,
+                            targetUserId: selectedTargetUserId,
                             reason: reason,
                           );
-                      await ref
-                          .read(moderationRepositoryProvider)
-                          .createTrustEvent(
-                            createReportSubmittedTrustEvent(
-                              subjectUserId: userId,
-                              reportedUserId: TrustEventReasonCodes.guestUserId,
-                            ),
-                          );
                       await ref.read(analyticsServiceProvider).logEvent(
-                            name: AnalyticsEvents.safetyReportSubmitted,
-                          );
+                        name: AnalyticsEvents.safetyReportSubmitted,
+                        parameters: {'target_user_id': selectedTargetUserId},
+                      );
                       if (!context.mounted) {
                         return;
                       }
@@ -211,17 +239,16 @@ class SafetyScreen extends ConsumerWidget {
                   },
             icon: const Icon(Icons.report_outlined),
             label: Text(
-              safetySummaryAsync.valueOrNull?.hasReportedGuestUser == true
+              hasReportedSelectedTarget
                   ? l10n.safetyReportAlreadySubmitted
                   : l10n.reportUser,
             ),
           ),
           const SizedBox(height: AppSpacing.sm),
           OutlinedButton.icon(
-            onPressed: safetySummaryAsync.valueOrNull?.hasBlockedGuestUser ==
-                    true
+            onPressed: !hasSelectedTarget || isSelectedTargetBlocked
                 ? null
-                : () {
+                : () async {
                     final userId = session.userId;
                     if (userId == null) {
                       showAppSnackBar(
@@ -230,38 +257,28 @@ class SafetyScreen extends ConsumerWidget {
                       );
                       return;
                     }
-                    () async {
-                      try {
-                        await ref.read(safetyRepositoryProvider).blockUser(
-                              targetUserId: TrustEventReasonCodes.guestUserId,
-                            );
-                        await ref
-                            .read(moderationRepositoryProvider)
-                            .createTrustEvent(
-                              createUserBlockedTrustEvent(
-                                subjectUserId: userId,
-                                blockedUserId:
-                                    TrustEventReasonCodes.guestUserId,
-                              ),
-                            );
-                        await ref.read(analyticsServiceProvider).logEvent(
-                              name: AnalyticsEvents.safetyUserBlocked,
-                            );
-                        if (!context.mounted) {
-                          return;
-                        }
-                        showAppSnackBar(context, l10n.safetyUserBlockedToast);
-                      } catch (_) {
-                        if (!context.mounted) {
-                          return;
-                        }
-                        showAppSnackBar(context, l10n.safetyActionFailedToast);
+                    try {
+                      await ref.read(safetyRepositoryProvider).blockUser(
+                            targetUserId: selectedTargetUserId,
+                          );
+                      await ref.read(analyticsServiceProvider).logEvent(
+                        name: AnalyticsEvents.safetyUserBlocked,
+                        parameters: {'target_user_id': selectedTargetUserId},
+                      );
+                      if (!context.mounted) {
+                        return;
                       }
-                    }();
+                      showAppSnackBar(context, l10n.safetyUserBlockedToast);
+                    } catch (_) {
+                      if (!context.mounted) {
+                        return;
+                      }
+                      showAppSnackBar(context, l10n.safetyActionFailedToast);
+                    }
                   },
             icon: const Icon(Icons.block_outlined),
             label: Text(
-              safetySummaryAsync.valueOrNull?.hasBlockedGuestUser == true
+              isSelectedTargetBlocked
                   ? l10n.safetyUserAlreadyBlocked
                   : l10n.blockUser,
             ),
@@ -269,6 +286,17 @@ class SafetyScreen extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  void _syncSelectedTarget(List<String> targetUserIds) {
+    if (targetUserIds.isEmpty) {
+      _selectedTargetUserId = null;
+      return;
+    }
+    if (_selectedTargetUserId == null ||
+        !targetUserIds.contains(_selectedTargetUserId)) {
+      _selectedTargetUserId = targetUserIds.first;
+    }
   }
 
   Future<String?> _showReportReasonDialog(
@@ -346,10 +374,48 @@ class SafetyScreen extends ConsumerWidget {
   }
 
   String _safetyUserLabel(AppLocalizations l10n, String userId) {
-    if (userId == TrustEventReasonCodes.guestUserId) {
+    if (userId.startsWith('guest-')) {
       return l10n.guestPreviewLabel;
     }
     final compactId = userId.length <= 10 ? userId : userId.substring(0, 10);
     return l10n.memberLabel(compactId);
+  }
+}
+
+class _SafetySummaryCard extends StatelessWidget {
+  const _SafetySummaryCard({
+    required this.l10n,
+    required this.summary,
+  });
+
+  final AppLocalizations l10n;
+  final SafetyActionSummary summary;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppSectionCard(
+      title: l10n.safetySummaryTitle,
+      subtitle: l10n.safetySummarySubtitle,
+      child: Wrap(
+        spacing: AppSpacing.sm,
+        runSpacing: AppSpacing.sm,
+        children: [
+          Chip(
+            label: Text(
+              l10n.safetyBlockedCount(summary.blockedCount),
+            ),
+          ),
+          Chip(
+            label: Text(
+              l10n.safetyReportedCount(summary.reportCount),
+            ),
+          ),
+          if (summary.reportCount > 0)
+            Chip(
+              label: Text(l10n.safetyReportsPrivateLabel),
+            ),
+        ],
+      ),
+    );
   }
 }

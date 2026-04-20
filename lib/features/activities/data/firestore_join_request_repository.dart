@@ -54,7 +54,12 @@ class FirestoreJoinRequestRepository implements JoinRequestRepository {
     final requests = _activities
         .doc(normalizedActivityId)
         .collection(FirebaseCollectionPaths.joinRequests);
-    final document = requests.doc(userId);
+    final document = requests.doc(
+      _joinRequestDocumentId(
+        activityId: normalizedActivityId,
+        requesterId: userId,
+      ),
+    );
     final snapshot = await document.get();
     if (snapshot.exists) {
       final existing = joinRequestFromMap(snapshot.id, snapshot.data()!);
@@ -84,16 +89,16 @@ class FirestoreJoinRequestRepository implements JoinRequestRepository {
     required String requestId,
     required JoinRequestStatus status,
   }) async {
-    final query = await _firestore()
-        .collectionGroup(FirebaseCollectionPaths.joinRequests)
-        .where(FieldPath.documentId, isEqualTo: requestId)
-        .limit(1)
-        .get();
-    if (query.docs.isEmpty) {
+    final requestPath = _joinRequestPath(requestId);
+    if (requestPath == null) {
+      return;
+    }
+    final snapshot = await requestPath.get();
+    if (!snapshot.exists) {
       return;
     }
 
-    await query.docs.single.reference.update({
+    await requestPath.update({
       FirebaseDocumentFields.status: status.name,
       FirebaseDocumentFields.workflowStatus: switch (status) {
         JoinRequestStatus.approved => 'approvalSideEffectsPending',
@@ -113,5 +118,30 @@ class FirestoreJoinRequestRepository implements JoinRequestRepository {
       requestId: requestId,
       status: JoinRequestStatus.cancelled,
     );
+  }
+
+  String _joinRequestDocumentId({
+    required String activityId,
+    required String requesterId,
+  }) {
+    return '${activityId.trim()}__${requesterId.trim()}';
+  }
+
+  DocumentReference<Map<String, dynamic>>? _joinRequestPath(String requestId) {
+    final parts = requestId.split('__');
+    if (parts.length != 2) {
+      return null;
+    }
+
+    final activityId = parts.first.trim();
+    final requesterId = parts.last.trim();
+    if (activityId.isEmpty || requesterId.isEmpty) {
+      return null;
+    }
+
+    return _activities
+        .doc(activityId)
+        .collection(FirebaseCollectionPaths.joinRequests)
+        .doc(requestId);
   }
 }

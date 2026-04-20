@@ -83,7 +83,7 @@ void main() {
       final repository = InMemoryJoinRequestRepository();
 
       await repository.updateRequestStatus(
-        requestId: 'join-1',
+        requestId: '${SampleIds.coffeeActivity}__${SampleIds.guestOne}',
         status: JoinRequestStatus.approved,
       );
 

@@ -49,13 +49,17 @@ void main() {
           blockedUserIdsProvider.overrideWith(
             (ref) => const AsyncValue.data({'guest-1'}),
           ),
+          reportedReasonsByUserProvider.overrideWith(
+            (ref) => const AsyncValue.data(<String, List<String>>{}),
+          ),
+          safetyTargetUserIdsProvider.overrideWith(
+            (ref) => const AsyncValue.data(['guest-1']),
+          ),
           safetyActionSummaryProvider.overrideWith(
             (ref) => const AsyncValue.data(
               SafetyActionSummary(
                 blockedCount: 1,
                 reportCount: 2,
-                hasBlockedGuestUser: false,
-                hasReportedGuestUser: false,
               ),
             ),
           ),

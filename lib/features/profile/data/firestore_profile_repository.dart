@@ -29,10 +29,12 @@ class FirestoreProfileRepository implements ProfileRepository {
         return Stream.value(_signedOutProfile());
       }
 
-      return _profiles.doc(user.uid).snapshots().map((snapshot) {
+      return _profiles.doc(user.uid).snapshots().asyncMap((snapshot) async {
         final data = snapshot.data();
         if (data == null) {
-          return _seedProfileForUser(user);
+          final seededProfile = _seedProfileForUser(user);
+          await saveProfile(seededProfile);
+          return seededProfile;
         }
         return appUserProfileFromMap(snapshot.id, data);
       });
@@ -53,7 +55,7 @@ class FirestoreProfileRepository implements ProfileRepository {
   AppUserProfile _seedProfileForUser(User user) {
     return AppUserProfile(
       id: user.uid,
-      displayName: user.displayName ?? 'Guest',
+      displayName: user.displayName ?? '',
       profilePhotoUrl: user.photoURL ?? '',
       city: '',
       bio: '',
@@ -72,7 +74,7 @@ class FirestoreProfileRepository implements ProfileRepository {
   AppUserProfile _signedOutProfile() {
     return const AppUserProfile(
       id: 'signed-out',
-      displayName: 'Guest',
+      displayName: '',
       profilePhotoUrl: '',
       city: '',
       bio: '',

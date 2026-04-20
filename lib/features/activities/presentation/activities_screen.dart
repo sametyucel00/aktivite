@@ -1,6 +1,5 @@
 import 'package:aktivite/app/app_routes.dart';
 import 'package:aktivite/core/config/repository_source.dart';
-import 'package:aktivite/core/config/sample_ids.dart';
 import 'package:aktivite/core/constants/app_spacing.dart';
 import 'package:aktivite/core/enums/activity_category.dart';
 import 'package:aktivite/core/enums/join_request_status.dart';
@@ -60,6 +59,7 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
 
   Future<void> _approveJoinRequest({
     required JoinRequest request,
+    required String currentUserId,
     required AppLocalizations l10n,
   }) async {
     await ref.read(joinRequestRepositoryProvider).updateRequestStatus(
@@ -73,7 +73,7 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
       await ref.read(chatRepositoryProvider).ensureThreadForActivity(
             activityId: request.activityId,
             participantIds: [
-              SampleIds.currentUser,
+              currentUserId,
               request.requesterId,
             ],
             initialMessagePreview: l10n.chatThreadCreatedPreview,
@@ -115,12 +115,10 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final plansAsync = ref.watch(ownedPlansProvider);
-    final primaryActivityId = ref.watch(primaryActivityIdProvider);
-    final primaryPlan = ref.watch(primaryOwnedPlanProvider);
+    final currentUserId = ref.watch(currentUserIdProvider);
+    final requestsByActivityAsync =
+        ref.watch(ownedJoinRequestsByActivityProvider);
     final requestSummaryAsync = ref.watch(joinRequestSummaryProvider);
-    final requestsAsync = primaryActivityId == null
-        ? const AsyncValue<List<JoinRequest>>.data([])
-        : ref.watch(joinRequestsProvider(primaryActivityId));
     final activePlansLimit = ref.watch(activePlansLimitProvider);
     final canCreatePlansAsync = ref.watch(canCreatePlansProvider);
     final completionAsync = ref.watch(profileCompletionProvider);
@@ -335,7 +333,7 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
             style: Theme.of(context).textTheme.bodySmall,
           ),
           const SizedBox(height: AppSpacing.md),
-          if (primaryPlan != null) ...[
+          if (ref.watch(primaryOwnedPlanProvider) case final primaryPlan?) ...[
             AppSectionCard(
               title: l10n.activitiesFocusTitle,
               subtitle: l10n.activitiesFocusSubtitle,
@@ -387,18 +385,31 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
           const SizedBox(height: AppSpacing.md),
           AppSectionCard(
             title: l10n.joinRequestsTitle,
-            subtitle: primaryActivityId == null
-                ? l10n.joinRequestsNoPlanSelected
-                : l10n.joinRequestsSubtitle,
-            child: requestsAsync.when(
-              data: (requests) {
-                final sortedRequests = [...requests]..sort((left, right) {
+            subtitle: l10n.joinRequestsSubtitle,
+            child: requestsByActivityAsync.when(
+              data: (requestsByActivity) {
+                final plans = plansAsync.valueOrNull ?? const [];
+                if (plans.isEmpty) {
+                  return Text(l10n.joinRequestsNoPlanSelected);
+                }
+
+                final planById = {
+                  for (final plan in plans) plan.id: plan,
+                };
+                final requests = [
+                  for (final entry in requestsByActivity.entries)
+                    ...entry.value,
+                ]..sort((left, right) {
                     final statusCompare = left.ownerListSortPriority
                         .compareTo(right.ownerListSortPriority);
                     if (statusCompare != 0) {
                       return statusCompare;
                     }
-                    return left.requesterId.compareTo(right.requesterId);
+                    final leftPlan = planById[left.activityId]?.scheduledAt ??
+                        DateTime.fromMillisecondsSinceEpoch(0);
+                    final rightPlan = planById[right.activityId]?.scheduledAt ??
+                        DateTime.fromMillisecondsSinceEpoch(0);
+                    return leftPlan.compareTo(rightPlan);
                   });
                 final summary = JoinRequestSummary.fromRequests(requests);
                 if (requests.isEmpty) {
@@ -412,90 +423,93 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
                       style: Theme.of(context).textTheme.labelLarge,
                     ),
                     const SizedBox(height: AppSpacing.md),
-                    if (primaryPlan != null) ...[
-                      Text(
-                        l10n.joinRequestsPlanContext(
-                          primaryPlan.title,
-                          DateFormat('dd MMMM, HH:mm')
-                              .format(primaryPlan.scheduledAt),
-                        ),
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                      const SizedBox(height: AppSpacing.md),
-                    ],
-                    ...sortedRequests.map(
-                      (request) => Padding(
-                        padding: const EdgeInsets.only(bottom: AppSpacing.md),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        _requesterLabel(l10n, request),
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleSmall,
-                                      ),
-                                      const SizedBox(height: AppSpacing.xs),
-                                      Text(
-                                        primaryPlan?.title ??
-                                            request.activityId,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall,
-                                      ),
-                                    ],
+                    ...requests.map(
+                      (request) {
+                        final plan = planById[request.activityId];
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: AppSpacing.md),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          _requesterLabel(l10n, request),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleSmall,
+                                        ),
+                                        const SizedBox(height: AppSpacing.xs),
+                                        Text(
+                                          plan == null
+                                              ? request.activityId
+                                              : l10n.joinRequestsPlanContext(
+                                                  plan.title,
+                                                  DateFormat('dd MMMM, HH:mm')
+                                                      .format(
+                                                    plan.scheduledAt,
+                                                  ),
+                                                ),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodySmall,
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(width: AppSpacing.sm),
-                                _JoinRequestStatusBadge(status: request.status),
-                              ],
-                            ),
-                            const SizedBox(height: AppSpacing.xs),
-                            Text(request.message),
-                            if (request.isApproved) ...[
+                                  const SizedBox(width: AppSpacing.sm),
+                                  _JoinRequestStatusBadge(
+                                    status: request.status,
+                                  ),
+                                ],
+                              ),
                               const SizedBox(height: AppSpacing.xs),
-                              Text(
-                                ref.read(repositorySourceProvider) ==
-                                        RepositorySource.firebase
-                                    ? l10n.joinRequestApprovedFirebaseNotice
-                                    : l10n.joinRequestApprovedLocalNotice,
-                                style: Theme.of(context).textTheme.bodySmall,
+                              Text(request.message),
+                              if (request.isApproved) ...[
+                                const SizedBox(height: AppSpacing.xs),
+                                Text(
+                                  ref.read(repositorySourceProvider) ==
+                                          RepositorySource.firebase
+                                      ? l10n.joinRequestApprovedFirebaseNotice
+                                      : l10n.joinRequestApprovedLocalNotice,
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                ),
+                              ],
+                              const SizedBox(height: AppSpacing.sm),
+                              Wrap(
+                                spacing: AppSpacing.sm,
+                                children: [
+                                  FilledButton.tonal(
+                                    onPressed: request.isPending &&
+                                            currentUserId != null
+                                        ? () => _approveJoinRequest(
+                                              request: request,
+                                              currentUserId: currentUserId,
+                                              l10n: l10n,
+                                            )
+                                        : null,
+                                    child: Text(l10n.approveRequest),
+                                  ),
+                                  OutlinedButton(
+                                    onPressed: request.isPending
+                                        ? () => _rejectJoinRequest(
+                                              request: request,
+                                              l10n: l10n,
+                                            )
+                                        : null,
+                                    child: Text(l10n.rejectRequest),
+                                  ),
+                                ],
                               ),
                             ],
-                            const SizedBox(height: AppSpacing.sm),
-                            Wrap(
-                              spacing: AppSpacing.sm,
-                              children: [
-                                FilledButton.tonal(
-                                  onPressed: request.isPending
-                                      ? () => _approveJoinRequest(
-                                            request: request,
-                                            l10n: l10n,
-                                          )
-                                      : null,
-                                  child: Text(l10n.approveRequest),
-                                ),
-                                OutlinedButton(
-                                  onPressed: request.isPending
-                                      ? () => _rejectJoinRequest(
-                                            request: request,
-                                            l10n: l10n,
-                                          )
-                                      : null,
-                                  child: Text(l10n.rejectRequest),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
+                          ),
+                        );
+                      },
                     ),
                   ],
                 );
@@ -521,6 +535,7 @@ class _ActivitiesScreenState extends ConsumerState<ActivitiesScreen> {
                         planTimeOptionLabel(l10n, composer.timeOption);
                     await composerController.submit(
                       ref.read(activityRepositoryProvider),
+                      ownerUserId: currentUserId ?? '',
                       timeLabel: timeLabel,
                     );
                     await ref.read(analyticsServiceProvider).logEvent(

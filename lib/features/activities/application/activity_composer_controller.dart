@@ -1,4 +1,3 @@
-import 'package:aktivite/core/config/sample_ids.dart';
 import 'package:aktivite/core/enums/activity_category.dart';
 import 'package:aktivite/core/enums/activity_status.dart';
 import 'package:aktivite/core/enums/discovery_surface.dart';
@@ -25,7 +24,7 @@ class ActivityComposerState {
   ActivityComposerState.initial()
       : title = '',
         description = '',
-        city = 'Istanbul',
+        city = '',
         approximateLocation = '',
         category = ActivityCategory.coffee,
         timeOption = PlanTimeOption.tonight,
@@ -128,6 +127,7 @@ class ActivityComposerController extends Notifier<ActivityComposerState> {
 
   Future<void> submit(
     ActivityRepository repository, {
+    required String ownerUserId,
     required String timeLabel,
   }) async {
     if (!state.canSubmit) {
@@ -135,9 +135,13 @@ class ActivityComposerController extends Notifier<ActivityComposerState> {
     }
 
     final title = state.title.trim();
+    final normalizedOwnerUserId = ownerUserId.trim();
+    if (normalizedOwnerUserId.isEmpty) {
+      return;
+    }
     final plan = ActivityPlan(
       id: AppIdFactory.timestampValue(),
-      ownerUserId: SampleIds.currentUser,
+      ownerUserId: normalizedOwnerUserId,
       title: title,
       category: state.category,
       description: state.description.trim(),

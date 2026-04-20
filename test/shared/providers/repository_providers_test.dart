@@ -5,8 +5,14 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('repository providers', () {
-    test('default source resolves in-memory implementations', () {
-      final container = ProviderContainer();
+    test('in-memory source resolves in-memory implementations', () {
+      final container = ProviderContainer(
+        overrides: [
+          repositorySourceProvider.overrideWith((ref) {
+            return RepositorySource.inMemory;
+          }),
+        ],
+      );
       addTearDown(container.dispose);
 
       expect(

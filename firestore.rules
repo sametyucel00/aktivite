@@ -38,7 +38,7 @@ service cloud.firestore {
 
     function createsOwnRequest(activityId, requestId) {
       return signedIn() &&
-        requestId == uid() &&
+        requestId == activityId + '__' + uid() &&
         request.resource.data.activityId == activityId &&
         request.resource.data.requesterId == uid() &&
         request.resource.data.message is string &&
@@ -95,6 +95,13 @@ service cloud.firestore {
           'fake_profile',
           'inappropriate_content'
         ];
+    }
+
+    function createsSafeReminderTrustEvent() {
+      return signedIn() &&
+        request.resource.data.subjectUserId == uid() &&
+        request.resource.data.isUserVisible == true &&
+        request.resource.data.reasonCode == 'safe_meetup_reminder_enabled';
     }
 
     function keepsBlockIdentity(blockId) {
@@ -227,9 +234,7 @@ service cloud.firestore {
       allow read: if signedIn() &&
         resource.data.subjectUserId == uid() &&
         resource.data.isUserVisible == true;
-      allow create: if signedIn() &&
-        request.resource.data.subjectUserId == uid() &&
-        request.resource.data.isUserVisible == true;
+      allow create: if createsSafeReminderTrustEvent();
       allow update, delete: if false;
     }
 

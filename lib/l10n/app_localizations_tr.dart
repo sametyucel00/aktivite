@@ -920,6 +920,20 @@ class AppLocalizationsTr extends AppLocalizations {
   String get safetySummaryTitle => 'Guvenlik ozeti';
 
   @override
+  String get safetyTargetEmpty =>
+      'Incelenecek biri oldugunda son sohbetler ve katilim istekleri burada gorunur.';
+
+  @override
+  String get safetyTargetFieldLabel => 'Bir uye sec';
+
+  @override
+  String get safetyTargetSubtitle =>
+      'Bildirmeden veya engellemeden once koordinasyon etkinliginden bir uye sec.';
+
+  @override
+  String get safetyTargetTitle => 'Incelenecek kisiyi sec';
+
+  @override
   String get safetyTimelineEmpty => 'Henuz guvenlik olayi yok.';
 
   @override

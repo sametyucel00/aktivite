@@ -5,6 +5,7 @@ import 'package:aktivite/core/utils/analytics_events.dart';
 import 'package:aktivite/features/auth/application/auth_phone_form_controller.dart';
 import 'package:aktivite/features/auth/application/session_controller.dart';
 import 'package:aktivite/l10n/app_localizations.dart';
+import 'package:aktivite/core/config/repository_source.dart';
 import 'package:aktivite/shared/providers/repository_providers.dart';
 import 'package:aktivite/shared/widgets/app_section_card.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ class AuthGateScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
     final authPhoneState = ref.watch(authPhoneFormControllerProvider);
+    final repositorySource = ref.watch(repositorySourceProvider);
     return Scaffold(
       appBar: AppBar(title: Text(l10n.authTitle)),
       body: ListView(
@@ -166,18 +168,20 @@ class AuthGateScreen extends ConsumerWidget {
                     ),
                   ),
                 ],
-                const SizedBox(height: AppSpacing.sm),
-                OutlinedButton(
-                  onPressed: () async {
-                    await ref.read(analyticsServiceProvider).logEvent(
-                          name: AnalyticsEvents.authGuestPreviewSelected,
-                        );
-                    await ref
-                        .read(sessionControllerProvider.notifier)
-                        .signInDemo();
-                  },
-                  child: Text(l10n.continueAsGuestPreview),
-                ),
+                if (repositorySource == RepositorySource.inMemory) ...[
+                  const SizedBox(height: AppSpacing.sm),
+                  OutlinedButton(
+                    onPressed: () async {
+                      await ref.read(analyticsServiceProvider).logEvent(
+                            name: AnalyticsEvents.authGuestPreviewSelected,
+                          );
+                      await ref
+                          .read(sessionControllerProvider.notifier)
+                          .signInDemo();
+                    },
+                    child: Text(l10n.continueAsGuestPreview),
+                  ),
+                ],
               ],
             ),
           ),

@@ -111,10 +111,14 @@ class FakeSafetyRepository implements SafetyRepository {
   String? lastReportedTargetUserId;
   String? lastReportReason;
   String? lastBlockedTargetUserId;
+  final Set<String> blockedUserIds = <String>{};
+  final Map<String, List<String>> reportedReasonsByUser =
+      <String, List<String>>{};
 
   @override
   Future<void> blockUser({required String targetUserId}) async {
     lastBlockedTargetUserId = targetUserId;
+    blockedUserIds.add(targetUserId);
   }
 
   @override
@@ -124,6 +128,26 @@ class FakeSafetyRepository implements SafetyRepository {
   }) async {
     lastReportedTargetUserId = targetUserId;
     lastReportReason = reason;
+    final reasons = reportedReasonsByUser.putIfAbsent(
+      targetUserId,
+      () => <String>[],
+    );
+    if (!reasons.contains(reason)) {
+      reasons.add(reason);
+    }
+  }
+
+  @override
+  Stream<Set<String>> watchBlockedUserIds() {
+    return Stream.value(Set<String>.unmodifiable(blockedUserIds));
+  }
+
+  @override
+  Stream<Map<String, List<String>>> watchReportedReasonsByUser() {
+    return Stream.value({
+      for (final entry in reportedReasonsByUser.entries)
+        entry.key: List<String>.unmodifiable(entry.value),
+    });
   }
 }
 

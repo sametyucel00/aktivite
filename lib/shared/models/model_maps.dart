@@ -90,12 +90,9 @@ ModelMap appUserProfileToMap(AppUserProfile profile) {
 AppUserProfile appUserProfileFromMap(String id, ModelMap map) {
   return AppUserProfile(
     id: id,
-    displayName: _string(
-      map[FirebaseDocumentFields.displayName],
-      fallback: 'Guest',
-    ),
+    displayName: _string(map[FirebaseDocumentFields.displayName]),
     profilePhotoUrl: _string(map[FirebaseDocumentFields.profilePhotoUrl]),
-    city: _string(map[FirebaseDocumentFields.city], fallback: 'Istanbul'),
+    city: _string(map[FirebaseDocumentFields.city]),
     bio: _string(map[FirebaseDocumentFields.bio]),
     profileCompletion: _int(map[FirebaseDocumentFields.profileCompletion]),
     favoriteActivities: enumListFromNames(

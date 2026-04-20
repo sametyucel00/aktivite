@@ -921,6 +921,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get safetySummaryTitle => 'Safety summary';
 
   @override
+  String get safetyTargetEmpty =>
+      'Recent chats and join requests will appear here once there is someone to review.';
+
+  @override
+  String get safetyTargetFieldLabel => 'Choose a member';
+
+  @override
+  String get safetyTargetSubtitle =>
+      'Pick a recent member from your coordination activity before reporting or blocking.';
+
+  @override
+  String get safetyTargetTitle => 'Choose who to review';
+
+  @override
   String get safetyTimelineEmpty => 'No safety events yet.';
 
   @override

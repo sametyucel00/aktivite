@@ -102,9 +102,14 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         children: [
           profileAsync.when(
             data: (loadedProfile) => AppSectionCard(
-              title: loadedProfile.displayName,
-              subtitle:
-                  '${loadedProfile.city} - ${verificationLabel(l10n, loadedProfile.verificationLabel)}',
+              title: loadedProfile.displayName.trim().isEmpty
+                  ? l10n.profileTitle
+                  : loadedProfile.displayName,
+              subtitle: [
+                if (loadedProfile.city.trim().isNotEmpty) loadedProfile.city,
+                if (loadedProfile.verificationLabel.trim().isNotEmpty)
+                  verificationLabel(l10n, loadedProfile.verificationLabel),
+              ].join(' - '),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

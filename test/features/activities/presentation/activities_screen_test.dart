@@ -68,11 +68,12 @@ void main() {
         tester,
         child: const ActivitiesScreen(),
         overrides: [
-          ownedPlansProvider.overrideWith((ref) => Stream.value([plan])),
-          primaryActivityIdProvider.overrideWith((ref) => plan.id),
+          ownedPlansProvider.overrideWith((ref) => AsyncValue.data([plan])),
           primaryOwnedPlanProvider.overrideWith((ref) => plan),
-          joinRequestsProvider(plan.id).overrideWith(
-            (ref) => Stream.value(requests),
+          ownedJoinRequestsByActivityProvider.overrideWith(
+            (ref) => const AsyncValue.data({
+              'owned-plan': requests,
+            }),
           ),
           joinRequestSummaryProvider.overrideWith(
             (ref) => const AsyncData(
@@ -101,6 +102,7 @@ void main() {
               ),
             ),
           ),
+          currentUserIdProvider.overrideWith((ref) => SampleIds.currentUser),
         ],
       );
       await tester.drag(find.byType(ListView).last, const Offset(0, -1800));
@@ -112,7 +114,7 @@ void main() {
 
       expect(pendingDy, lessThan(approvedDy));
       expect(approvedDy, lessThan(cancelledDy));
-      expect(find.text('Owner coffee plan'), findsWidgets);
+      expect(find.textContaining('Owner coffee plan'), findsWidgets);
     },
   );
 }

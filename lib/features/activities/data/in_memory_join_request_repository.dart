@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:aktivite/core/config/sample_ids.dart';
 import 'package:aktivite/core/enums/join_request_status.dart';
-import 'package:aktivite/core/utils/app_time.dart';
 import 'package:aktivite/features/activities/data/join_request_repository.dart';
 import 'package:aktivite/shared/models/join_request.dart';
 
@@ -13,7 +12,7 @@ class InMemoryJoinRequestRepository implements JoinRequestRepository {
 
   final List<JoinRequest> _requests = [
     const JoinRequest(
-      id: 'join-1',
+      id: '1__guest-1',
       activityId: SampleIds.coffeeActivity,
       requesterId: SampleIds.guestOne,
       message: 'I can arrive in 20 minutes.',
@@ -46,9 +45,9 @@ class InMemoryJoinRequestRepository implements JoinRequestRepository {
 
     _requests.add(
       JoinRequest(
-        id: AppIdFactory.sequenceId(
-          prefix: 'join',
-          nextNumber: _requests.length + 1,
+        id: _joinRequestId(
+          activityId: normalizedActivityId,
+          requesterId: SampleIds.currentUser,
         ),
         activityId: normalizedActivityId,
         requesterId: SampleIds.currentUser,
@@ -109,4 +108,11 @@ class InMemoryJoinRequestRepository implements JoinRequestRepository {
   }
 
   List<JoinRequest> _snapshot() => List<JoinRequest>.unmodifiable(_requests);
+
+  String _joinRequestId({
+    required String activityId,
+    required String requesterId,
+  }) {
+    return '${activityId.trim()}__${requesterId.trim()}';
+  }
 }

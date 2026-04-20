@@ -1754,6 +1754,30 @@ abstract class AppLocalizations {
   /// **'Safety summary'**
   String get safetySummaryTitle;
 
+  /// No description provided for @safetyTargetEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent chats and join requests will appear here once there is someone to review.'**
+  String get safetyTargetEmpty;
+
+  /// No description provided for @safetyTargetFieldLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a member'**
+  String get safetyTargetFieldLabel;
+
+  /// No description provided for @safetyTargetSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a recent member from your coordination activity before reporting or blocking.'**
+  String get safetyTargetSubtitle;
+
+  /// No description provided for @safetyTargetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose who to review'**
+  String get safetyTargetTitle;
+
   /// No description provided for @safetyTimelineEmpty.
   ///
   /// In en, this message translates to:

@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 
 import 'package:aktivite/app/app_routes.dart';
-import 'package:aktivite/core/config/sample_ids.dart';
 import 'package:aktivite/core/constants/app_spacing.dart';
 import 'package:aktivite/core/enums/activity_category.dart';
 import 'package:aktivite/core/enums/availability_slot.dart';
@@ -132,8 +131,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                           ? null
                           : () async {
                               final userId =
-                                  ref.read(sessionControllerProvider).userId ??
-                                      SampleIds.currentUser;
+                                  ref.read(sessionControllerProvider).userId;
+                              if (userId == null) {
+                                return;
+                              }
                               final success =
                                   await controller.uploadProfilePhoto(
                                 userId: userId,
@@ -300,11 +301,13 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           FilledButton(
             onPressed: onboarding.canSubmit
                 ? () async {
+                    final userId = ref.read(sessionControllerProvider).userId;
+                    if (userId == null) {
+                      return;
+                    }
                     await ref.read(profileRepositoryProvider).saveProfile(
                           controller.toProfile(
-                            userId:
-                                ref.read(sessionControllerProvider).userId ??
-                                    SampleIds.currentUser,
+                            userId: userId,
                           ),
                         );
                     ref

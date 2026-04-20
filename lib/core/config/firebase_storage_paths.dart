@@ -5,14 +5,14 @@ class FirebaseStoragePaths {
     required String userId,
     required String fileName,
   }) {
-    return 'users/$userId/profilePhotos/$fileName';
+    return 'profilePhotos/$userId/$fileName';
   }
 
   static String verificationMedia({
     required String userId,
     required String fileName,
   }) {
-    return 'users/$userId/verification/$fileName';
+    return 'verification/$userId/$fileName';
   }
 
   static String reportAttachment({

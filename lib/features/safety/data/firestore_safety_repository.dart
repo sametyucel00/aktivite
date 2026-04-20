@@ -22,6 +22,65 @@ class FirestoreSafetyRepository implements SafetyRepository {
       _firestore().collection(FirebaseCollectionPaths.blocks);
 
   @override
+  Stream<Set<String>> watchBlockedUserIds() {
+    return _auth().authStateChanges().asyncExpand((user) {
+      final userId = user?.uid;
+      if (userId == null) {
+        return Stream.value(const <String>{});
+      }
+
+      return _blocks
+          .where(FirebaseDocumentFields.userId, isEqualTo: userId)
+          .where(FirebaseDocumentFields.status, isEqualTo: 'active')
+          .snapshots()
+          .map((snapshot) {
+        return snapshot.docs
+            .map((doc) => doc.data()[FirebaseDocumentFields.targetUserId])
+            .whereType<String>()
+            .where((value) => value.trim().isNotEmpty)
+            .map((value) => value.trim())
+            .toSet();
+      });
+    });
+  }
+
+  @override
+  Stream<Map<String, List<String>>> watchReportedReasonsByUser() {
+    return _auth().authStateChanges().asyncExpand((user) {
+      final userId = user?.uid;
+      if (userId == null) {
+        return Stream.value(const <String, List<String>>{});
+      }
+
+      return _reports
+          .where(FirebaseDocumentFields.userId, isEqualTo: userId)
+          .snapshots()
+          .map((snapshot) {
+        final grouped = <String, Set<String>>{};
+        for (final doc in snapshot.docs) {
+          final data = doc.data();
+          final targetUserId =
+              (data[FirebaseDocumentFields.targetUserId] as String?)?.trim();
+          final reason =
+              (data[FirebaseDocumentFields.reason] as String?)?.trim();
+          if (targetUserId == null ||
+              targetUserId.isEmpty ||
+              reason == null ||
+              reason.isEmpty) {
+            continue;
+          }
+          grouped.putIfAbsent(targetUserId, () => <String>{}).add(reason);
+        }
+
+        return {
+          for (final entry in grouped.entries)
+            entry.key: entry.value.toList(growable: false),
+        };
+      });
+    });
+  }
+
+  @override
   Future<void> reportUser({
     required String targetUserId,
     required String reason,
@@ -60,7 +119,9 @@ class FirestoreSafetyRepository implements SafetyRepository {
       targetUserId: targetUserId,
       currentUserId: currentUserId,
     );
-    if (normalizedTargetUserId == null || currentUserId == null || blockDocumentId == null) {
+    if (normalizedTargetUserId == null ||
+        currentUserId == null ||
+        blockDocumentId == null) {
       return;
     }
 

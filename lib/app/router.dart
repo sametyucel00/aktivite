@@ -17,6 +17,7 @@ import 'package:go_router/go_router.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   final session = ref.watch(sessionControllerProvider);
+  final isOnboardingComplete = ref.watch(onboardingCompletedProvider);
 
   return GoRouter(
     initialLocation: AuthGateScreen.routePath,
@@ -29,7 +30,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         return isAuthRoute ? null : AuthGateScreen.routePath;
       }
 
-      if (!session.isOnboardingComplete) {
+      if (!isOnboardingComplete) {
         return isOnboardingRoute ? null : OnboardingScreen.routePath;
       }
 

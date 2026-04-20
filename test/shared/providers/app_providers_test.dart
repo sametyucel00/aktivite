@@ -94,9 +94,11 @@ void main() {
     );
     addTearDown(container.dispose);
 
-    final plans = await container.read(featuredPlansProvider.future);
+    await container.read(allPlansProvider.future);
+    final plans = container.read(featuredPlansProvider).valueOrNull;
 
-    expect(plans.map((plan) => plan.id), ['plan-open']);
+    expect(
+        plans?.map((plan) => plan.id).toList(growable: false), ['plan-open']);
   });
 
   test('chatThreadsProvider hides threads tied to blocked users', () async {
@@ -125,6 +127,7 @@ void main() {
         blockedUserIdsProvider.overrideWith(
           (ref) => const AsyncValue.data({'guest-blocked'}),
         ),
+        currentUserIdProvider.overrideWith((ref) => 'demo-user'),
       ],
     );
     addTearDown(container.dispose);

@@ -4,7 +4,6 @@ import 'package:aktivite/core/services/app_bootstrap_service.dart';
 import 'package:aktivite/core/enums/activity_status.dart';
 import 'package:aktivite/core/utils/analytics_events.dart';
 import 'package:aktivite/core/utils/plan_matching.dart';
-import 'package:aktivite/core/utils/trust_event_factory.dart';
 import 'package:aktivite/features/auth/application/session_controller.dart';
 import 'package:aktivite/features/explore/application/explore_controller.dart';
 import 'package:aktivite/features/settings/application/settings_controller.dart';
@@ -33,6 +32,19 @@ final currentUserIdProvider = Provider<String?>((ref) {
   return ref.watch(sessionControllerProvider).userId;
 });
 
+final onboardingCompletedProvider = Provider<bool>((ref) {
+  final session = ref.watch(sessionControllerProvider);
+  if (!session.isAuthenticated) {
+    return false;
+  }
+
+  final profileAsync = ref.watch(currentUserProfileProvider);
+  return profileAsync.maybeWhen(
+    data: (profile) => profile.profileCompletion > 0,
+    orElse: () => session.isOnboardingComplete,
+  );
+});
+
 final profileCompletionProvider = Provider<AsyncValue<int>>((ref) {
   final profileAsync = ref.watch(currentUserProfileProvider);
   return profileAsync.whenData((profile) => profile.profileCompletion);
@@ -54,82 +66,143 @@ final currentUserModerationEventsProvider =
 });
 
 final blockedUserIdsProvider = Provider<AsyncValue<Set<String>>>((ref) {
-  final eventsAsync = ref.watch(currentUserModerationEventsProvider);
-  return eventsAsync.whenData((events) {
-    return events
-        .where(isUserBlockedTrustEvent)
-        .map((event) => TrustEventReasonCodes.targetUserId(event.reasonCode))
-        .whereType<String>()
-        .where((value) => value.isNotEmpty)
-        .toSet();
-  });
+  final blockedUserIdsAsync = ref.watch(_blockedUserIdsStreamProvider);
+  return blockedUserIdsAsync.whenData((blockedUserIds) => blockedUserIds);
 });
 
 final safetyActionSummaryProvider =
     Provider<AsyncValue<SafetyActionSummary>>((ref) {
-  final eventsAsync = ref.watch(currentUserModerationEventsProvider);
-  return eventsAsync.whenData((events) {
-    final blockedEvents =
-        events.where(isUserBlockedTrustEvent).toList(growable: false);
-    final reportEvents =
-        events.where(isReportSubmittedTrustEvent).toList(growable: false);
+  final blockedUserIdsAsync = ref.watch(_blockedUserIdsStreamProvider);
+  final reportedReasonsAsync = ref.watch(_reportedReasonsByUserStreamProvider);
 
-    return SafetyActionSummary(
-      blockedCount: blockedEvents.length,
-      reportCount: reportEvents.length,
-      hasBlockedGuestUser: blockedEvents.any(
-        (event) =>
-            event.reasonCode ==
-            TrustEventReasonCodes.userBlockedFor(
-              TrustEventReasonCodes.guestUserId,
-            ),
+  return switch ((blockedUserIdsAsync, reportedReasonsAsync)) {
+    (
+      AsyncData(value: final blockedUserIds),
+      AsyncData(value: final reportedReasonsByUser)
+    ) =>
+      AsyncValue.data(
+        SafetyActionSummary(
+          blockedCount: blockedUserIds.length,
+          reportCount: reportedReasonsByUser.values
+              .fold<int>(0, (total, reasons) => total + reasons.length),
+        ),
       ),
-      hasReportedGuestUser: reportEvents.any(
-        (event) =>
-            event.reasonCode ==
-            TrustEventReasonCodes.reportSubmittedFor(
-              TrustEventReasonCodes.guestUserId,
-            ),
-      ),
-    );
+    (AsyncError(:final error, :final stackTrace), _) =>
+      AsyncValue.error(error, stackTrace),
+    (_, AsyncError(:final error, :final stackTrace)) =>
+      AsyncValue.error(error, stackTrace),
+    _ => const AsyncValue.loading(),
+  };
+});
+
+final _blockedUserIdsStreamProvider = StreamProvider<Set<String>>((ref) {
+  final repository = ref.watch(safetyRepositoryProvider);
+  return repository.watchBlockedUserIds();
+});
+
+final _reportedReasonsByUserStreamProvider =
+    StreamProvider<Map<String, List<String>>>((ref) {
+  final repository = ref.watch(safetyRepositoryProvider);
+  return repository.watchReportedReasonsByUser();
+});
+
+final reportedReasonsByUserProvider =
+    Provider<AsyncValue<Map<String, List<String>>>>((ref) {
+  final reportedReasonsAsync = ref.watch(_reportedReasonsByUserStreamProvider);
+  return reportedReasonsAsync.whenData(
+    (reportedReasonsByUser) => reportedReasonsByUser,
+  );
+});
+
+final allPlansProvider = StreamProvider<List<ActivityPlan>>((ref) {
+  final repository = ref.watch(activityRepositoryProvider);
+  return repository.watchNearbyPlans();
+});
+
+final featuredPlansProvider = Provider<AsyncValue<List<ActivityPlan>>>((ref) {
+  final plansAsync = ref.watch(allPlansProvider);
+  final blockedUserIds = ref.watch(blockedUserIdsProvider).valueOrNull ?? {};
+  return plansAsync.whenData(
+    (plans) => plans
+        .where((plan) => plan.isDiscoverable)
+        .where((plan) => !blockedUserIds.contains(plan.ownerUserId))
+        .toList(growable: false)
+      ..sort((left, right) {
+        if (left.status == right.status) {
+          return 0;
+        }
+        if (left.status == ActivityStatus.open) {
+          return -1;
+        }
+        if (right.status == ActivityStatus.open) {
+          return 1;
+        }
+        return 0;
+      }),
+  );
+});
+
+final ownedPlansProvider = Provider<AsyncValue<List<ActivityPlan>>>((ref) {
+  final plansAsync = ref.watch(allPlansProvider);
+  final currentUserId = ref.watch(currentUserIdProvider);
+  if (currentUserId == null) {
+    return const AsyncValue.data(<ActivityPlan>[]);
+  }
+  return plansAsync.whenData(
+    (plans) => plans
+        .where((plan) => plan.ownerUserId == currentUserId)
+        .where((plan) => plan.isDiscoverable)
+        .toList(growable: false),
+  );
+});
+
+final ownedJoinRequestsByActivityProvider =
+    Provider<AsyncValue<Map<String, List<JoinRequest>>>>((ref) {
+  final ownedPlansAsync = ref.watch(ownedPlansProvider);
+  return ownedPlansAsync.whenData((plans) {
+    final requestsByActivity = <String, List<JoinRequest>>{};
+    for (final plan in plans) {
+      final currentRequests =
+          ref.watch(joinRequestsProvider(plan.id)).valueOrNull;
+      if (currentRequests == null) {
+        continue;
+      }
+      requestsByActivity[plan.id] = List<JoinRequest>.unmodifiable(
+        currentRequests,
+      );
+    }
+    return Map<String, List<JoinRequest>>.unmodifiable(requestsByActivity);
   });
 });
 
-final featuredPlansProvider = StreamProvider<List<ActivityPlan>>((ref) {
-  final repository = ref.watch(activityRepositoryProvider);
-  final blockedUserIds = ref.watch(blockedUserIdsProvider).valueOrNull ?? {};
-  return repository.watchNearbyPlans().map(
-        (plans) => plans
-            .where((plan) => plan.isDiscoverable)
-            .where((plan) => !blockedUserIds.contains(plan.ownerUserId))
-            .toList(growable: false)
-          ..sort((left, right) {
-            if (left.status == right.status) {
-              return 0;
-            }
-            if (left.status == ActivityStatus.open) {
-              return -1;
-            }
-            if (right.status == ActivityStatus.open) {
-              return 1;
-            }
-            return 0;
-          }),
-      );
-});
-
-final ownedPlansProvider = StreamProvider<List<ActivityPlan>>((ref) {
-  final repository = ref.watch(activityRepositoryProvider);
+final safetyTargetUserIdsProvider = Provider<AsyncValue<List<String>>>((ref) {
+  final threadsAsync = ref.watch(chatThreadsProvider);
+  final requestsByActivityAsync =
+      ref.watch(ownedJoinRequestsByActivityProvider);
   final currentUserId = ref.watch(currentUserIdProvider);
-  if (currentUserId == null) {
-    return Stream.value(const <ActivityPlan>[]);
-  }
-  return repository.watchNearbyPlans().map(
-        (plans) => plans
-            .where((plan) => plan.ownerUserId == currentUserId)
-            .where((plan) => plan.isDiscoverable)
-            .toList(growable: false),
-      );
+  return switch ((threadsAsync, requestsByActivityAsync)) {
+    (
+      AsyncData(value: final threads),
+      AsyncData(value: final requestsByActivity)
+    ) =>
+      AsyncValue.data(
+        {
+          for (final thread in threads)
+            ...thread.participantIds.where(
+              (participantId) =>
+                  currentUserId != null && participantId != currentUserId,
+            ),
+          for (final requests in requestsByActivity.values)
+            ...requests.map((request) => request.requesterId),
+        }.where((userId) => userId.trim().isNotEmpty).toList(growable: false)
+          ..sort(),
+      ),
+    (AsyncError(:final error, :final stackTrace), _) =>
+      AsyncValue.error(error, stackTrace),
+    (_, AsyncError(:final error, :final stackTrace)) =>
+      AsyncValue.error(error, stackTrace),
+    _ => const AsyncValue.loading(),
+  };
 });
 
 final filteredPlansProvider = Provider<AsyncValue<List<ActivityPlan>>>((ref) {
@@ -259,15 +332,11 @@ final joinRequestsProvider =
 
 final ownedJoinRequestsProvider =
     Provider<AsyncValue<List<JoinRequest>>>((ref) {
-  final ownedPlansAsync = ref.watch(ownedPlansProvider);
-  return ownedPlansAsync.whenData((plans) {
+  final requestsByActivityAsync =
+      ref.watch(ownedJoinRequestsByActivityProvider);
+  return requestsByActivityAsync.whenData((requestsByActivity) {
     final requests = <JoinRequest>[];
-    for (final plan in plans) {
-      final currentRequests =
-          ref.watch(joinRequestsProvider(plan.id)).valueOrNull;
-      if (currentRequests == null) {
-        continue;
-      }
+    for (final currentRequests in requestsByActivity.values) {
       requests.addAll(currentRequests);
     }
     return List<JoinRequest>.unmodifiable(requests);

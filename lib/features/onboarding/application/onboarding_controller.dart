@@ -30,7 +30,7 @@ class OnboardingState {
       : displayName = '',
         profilePhotoUrl = '',
         profilePhotoBytes = null,
-        city = 'Istanbul',
+        city = '',
         bio = '',
         socialMood = SocialMood.calm,
         favoriteActivities = const [
