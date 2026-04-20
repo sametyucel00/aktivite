@@ -36,6 +36,13 @@ Still pending for deeper backend validation:
 - storage emulator coverage
 - richer function-level tests around Firestore writes and fanout side effects
 
+Fixed MVP boundaries for these workflows:
+
+- blocked chats stay hidden behind the existing safety-oriented empty state
+- trusted contact and safe return remain contract-only
+- activity editing remains out of scope
+- join summary data does not move into dashboard or settings surfaces
+
 ## Join Request Created
 
 Trigger:
@@ -70,7 +77,7 @@ Function responsibilities:
 - stop side effects when the activity is full, cancelled, completed, or the requester is the owner
 - notify the requester
 - suppress requester notification if either side has an active block against the other
-- optionally append a user-visible trust event if that product decision is kept
+- do not append a separate user-visible trust event for approval in the MVP
 
 Outputs:
 

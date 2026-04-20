@@ -124,6 +124,14 @@ lib/
 - Public humiliation mechanics such as star ratings are intentionally avoided
 - The current MVP scaffold exposes a user-facing trust timeline while keeping room for internal-only moderation events
 
+## Finalized MVP Product Decisions
+
+- Trusted contact stays contract-only and should not ship as a visible product flow yet.
+- Safe return stays contract-only and should wait until the core meetup flow is stable post-MVP.
+- Activity editing stays out of scope; plan creation, join, approval, and coordination are the priority flows.
+- Blocked chats stay hidden behind the existing safety-oriented empty state instead of a dedicated "hidden for safety" screen.
+- Join summary information stays within activity and safety contexts, not dashboard or settings.
+
 ## Localization Plan
 
 - ARB-based English and Turkish localization
@@ -175,5 +183,5 @@ Use `docs/functions_contracts.md` as the trigger/side-effect planning note befor
 1. Add Freezed/json models for persisted entities and request payloads.
 2. Replace the in-memory sample providers feature-by-feature as Firebase repositories become verified.
 3. Wire the phone-auth verification UI on top of the Firebase Auth session repository.
-4. Add profile media upload and approximate-location activity creation flows.
-5. Add moderation workflows and Cloud Functions contracts.
+4. Keep profile media upload and approximate-location activity creation stable while Firebase seams expand.
+5. Continue moderation workflows and Cloud Functions hardening without widening the MVP surface.

@@ -46,7 +46,7 @@ After each repository/service migration, verify:
 
 - auth/session startup
 - onboarding/profile persistence
-- activity publish/discover/update flows
+- activity publish and discovery flows
 - join request submission and owner approval
 - chat hydration and send flow
 - safety report/block flow
@@ -91,3 +91,4 @@ After each repository/service migration, verify:
 - `docs/storage_rules_scenarios.md` for expanding Storage emulator assertions
 - `docs/safety_backend_contracts.md` for cross-surface safety alignment
 - `docs/repository_source_comparison.md` for a short in-memory vs firebase seam comparison
+- finalized MVP boundaries keep trusted contact, safe return, activity editing, hidden-safety thread UI, and dashboard/settings join summaries out of scope for now

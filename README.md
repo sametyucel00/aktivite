@@ -76,6 +76,14 @@ If you are validating a larger feature or backend workflow manually after the sc
 - Install JDK 21 or newer before running Firebase emulator-based rule checks.
 - Use the `firebase-tests/` suite and fixtures for Firestore and Storage rules verification.
 
+## MVP Boundaries
+
+- Trusted contact: contract-only for now
+- Safe return: post-MVP candidate, not a visible current flow
+- Activity edit: intentionally out of scope
+- Blocked chats: stay hidden behind safety-oriented empty states
+- Join summary: stays in activity and safety contexts, not dashboard or settings
+
 ## Current Repository State
 
 This repository already includes:
