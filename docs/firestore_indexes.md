@@ -15,6 +15,21 @@ Current planned query families map to repository/provider seams like this:
 | read trust or moderation events by subject user | `ModerationRepository.watchTrustEvents` |
 | read user-scoped reports or blocks | future Firebase `SafetyRepository` history reads |
 
+## Current Firebase Query Usage
+
+The Firebase-backed seams currently implemented in code use these concrete query shapes:
+
+| Repository method | Query shape | Index status |
+| --- | --- | --- |
+| `FirestoreActivityRepository.watchNearbyPlans` | `activities.orderBy(createdAt, desc)` | single-field, no composite index needed |
+| `FirestoreJoinRequestRepository.watchRequestsForActivity` | `activities/{activityId}/joinRequests` direct collection read | no composite index needed |
+| `FirestoreJoinRequestRepository.updateRequestStatus` | `collectionGroup(joinRequests).where(documentId == requestId).limit(1)` | document id lookup, no composite index needed |
+| `FirestoreChatRepository.watchApprovedThreads` | `chatThreads.where(participantIds, arrayContains: userId)` | single array filter, no composite index needed |
+| `FirestoreChatRepository.watchMessages` | `chatThreads/{threadId}/messages.orderBy(sentAt)` | single-field order, no composite index needed |
+| `FirestoreModerationRepository.watchTrustEvents` | `trustEvents.where(subjectUserId == userId).orderBy(createdAt, desc)` | covered by `firestore.indexes.json` |
+
+The remaining indexes in `firestore.indexes.json` are intentionally pre-provisioned for planned discovery and safety history queries, not because the current Firebase seams already require all of them.
+
 ## Activities
 
 Expected query families:
@@ -46,6 +61,7 @@ Likely index combinations:
 Notes:
 
 - Discovery ranking currently happens in memory after provider filtering.
+- The current Firebase-backed `watchNearbyPlans` seam only orders by `createdAt`; the surface/category indexes are pre-provisioned for the next discovery migration step.
 - If distance/time ordering moves to Firestore later, new indexes will be needed.
 
 ## Join Requests
@@ -63,6 +79,7 @@ Likely index combinations:
 Notes:
 
 - The current app reads per-activity join requests directly and sorts them client-side.
+- `updateRequestStatus` currently uses a `collectionGroup` lookup by document id only.
 - No join-request composite index is currently required in `firestore.indexes.json`.
 - Add the status index only when Firebase-backed filtering or ordering by status is introduced.
 
@@ -84,6 +101,7 @@ Likely index combinations:
 
 Notes:
 
+- The current Firebase-backed seam uses only `arrayContains(participantIds)`; the `updatedAt` index is ready for the likely next step of recency ordering.
 - The current in-memory seam filters blocked users after read.
 - If backend filtering becomes query-driven, additional fields and indexes may be required.
 - `firestore.indexes.json` already includes the participant + updatedAt index because that is the most likely first Firebase-backed thread query shape.

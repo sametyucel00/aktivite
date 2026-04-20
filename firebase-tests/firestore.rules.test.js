@@ -100,6 +100,32 @@ test(
 );
 
 test(
+  'allows owner metadata updates but denies immutable activity field changes',
+  { skip },
+  async () => {
+    await seedFirestore('activities/activity-1', activityFixture);
+
+    const ownerDb = testEnv.authenticatedContext('owner-1').firestore();
+
+    await assertSucceeds(
+      updateDoc(doc(ownerDb, 'activities', 'activity-1'), {
+        participantCount: 2,
+        status: 'open',
+        workflowSource: 'clientFallback',
+      }),
+    );
+
+    await seedFirestore('activities/activity-1', activityFixture);
+
+    await assertFails(
+      updateDoc(doc(ownerDb, 'activities', 'activity-1'), {
+        title: 'Changed title',
+      }),
+    );
+  },
+);
+
+test(
   'denies cross-user join request writes that break deterministic request ids',
   { skip },
   async () => {
@@ -168,6 +194,28 @@ test(
   },
 );
 
+test('restricts join request reads to owner and requester only', { skip }, async () => {
+  await seedFirestore('activities/activity-1', activityFixture);
+  await seedFirestore(
+    'activities/activity-1/joinRequests/guest-1',
+    joinRequestFixture,
+  );
+
+  const ownerDb = testEnv.authenticatedContext('owner-1').firestore();
+  const guestDb = testEnv.authenticatedContext('guest-1').firestore();
+  const outsiderDb = testEnv.authenticatedContext('outsider-1').firestore();
+
+  await assertSucceeds(
+    getDoc(doc(ownerDb, 'activities', 'activity-1', 'joinRequests', 'guest-1')),
+  );
+  await assertSucceeds(
+    getDoc(doc(guestDb, 'activities', 'activity-1', 'joinRequests', 'guest-1')),
+  );
+  await assertFails(
+    getDoc(doc(outsiderDb, 'activities', 'activity-1', 'joinRequests', 'guest-1')),
+  );
+});
+
 test(
   'denies chat-thread creation from clients and allows participant message writes only',
   { skip },
@@ -197,6 +245,16 @@ test(
   },
 );
 
+test('restricts chat thread reads to participants only', { skip }, async () => {
+  await seedFirestore('chatThreads/thread-1', chatThreadFixture);
+
+  const ownerDb = testEnv.authenticatedContext('owner-1').firestore();
+  const outsiderDb = testEnv.authenticatedContext('outsider-1').firestore();
+
+  await assertSucceeds(getDoc(doc(ownerDb, 'chatThreads', 'thread-1')));
+  await assertFails(getDoc(doc(outsiderDb, 'chatThreads', 'thread-1')));
+});
+
 test('denies invalid report reasons and invalid block ids', { skip }, async () => {
   const reporterDb = testEnv.authenticatedContext('reporter-1').firestore();
   const ownerDb = testEnv.authenticatedContext('owner-1').firestore();
@@ -213,4 +271,23 @@ test('denies invalid report reasons and invalid block ids', { skip }, async () =
   await assertSucceeds(setDoc(doc(ownerDb, 'blocks', 'owner-1-guest-1'), blockFixture));
 
   await assertFails(setDoc(doc(ownerDb, 'blocks', 'guest-1-owner-1'), blockFixture));
+});
+
+test('denies self-targeted reports and self blocks', { skip }, async () => {
+  const reporterDb = testEnv.authenticatedContext('reporter-1').firestore();
+  const ownerDb = testEnv.authenticatedContext('owner-1').firestore();
+
+  await assertFails(
+    setDoc(doc(reporterDb, 'reports', 'report-self'), {
+      ...reportFixture,
+      targetUserId: 'reporter-1',
+    }),
+  );
+
+  await assertFails(
+    setDoc(doc(ownerDb, 'blocks', 'owner-1-owner-1'), {
+      ...blockFixture,
+      targetUserId: 'owner-1',
+    }),
+  );
 });

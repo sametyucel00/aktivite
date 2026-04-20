@@ -2,7 +2,7 @@
 
 Use this checklist after meaningful feature, repository, or backend-workflow changes.
 
-## Always Check
+## Core Smoke
 
 - open the app and confirm the shell loads without a crash
 - confirm signed-out and signed-in entry states behave as expected
@@ -29,12 +29,21 @@ Use this checklist after meaningful feature, repository, or backend-workflow cha
 - toggle safe-meetup reminders and verify expected feedback appears
 - confirm analytics summary and trust signal surfaces remain readable
 
-## Locale And Platform Spot Checks
+## Real Device Tour
+
+- Android or iOS: verify auth entry, keyboard behavior, focus movement, and back navigation
+- Android or iOS: verify image picker permission flow and cancellation path
+- Android or iOS: verify location-sensitive surfaces fail gracefully when permission is denied
+- Android or iOS: verify scrolling, sticky actions, and bottom-sheet interactions feel correct in hand
+- Android or iOS: verify chat send, join request, and safety actions show visible loading and feedback states
+- Android or iOS: verify Turkish text and longer English strings still fit on smaller screens
+
+## Browser And Desktop Spot Checks
 
 - confirm Turkish and English strings still render without overflow in key screens
 - Web: shell load, navigation, localization, responsive layout
-- Windows: shell load, keyboard input, dialogs, scrolling
-- Android: auth entry, image picker flow, location/permission-sensitive surfaces
+- Web: chat, join, and safety flows still behave after reload or tab restore
+- Desktop browser: keyboard input, dialogs, hover states, and scrolling
 
 ## When A Firebase Seam Changes
 

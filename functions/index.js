@@ -59,44 +59,33 @@ exports.onJoinRequestCreated = onDocumentCreated(
 
     const { activityId, requestId } = event.params;
     const request = snapshot.data();
-    const activitySnapshot = await db.collection('activities').doc(activityId).get();
-    if (!activitySnapshot.exists) {
-      logger.warn('Join request references missing activity.', { activityId, requestId });
-      await snapshot.ref.update({
-        ...buildInvalidPayloadUpdate('invalidMissingActivity'),
-        updatedAt: FieldValue.serverTimestamp(),
+    const activity = await getActivityData(activityId);
+    if (!activity) {
+      await markInvalidJoinRequest(snapshot.ref, {
+        activityId,
+        requestId,
+        reason: 'invalidMissingActivity',
+        logMessage: 'Join request references missing activity.',
       });
       return;
     }
 
-    const activity = activitySnapshot.data();
     if (activity.ownerUserId === request.requesterId) {
-      logger.warn('Owner attempted to join own activity.', { activityId, requestId });
-      await snapshot.ref.update({
+      await markInvalidJoinRequest(snapshot.ref, {
+        activityId,
+        requestId,
+        reason: 'invalidOwnerRequest',
         status: 'cancelled',
-        ...buildInvalidPayloadUpdate('invalidOwnerRequest'),
-        updatedAt: FieldValue.serverTimestamp(),
+        logMessage: 'Owner attempted to join own activity.',
       });
       return;
     }
 
-    const ownerRecipients = await filterBlockedNotificationRecipients({
-      actorUserId: request.requesterId,
-      recipientIds: [activity.ownerUserId],
-    });
-    const ownerNotification = buildJoinRequestCreatedNotification();
-    await sendNotificationToUsers({
-      userIds: ownerRecipients,
-      title: ownerNotification.title,
-      body: ownerNotification.body,
-      data: buildJoinRequestCreatedNotificationData({ activityId, requestId }),
-    });
-
-    logger.info('Join request created; owner notification fanout attempted.', {
+    await notifyJoinRequestCreated({
       activityId,
       requestId,
-      ownerUserId: activity.ownerUserId,
-      requesterId: request.requesterId,
+      activity,
+      request,
     });
   },
 );
@@ -132,37 +121,17 @@ exports.onJoinRequestStatusUpdated = onDocumentUpdated(
     }
 
     if (after.status === 'rejected') {
-      const activitySnapshot = await db.collection('activities').doc(activityId).get();
-      const activity = activitySnapshot.exists ? activitySnapshot.data() : {};
-      const requesterRecipients = await filterBlockedNotificationRecipients({
-        actorUserId: activity.ownerUserId,
-        recipientIds: [after.requesterId],
-      });
-      const requesterNotification = buildJoinRequestRejectedNotification();
-      await sendNotificationToUsers({
-        userIds: requesterRecipients,
-        title: requesterNotification.title,
-        body: requesterNotification.body,
-        data: buildJoinRequestRejectedNotificationData({ activityId, requestId }),
-      });
-
-      logger.info('Join request rejected; requester notification attempted.', {
+      await handleJoinRequestRejected({
         activityId,
         requestId,
-        requesterId: after.requesterId,
-      });
-      await event.data.after.ref.update({
-        ...buildClosedJoinRequestUpdate('rejected'),
-        updatedAt: FieldValue.serverTimestamp(),
+        request: after,
+        requestRef: event.data.after.ref,
       });
       return;
     }
 
     if (after.status === 'cancelled') {
-      await event.data.after.ref.update({
-        ...buildClosedJoinRequestUpdate('cancelled'),
-        updatedAt: FieldValue.serverTimestamp(),
-      });
+      await closeJoinRequest(event.data.after.ref, 'cancelled');
     }
   },
 );
@@ -175,11 +144,12 @@ exports.onReportCreated = onDocumentCreated('reports/{reportId}', async (event) 
 
   const report = snapshot.data();
   if (!isValidReportPayload(report)) {
-    await snapshot.ref.update({
-      ...buildInvalidPayloadUpdate('invalidReportPayload'),
-      updatedAt: FieldValue.serverTimestamp(),
+    await handleInvalidPayloadWrite({
+      snapshot,
+      params: { reportId: event.params.reportId },
+      workflowStatus: 'invalidReportPayload',
+      logMessage: 'Report created with invalid payload.',
     });
-    logger.warn('Report created with invalid payload.', { reportId: event.params.reportId });
     return;
   }
 
@@ -202,11 +172,12 @@ exports.onBlockCreated = onDocumentCreated('blocks/{blockId}', async (event) => 
 
   const block = snapshot.data();
   if (!isValidBlockPayload(block)) {
-    await snapshot.ref.update({
-      ...buildInvalidPayloadUpdate('invalidBlockPayload'),
-      updatedAt: FieldValue.serverTimestamp(),
+    await handleInvalidPayloadWrite({
+      snapshot,
+      params: { blockId: event.params.blockId },
+      workflowStatus: 'invalidBlockPayload',
+      logMessage: 'Block created with invalid payload.',
     });
-    logger.warn('Block created with invalid payload.', { blockId: event.params.blockId });
     return;
   }
 
@@ -225,8 +196,8 @@ exports.onMessageCreated = onDocumentCreated(
       return;
     }
 
-    const threadSnapshot = await db.collection('chatThreads').doc(event.params.threadId).get();
-    if (!threadSnapshot.exists) {
+    const thread = await getChatThreadData(event.params.threadId);
+    if (!thread) {
       logger.warn('Message references missing chat thread.', {
         threadId: event.params.threadId,
         messageId: event.params.messageId,
@@ -234,13 +205,9 @@ exports.onMessageCreated = onDocumentCreated(
       return;
     }
 
-    const thread = threadSnapshot.data();
     if (!hasThreadParticipant(thread.participantIds, message.senderUserId)) {
-      await event.data.ref.update({
-        moderationStatus: 'invalidSender',
-        updatedAt: FieldValue.serverTimestamp(),
-      });
-      logger.warn('Message sender is not a thread participant.', {
+      await markInvalidMessageSender({
+        messageRef: event.data.ref,
         threadId: event.params.threadId,
         messageId: event.params.messageId,
         senderUserId: message.senderUserId,
@@ -248,30 +215,11 @@ exports.onMessageCreated = onDocumentCreated(
       return;
     }
 
-    const recipientIds = await filterBlockedNotificationRecipients({
-      actorUserId: message.senderUserId,
-      recipientIds: getThreadRecipientIds(
-        thread.participantIds,
-        message.senderUserId,
-      ),
-    });
-    const messageNotification = buildMessageCreatedNotification(
-      safeNotificationPreview(message.text),
-    );
-    await sendNotificationToUsers({
-      userIds: recipientIds,
-      title: messageNotification.title,
-      body: messageNotification.body,
-      data: buildMessageCreatedNotificationData({
-        threadId: event.params.threadId,
-        messageId: event.params.messageId,
-      }),
-    });
-
-    logger.info('Message created; notification fanout attempted.', {
+    await notifyMessageRecipients({
       threadId: event.params.threadId,
       messageId: event.params.messageId,
-      senderUserId: message.senderUserId,
+      message,
+      thread,
     });
   },
 );
@@ -285,21 +233,12 @@ exports.onNotificationTokenWritten = onDocumentWritten(
       return;
     }
 
-    const normalized = {
-      ...normalizeNotificationTokenRecord(after),
-      updatedAt: FieldValue.serverTimestamp(),
-    };
-    if (isTokenNormalizationNoop(before, normalized)) {
-      return;
-    }
-
-    if (shouldDeleteNormalizedToken(normalized)) {
-      await event.data.after.ref.delete();
-      logger.warn('Deleted empty notification token.', event.params);
-      return;
-    }
-
-    await event.data.after.ref.set(normalized, { merge: true });
+    await normalizeNotificationTokenWrite({
+      before,
+      after,
+      ref: event.data.after.ref,
+      params: event.params,
+    });
   },
 );
 
@@ -475,6 +414,177 @@ async function sendNotificationToUsers({ userIds, title, body, data }) {
   });
 
   await cleanupInvalidTokens(tokenRecords, response.responses);
+}
+
+async function getActivityData(activityId) {
+  const activitySnapshot = await db.collection('activities').doc(activityId).get();
+  return activitySnapshot.exists ? activitySnapshot.data() : null;
+}
+
+async function getChatThreadData(threadId) {
+  const threadSnapshot = await db.collection('chatThreads').doc(threadId).get();
+  return threadSnapshot.exists ? threadSnapshot.data() : null;
+}
+
+async function handleInvalidPayloadWrite({
+  snapshot,
+  params,
+  workflowStatus,
+  logMessage,
+}) {
+  await snapshot.ref.update({
+    ...buildInvalidPayloadUpdate(workflowStatus),
+    updatedAt: FieldValue.serverTimestamp(),
+  });
+  logger.warn(logMessage, params);
+}
+
+async function markInvalidJoinRequest(requestRef, {
+  activityId,
+  requestId,
+  reason,
+  status,
+  logMessage,
+}) {
+  await requestRef.update({
+    ...(status ? { status } : {}),
+    ...buildInvalidPayloadUpdate(reason),
+    updatedAt: FieldValue.serverTimestamp(),
+  });
+  logger.warn(logMessage, { activityId, requestId });
+}
+
+async function notifyJoinRequestCreated({
+  activityId,
+  requestId,
+  activity,
+  request,
+}) {
+  const ownerRecipients = await filterBlockedNotificationRecipients({
+    actorUserId: request.requesterId,
+    recipientIds: [activity.ownerUserId],
+  });
+  const ownerNotification = buildJoinRequestCreatedNotification();
+  await sendNotificationToUsers({
+    userIds: ownerRecipients,
+    title: ownerNotification.title,
+    body: ownerNotification.body,
+    data: buildJoinRequestCreatedNotificationData({ activityId, requestId }),
+  });
+
+  logger.info('Join request created; owner notification fanout attempted.', {
+    activityId,
+    requestId,
+    ownerUserId: activity.ownerUserId,
+    requesterId: request.requesterId,
+  });
+}
+
+async function handleJoinRequestRejected({
+  activityId,
+  requestId,
+  request,
+  requestRef,
+}) {
+  const activity = await getActivityData(activityId);
+  const requesterRecipients = await filterBlockedNotificationRecipients({
+    actorUserId: activity?.ownerUserId,
+    recipientIds: [request.requesterId],
+  });
+  const requesterNotification = buildJoinRequestRejectedNotification();
+  await sendNotificationToUsers({
+    userIds: requesterRecipients,
+    title: requesterNotification.title,
+    body: requesterNotification.body,
+    data: buildJoinRequestRejectedNotificationData({ activityId, requestId }),
+  });
+
+  logger.info('Join request rejected; requester notification attempted.', {
+    activityId,
+    requestId,
+    requesterId: request.requesterId,
+  });
+  await closeJoinRequest(requestRef, 'rejected');
+}
+
+async function closeJoinRequest(requestRef, status) {
+  await requestRef.update({
+    ...buildClosedJoinRequestUpdate(status),
+    updatedAt: FieldValue.serverTimestamp(),
+  });
+}
+
+async function markInvalidMessageSender({
+  messageRef,
+  threadId,
+  messageId,
+  senderUserId,
+}) {
+  await messageRef.update({
+    moderationStatus: 'invalidSender',
+    updatedAt: FieldValue.serverTimestamp(),
+  });
+  logger.warn('Message sender is not a thread participant.', {
+    threadId,
+    messageId,
+    senderUserId,
+  });
+}
+
+async function notifyMessageRecipients({
+  threadId,
+  messageId,
+  message,
+  thread,
+}) {
+  const recipientIds = await filterBlockedNotificationRecipients({
+    actorUserId: message.senderUserId,
+    recipientIds: getThreadRecipientIds(
+      thread.participantIds,
+      message.senderUserId,
+    ),
+  });
+  const messageNotification = buildMessageCreatedNotification(
+    safeNotificationPreview(message.text),
+  );
+  await sendNotificationToUsers({
+    userIds: recipientIds,
+    title: messageNotification.title,
+    body: messageNotification.body,
+    data: buildMessageCreatedNotificationData({
+      threadId,
+      messageId,
+    }),
+  });
+
+  logger.info('Message created; notification fanout attempted.', {
+    threadId,
+    messageId,
+    senderUserId: message.senderUserId,
+  });
+}
+
+async function normalizeNotificationTokenWrite({
+  before,
+  after,
+  ref,
+  params,
+}) {
+  const normalized = {
+    ...normalizeNotificationTokenRecord(after),
+    updatedAt: FieldValue.serverTimestamp(),
+  };
+  if (isTokenNormalizationNoop(before, normalized)) {
+    return;
+  }
+
+  if (shouldDeleteNormalizedToken(normalized)) {
+    await ref.delete();
+    logger.warn('Deleted empty notification token.', params);
+    return;
+  }
+
+  await ref.set(normalized, { merge: true });
 }
 
 async function filterBlockedNotificationRecipients({ actorUserId, recipientIds }) {

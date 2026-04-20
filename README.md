@@ -80,12 +80,12 @@ If you are validating a larger feature or backend workflow manually after the sc
 
 This repository already includes:
 
-- feature-first Flutter structure with localized app shell, guarded session flow, design-system primitives, and shared route/action helpers
-- in-memory repository seams that mirror Firebase boundaries for auth, profile, activities, join requests, chat, moderation, analytics, remote config, and safety
+- feature-first Flutter structure with localized app shell, session gating, reusable design-system primitives, and shared route/action helpers
+- in-memory and Firebase seam preparation across auth, profile, activities, join requests, chat, moderation, analytics, remote config, and safety
 - activity-first user flows for explore, map, owned activities, join requests, coordination chat, safety center, profile, and settings
-- shared domain helpers for profile gating, join-request status, activity invariants, chat normalization, trust-event creation, enum parsing, ids, and timestamps
-- Firebase migration prep through field/path constants, Firestore index planning, Functions workflow contracts, security-rule docs, and emulator-backed rules tests
-- regression coverage for widget, provider, repository, model, and Cloud Functions helper behavior across join, chat, blocked visibility, and safety flows
+- shared domain helpers for profile gating, join-request status, activity invariants, chat normalization, trust events, enums, ids, and timestamps
+- Firebase migration support through field/path constants, Functions contracts, security rules, index planning, and emulator-backed rules tests
+- regression coverage across widgets, providers, repositories, models, functions helpers, and safety/block visibility behavior
 
 ## Notes
 
