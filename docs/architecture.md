@@ -162,8 +162,8 @@ lib/
 - In-memory safety repository tests cover normalized local block/report bookkeeping before those actions are fully connected to moderation persistence
 - Repository factory tests cover every local dependency plus the currently implemented Firebase-backed seams
 - Repository provider tests cover container-level source overrides so app wiring stays aligned with the factory seam
-- Build checks for Web and Windows during active development
-- Android debug build validation for device and emulator testing
+- Build checks for Web during active development
+- Android debug build validation through GitHub-managed CI
 
 Supporting operational docs live in `docs/testing.md` and `docs/security_rules.md` so Firebase migration work stays reviewable and aligned with the app boundary rules.
 Use `docs/migration_checklist.md` as the dependency-by-dependency rollout guide before switching app-level backend source selection.
