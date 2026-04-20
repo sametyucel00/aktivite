@@ -32,10 +32,10 @@
               "client_type": 3
             },
             {
-              "client_id": "310514488602-a3jfvp1f72vdusu6omfb2loatkcmgm7b.apps.googleusercontent.com",
+              "client_id": "310514488602-05bb1o76ohk1c2eef4sfk61ttco8ge6v.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.petracore.app"
+                "bundle_id": "com.example.aktivite"
               }
             }
           ]
@@ -76,10 +76,10 @@
               "client_type": 3
             },
             {
-              "client_id": "310514488602-a3jfvp1f72vdusu6omfb2loatkcmgm7b.apps.googleusercontent.com",
+              "client_id": "310514488602-05bb1o76ohk1c2eef4sfk61ttco8ge6v.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.petracore.app"
+                "bundle_id": "com.example.aktivite"
               }
             }
           ]
@@ -112,10 +112,10 @@
               "client_type": 3
             },
             {
-              "client_id": "310514488602-a3jfvp1f72vdusu6omfb2loatkcmgm7b.apps.googleusercontent.com",
+              "client_id": "310514488602-05bb1o76ohk1c2eef4sfk61ttco8ge6v.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.petracore.app"
+                "bundle_id": "com.example.aktivite"
               }
             }
           ]
@@ -148,10 +148,10 @@
               "client_type": 3
             },
             {
-              "client_id": "310514488602-a3jfvp1f72vdusu6omfb2loatkcmgm7b.apps.googleusercontent.com",
+              "client_id": "310514488602-05bb1o76ohk1c2eef4sfk61ttco8ge6v.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.petracore.app"
+                "bundle_id": "com.example.aktivite"
               }
             }
           ]
