@@ -1,6 +1,6 @@
 # Firebase Setup
 
-Aktivite uses Firebase behind repository and service interfaces. Local development can run against in-memory implementations until Firebase platform configuration is generated.
+Togio uses Firebase behind repository and service interfaces. Local development can run against in-memory implementations until Firebase platform configuration is generated.
 
 ## Required Products
 
@@ -20,8 +20,12 @@ Aktivite uses Firebase behind repository and service interfaces. Local developme
 3. Run `flutterfire configure` from the repository root.
 4. Confirm `lib/firebase_options.dart` is generated locally.
 5. Keep real secrets out of public review. Firebase client configuration files are tracked for CI because the app imports them at compile time; protect data with Firebase Auth, rules, App Check, and backend validation rather than by treating client API keys as secrets.
-6. Run `.\tool\check.ps1` after configuration.
-7. Use `docs/manual_qa_checklist.md` for focused smoke validation after larger flow changes.
+6. Set the visible app identity and native ids to the current product values:
+   - Android package: `com.togio.app`
+   - iOS bundle id: `com.togio.app`
+7. Pass `GOOGLE_MAPS_API_KEY` through local build settings or CI secrets rather than hardcoding it into tracked files.
+8. Run `.\tool\check.ps1` after configuration.
+9. Use `docs/manual_qa_checklist.md` for focused smoke validation after larger flow changes.
 
 Use `docs/migration_checklist.md` as the step-by-step playbook when replacing in-memory seams with Firebase-backed implementations.
 
@@ -29,6 +33,8 @@ Use `docs/migration_checklist.md` as the step-by-step playbook when replacing in
 
 - `lib/firebase_options.dart` and native Firebase client config files are tracked so GitHub Actions can analyze and build the app without a manual FlutterFire step.
 - Do not commit service account JSON, private keys, `.env` files, local emulator exports, or production signing credentials.
+- Current Android GitHub secret requirement: `GOOGLE_MAPS_API_KEY`
+- Future Android release signing can be added later with separate keystore secrets; it is not required for the current debug-oriented CI flow.
 - Widgets should not call Firebase SDKs directly.
 - Feature code should depend on repository or service abstractions.
 - Firestore collection and field names should use centralized constants from `lib/core/config`.

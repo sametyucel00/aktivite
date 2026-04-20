@@ -1,6 +1,6 @@
 {
   "name": "aktivite-functions",
-  "description": "Cloud Functions contracts for Aktivite Firebase workflows.",
+  "description": "Cloud Functions contracts for Togio Firebase workflows.",
   "private": true,
   "main": "index.js",
   "engines": {

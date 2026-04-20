@@ -36,7 +36,9 @@ dependencies:
 
 dev_dependencies:
   build_runner: ^2.4.13
+  flutter_launcher_icons: ^0.14.3
   flutter_lints: ^4.0.0
+  flutter_native_splash: ^2.4.6
   flutter_test:
     sdk: flutter
   freezed: ^2.5.7
@@ -47,3 +49,20 @@ flutter:
   generate: true
   assets:
     - assets/images/
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: assets/images/togio_app_icon.png
+  adaptive_icon_background: "#F4EDE2"
+  adaptive_icon_foreground: assets/images/togio_app_icon_foreground.png
+  remove_alpha_ios: true
+
+flutter_native_splash:
+  color: "#F4EDE2"
+  image: assets/images/togio_splash_logo.png
+  android: true
+  ios: true
+  android_12:
+    color: "#F4EDE2"
+    image: assets/images/togio_splash_logo.png

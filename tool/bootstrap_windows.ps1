@@ -1,6 +1,6 @@
 $ErrorActionPreference = 'Stop'
 
-Write-Host 'Bootstrapping Flutter project structure for Aktivite...'
+Write-Host 'Bootstrapping Flutter project structure for Togio...'
 
 if (-not (Get-Command flutter -ErrorAction SilentlyContinue)) {
   throw 'Flutter SDK is not available on PATH. Install Flutter, then rerun this script.'

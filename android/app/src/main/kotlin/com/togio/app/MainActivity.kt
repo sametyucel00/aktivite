@@ -1,4 +1,4 @@
-package com.example.aktivite
+package com.togio.app
 
 import io.flutter.embedding.android.FlutterActivity
 

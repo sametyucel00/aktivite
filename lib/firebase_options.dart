@@ -45,18 +45,18 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyA2GFSr9YJpUmC-PoaTKE0yGodyzqYcq6w',
-    appId: '1:310514488602:web:3790968da8a9cfc09a88a3',
+    appId: '1:310514488602:web:23c07f88ae970f6c9a88a3',
     messagingSenderId: '310514488602',
     projectId: 'nar-rehberi',
     authDomain: 'nar-rehberi.firebaseapp.com',
     databaseURL: 'https://nar-rehberi-default-rtdb.firebaseio.com',
     storageBucket: 'nar-rehberi.firebasestorage.app',
-    measurementId: 'G-L1SCPZS6KN',
+    measurementId: 'G-D4SW5LNFTD',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyC5acc2-V7kTa3eA3ehMeSVYpoSqdYvSOc',
-    appId: '1:310514488602:android:f260b933a0ecbaaa9a88a3',
+    appId: '1:310514488602:android:d07adcc11fea081b9a88a3',
     messagingSenderId: '310514488602',
     projectId: 'nar-rehberi',
     databaseURL: 'https://nar-rehberi-default-rtdb.firebaseio.com',
@@ -65,7 +65,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyBb4vGonG4ag62KRULwBj7s4ysPw6gfNQo',
-    appId: '1:310514488602:ios:019600bee29bde649a88a3',
+    appId: '1:310514488602:ios:f232edb5efc1ff8e9a88a3',
     messagingSenderId: '310514488602',
     projectId: 'nar-rehberi',
     databaseURL: 'https://nar-rehberi-default-rtdb.firebaseio.com',
@@ -73,18 +73,18 @@ class DefaultFirebaseOptions {
     androidClientId:
         '310514488602-i77rlej2vq3jb6gk991o222lsgapdvro.apps.googleusercontent.com',
     iosClientId:
-        '310514488602-05bb1o76ohk1c2eef4sfk61ttco8ge6v.apps.googleusercontent.com',
-    iosBundleId: 'com.example.aktivite',
+        '310514488602-q1b0d5dnipv4hbtqigcfc0h7ophi3bh6.apps.googleusercontent.com',
+    iosBundleId: 'com.togio.app',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
     apiKey: 'AIzaSyA2GFSr9YJpUmC-PoaTKE0yGodyzqYcq6w',
-    appId: '1:310514488602:web:54d648777db020b29a88a3',
+    appId: '1:310514488602:web:23c07f88ae970f6c9a88a3',
     messagingSenderId: '310514488602',
     projectId: 'nar-rehberi',
     authDomain: 'nar-rehberi.firebaseapp.com',
     databaseURL: 'https://nar-rehberi-default-rtdb.firebaseio.com',
     storageBucket: 'nar-rehberi.firebasestorage.app',
-    measurementId: 'G-06P9R0MTF7',
+    measurementId: 'G-D4SW5LNFTD',
   );
 }

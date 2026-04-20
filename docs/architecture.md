@@ -1,8 +1,8 @@
-# Aktivite Architecture
+# Togio Architecture
 
 ## Product And Engineering Summary
 
-Aktivite is a real-life social activity app for low-pressure companionship and simple plans. The product centers on practical in-person activities such as coffee, walking, coworking, events, movies, games, and short spontaneous meetups. The architecture is optimized for trust, clarity, and fast coordination rather than vanity metrics, swiping, or romance-first mechanics.
+Togio is a real-life social activity app for low-pressure companionship and simple plans. The product centers on practical in-person activities such as coffee, walking, coworking, events, movies, games, and short spontaneous meetups. The architecture is optimized for trust, clarity, and fast coordination rather than vanity metrics, swiping, or romance-first mechanics.
 
 The repository is designed for Windows-first development while keeping Android, Web, Windows, and iOS support in the product architecture. Firebase is the backend platform, but platform-specific runtime setup is isolated so local development stays clean and predictable.
 

@@ -1,11 +1,11 @@
 {
-    "name": "aktivite",
-    "short_name": "aktivite",
+    "name": "Togio",
+    "short_name": "Togio",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Togio helps people make simple real-life plans together.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

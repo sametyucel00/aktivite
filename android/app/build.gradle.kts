@@ -9,8 +9,12 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+val googleMapsApiKey = providers.gradleProperty("GOOGLE_MAPS_API_KEY")
+    .orElse(providers.environmentVariable("GOOGLE_MAPS_API_KEY"))
+    .orElse("")
+
 android {
-    namespace = "com.example.aktivite"
+    namespace = "com.togio.app"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -24,14 +28,14 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.aktivite"
+        applicationId = "com.togio.app"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        manifestPlaceholders["googleMapsApiKey"] = googleMapsApiKey.get()
     }
 
     buildTypes {

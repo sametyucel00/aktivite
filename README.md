@@ -1,6 +1,6 @@
-# Aktivite
+# Togio
 
-Aktivite is a Flutter + Firebase social activity app focused on helping people make simple real-life plans together such as coffee, walking, coworking, chatting, games, events, and casual group activities.
+Togio is a Flutter + Firebase social activity app focused on helping people make simple real-life plans together such as coffee, walking, coworking, chatting, games, events, and casual group activities.
 
 ## Product Direction
 
@@ -71,6 +71,7 @@ If you are validating a larger feature or backend workflow manually after the sc
 
 - Firebase client config is tracked because the app imports it during analysis and build.
 - Do not commit service accounts, private keys, signing credentials, local emulator exports, or `.env` files.
+- Pass the Google Maps key through CI or local build settings via `GOOGLE_MAPS_API_KEY`; do not hardcode it into tracked files.
 - Keep changes small enough for review and run `.\tool\check.ps1` or the equivalent Flutter commands before opening a PR.
 - Use local web build verification when needed; Android and iOS release-oriented builds are expected to run through GitHub workflows rather than local daily checks.
 - Install JDK 21 or newer before running Firebase emulator-based rule checks.
