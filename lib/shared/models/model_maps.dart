@@ -15,6 +15,7 @@ typedef ModelMap = Map<String, Object?>;
 
 ModelMap activityPlanToMap(ActivityPlan plan) {
   return {
+    FirebaseDocumentFields.id: plan.id,
     FirebaseDocumentFields.ownerUserId: plan.ownerUserId,
     FirebaseDocumentFields.title: plan.title,
     FirebaseDocumentFields.category: enumName(plan.category),
@@ -27,6 +28,7 @@ ModelMap activityPlanToMap(ActivityPlan plan) {
     FirebaseDocumentFields.durationMinutes: plan.durationMinutes,
     FirebaseDocumentFields.participantCount: plan.participantCount,
     FirebaseDocumentFields.maxParticipants: plan.maxParticipants,
+    FirebaseDocumentFields.distanceKm: plan.distanceKm,
     FirebaseDocumentFields.isIndoor: plan.isIndoor,
     FirebaseDocumentFields.status: enumName(plan.status),
     FirebaseDocumentFields.surfaces: enumNames(plan.surfaces),
@@ -61,6 +63,7 @@ ActivityPlan activityPlanFromMap(String id, ModelMap map) {
         _int(map[FirebaseDocumentFields.participantCount], fallback: 1),
     maxParticipants:
         _int(map[FirebaseDocumentFields.maxParticipants], fallback: 2),
+    distanceKm: _doubleOrNull(map[FirebaseDocumentFields.distanceKm]),
     isIndoor: _bool(map[FirebaseDocumentFields.isIndoor], fallback: true),
     status: activityStatusFromName(map[FirebaseDocumentFields.status]),
     surfaces: surfaces.isEmpty ? const [DiscoverySurface.nearby] : surfaces,
@@ -200,6 +203,16 @@ String _string(Object? value, {String fallback = ''}) {
 
 int _int(Object? value, {int fallback = 0}) {
   return value is int ? value : fallback;
+}
+
+double? _doubleOrNull(Object? value) {
+  if (value is double) {
+    return value;
+  }
+  if (value is int) {
+    return value.toDouble();
+  }
+  return null;
 }
 
 bool _bool(Object? value, {bool fallback = false}) {

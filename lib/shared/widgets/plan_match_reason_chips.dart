@@ -24,17 +24,21 @@ class PlanMatchReasonChips extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    return Wrap(
-      spacing: AppSpacing.sm,
-      runSpacing: AppSpacing.sm,
-      children: visibleReasons
-          .map(
-            (reason) => Chip(
-              label: Text(_labelForReason(l10n, reason)),
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            ),
-          )
-          .toList(growable: false),
+    return SizedBox(
+      width: double.infinity,
+      child: Wrap(
+        spacing: AppSpacing.sm,
+        runSpacing: AppSpacing.sm,
+        alignment: WrapAlignment.center,
+        children: visibleReasons
+            .map(
+              (reason) => Chip(
+                label: Text(_labelForReason(l10n, reason)),
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+            )
+            .toList(growable: false),
+      ),
     );
   }
 }

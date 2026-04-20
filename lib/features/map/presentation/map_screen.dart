@@ -41,18 +41,52 @@ class MapScreen extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  height: 280,
+                  height: MediaQuery.sizeOf(context).width < 420 ? 220 : 280,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
-                    color:
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
                         Theme.of(context).colorScheme.surfaceContainerHighest,
+                        Theme.of(context)
+                            .colorScheme
+                            .primaryContainer
+                            .withValues(alpha: 0.42),
+                      ],
+                    ),
                   ),
                   child: Stack(
                     children: [
                       Positioned.fill(
+                        child: CustomPaint(
+                          painter: _ApproximateMapPainter(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurfaceVariant
+                                .withValues(alpha: 0.12),
+                          ),
+                        ),
+                      ),
+                      Positioned.fill(
                         child: Padding(
                           padding: const EdgeInsets.all(AppSpacing.lg),
-                          child: Text(l10n.mapPlaceholder),
+                          child: Align(
+                            alignment: Alignment.topLeft,
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .surface
+                                    .withValues(alpha: 0.82),
+                                borderRadius: BorderRadius.circular(14),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(AppSpacing.sm),
+                                child: Text(l10n.mapPlaceholder),
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                       const Positioned(
@@ -184,6 +218,32 @@ class MapScreen extends ConsumerWidget {
         ],
       ),
     );
+  }
+}
+
+class _ApproximateMapPainter extends CustomPainter {
+  const _ApproximateMapPainter({required this.color});
+
+  final Color color;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = 2;
+    for (var i = 1; i < 5; i++) {
+      final y = size.height * i / 5;
+      canvas.drawLine(Offset(0, y), Offset(size.width, y + 24), paint);
+    }
+    for (var i = 1; i < 4; i++) {
+      final x = size.width * i / 4;
+      canvas.drawLine(Offset(x, 0), Offset(x - 32, size.height), paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _ApproximateMapPainter oldDelegate) {
+    return oldDelegate.color != color;
   }
 }
 

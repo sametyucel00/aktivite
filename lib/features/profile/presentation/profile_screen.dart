@@ -139,20 +139,32 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     children: loadedProfile.favoriteActivities
                         .map(
                           (activity) => Chip(
+                            avatar: Icon(activityIcon(activity), size: 18),
                             label: Text(activityLabel(l10n, activity)),
                           ),
                         )
                         .toList(growable: false),
                   ),
                   const SizedBox(height: AppSpacing.md),
-                  Text(
-                    l10n.profileMoodLabel(
-                      moodLabel(l10n, loadedProfile.socialMood),
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.md),
-                  Text(
-                    '${l10n.profileGroupPreferenceTitle}: ${groupPreferenceLabel(l10n, loadedProfile.groupPreference)}',
+                  Wrap(
+                    spacing: AppSpacing.sm,
+                    runSpacing: AppSpacing.sm,
+                    children: [
+                      Chip(
+                        avatar: const Icon(Icons.mood_outlined, size: 18),
+                        label: Text(
+                          l10n.profileMoodLabel(
+                            moodLabel(l10n, loadedProfile.socialMood),
+                          ),
+                        ),
+                      ),
+                      Chip(
+                        avatar: const Icon(Icons.groups_outlined, size: 18),
+                        label: Text(
+                          '${l10n.profileGroupPreferenceTitle}: ${groupPreferenceLabel(l10n, loadedProfile.groupPreference)}',
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: AppSpacing.md),
                   Text(
@@ -222,7 +234,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   _profilePhotoMessage(context, editor),
                 ),
                 const SizedBox(height: AppSpacing.sm),
-                Row(
+                Wrap(
+                  spacing: AppSpacing.sm,
+                  runSpacing: AppSpacing.sm,
+                  crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
                     OutlinedButton(
                       onPressed: profile == null || editor.isUploadingPhoto
@@ -259,15 +274,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       ),
                     ),
                     if (editor.profilePhotoUrl.isNotEmpty ||
-                        editor.profilePhotoBytes != null) ...[
-                      const SizedBox(width: AppSpacing.sm),
+                        editor.profilePhotoBytes != null)
                       TextButton(
                         onPressed: editor.isUploadingPhoto
                             ? null
                             : editorController.removeProfilePhoto,
                         child: Text(l10n.profilePhotoRemove),
                       ),
-                    ],
                   ],
                 ),
                 const SizedBox(height: AppSpacing.md),
@@ -301,6 +314,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   initialValue: editor.socialMood,
                   decoration: InputDecoration(
                     labelText: l10n.onboardingFieldMood,
+                    prefixIcon: Icon(socialMoodIcon(editor.socialMood)),
                   ),
                   items: SocialMood.values
                       .map(
@@ -321,6 +335,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   initialValue: editor.groupPreference,
                   decoration: InputDecoration(
                     labelText: l10n.onboardingFieldGroupPreference,
+                    prefixIcon:
+                        Icon(groupPreferenceIcon(editor.groupPreference)),
                   ),
                   items: GroupPreference.values
                       .map(
@@ -345,20 +361,28 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   ),
                 ),
                 const SizedBox(height: AppSpacing.sm),
-                Wrap(
-                  spacing: AppSpacing.sm,
-                  runSpacing: AppSpacing.sm,
-                  children: ActivityCategory.values
-                      .map(
-                        (activity) => FilterChip(
-                          selected:
-                              editor.favoriteActivities.contains(activity),
-                          label: Text(activityLabel(l10n, activity)),
-                          onSelected: (_) =>
-                              editorController.toggleActivity(activity),
-                        ),
-                      )
-                      .toList(growable: false),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: ActivityCategory.values
+                        .map(
+                          (activity) => Padding(
+                            padding:
+                                const EdgeInsets.only(right: AppSpacing.sm),
+                            child: FilterChip(
+                              selected:
+                                  editor.favoriteActivities.contains(activity),
+                              showCheckmark: false,
+                              avatar: Icon(activityIcon(activity), size: 18),
+                              label: Text(activityLabel(l10n, activity)),
+                              visualDensity: VisualDensity.compact,
+                              onSelected: (_) =>
+                                  editorController.toggleActivity(activity),
+                            ),
+                          ),
+                        )
+                        .toList(growable: false),
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.md),
                 Align(
@@ -369,19 +393,27 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   ),
                 ),
                 const SizedBox(height: AppSpacing.sm),
-                Wrap(
-                  spacing: AppSpacing.sm,
-                  runSpacing: AppSpacing.sm,
-                  children: AvailabilitySlot.values
-                      .map(
-                        (slot) => FilterChip(
-                          selected: editor.activeTimes.contains(slot),
-                          label: Text(availabilityLabel(l10n, slot)),
-                          onSelected: (_) =>
-                              editorController.toggleActiveTime(slot),
-                        ),
-                      )
-                      .toList(growable: false),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: AvailabilitySlot.values
+                        .map(
+                          (slot) => Padding(
+                            padding:
+                                const EdgeInsets.only(right: AppSpacing.sm),
+                            child: FilterChip(
+                              selected: editor.activeTimes.contains(slot),
+                              showCheckmark: false,
+                              avatar: Icon(availabilityIcon(slot), size: 18),
+                              label: Text(availabilityLabel(l10n, slot)),
+                              visualDensity: VisualDensity.compact,
+                              onSelected: (_) =>
+                                  editorController.toggleActiveTime(slot),
+                            ),
+                          ),
+                        )
+                        .toList(growable: false),
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.md),
                 Align(
@@ -392,8 +424,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   ),
                 ),
                 const SizedBox(height: AppSpacing.md),
-                Align(
-                  alignment: Alignment.centerLeft,
+                Center(
                   child: FilledButton(
                     onPressed: profile == null || !editor.canSubmit
                         ? null

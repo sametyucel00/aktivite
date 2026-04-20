@@ -218,6 +218,7 @@ final filteredPlansProvider = Provider<AsyncValue<List<ActivityPlan>>>((ref) {
               exploreState.category == null ||
               plan.category == exploreState.category,
         )
+        .where((plan) => exploreState.distanceFilter.includes(plan.distanceKm))
         .toList(growable: true);
 
     final profile = profileAsync.valueOrNull;

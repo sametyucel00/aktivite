@@ -28,6 +28,7 @@ class InMemoryActivityRepository implements ActivityRepository {
       durationMinutes: 75,
       participantCount: 2,
       maxParticipants: 4,
+      distanceKm: 1.8,
       isIndoor: true,
       status: ActivityStatus.open,
       surfaces: [
@@ -49,6 +50,7 @@ class InMemoryActivityRepository implements ActivityRepository {
       durationMinutes: 60,
       participantCount: 3,
       maxParticipants: 5,
+      distanceKm: 3.2,
       isIndoor: false,
       status: ActivityStatus.open,
       surfaces: [
@@ -70,6 +72,7 @@ class InMemoryActivityRepository implements ActivityRepository {
       durationMinutes: 120,
       participantCount: 1,
       maxParticipants: 3,
+      distanceKm: 6.5,
       isIndoor: true,
       status: ActivityStatus.open,
       surfaces: [

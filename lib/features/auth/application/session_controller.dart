@@ -38,6 +38,24 @@ class SessionController extends Notifier<AppSession> {
         );
   }
 
+  Future<PhoneAuthResult> signInWithEmail({
+    required String email,
+    required String password,
+  }) {
+    return ref.read(authRepositoryProvider).signInWithEmail(
+          email: email,
+          password: password,
+        );
+  }
+
+  Future<PhoneAuthResult> signInWithGoogle() {
+    return ref.read(authRepositoryProvider).signInWithGoogle();
+  }
+
+  Future<PhoneAuthResult> signInWithApple() {
+    return ref.read(authRepositoryProvider).signInWithApple();
+  }
+
   void completeOnboarding() {
     state = state.copyWith(isOnboardingComplete: true);
   }

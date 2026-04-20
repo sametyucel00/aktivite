@@ -20,6 +20,7 @@ class ActivityPlan {
     required this.durationMinutes,
     required this.participantCount,
     required this.maxParticipants,
+    this.distanceKm,
     required this.isIndoor,
     required this.status,
     required this.surfaces,
@@ -38,6 +39,7 @@ class ActivityPlan {
   final int durationMinutes;
   final int participantCount;
   final int maxParticipants;
+  final double? distanceKm;
   final bool isIndoor;
   final ActivityStatus status;
   final List<DiscoverySurface> surfaces;
@@ -72,6 +74,8 @@ class ActivityPlan {
       maxParticipants > 0 &&
       participantCount <= maxParticipants;
 
+  bool get hasApproximateDistance => distanceKm != null && distanceKm! >= 0;
+
   bool get canPublish =>
       hasValidIdentity &&
       hasValidCreateDetails &&
@@ -94,6 +98,7 @@ class ActivityPlan {
     int? durationMinutes,
     int? participantCount,
     int? maxParticipants,
+    Object? distanceKm = _unset,
     bool? isIndoor,
     ActivityStatus? status,
     List<DiscoverySurface>? surfaces,
@@ -114,6 +119,9 @@ class ActivityPlan {
       durationMinutes: durationMinutes ?? this.durationMinutes,
       participantCount: participantCount ?? this.participantCount,
       maxParticipants: maxParticipants ?? this.maxParticipants,
+      distanceKm: identical(distanceKm, _unset)
+          ? this.distanceKm
+          : distanceKm as double?,
       isIndoor: isIndoor ?? this.isIndoor,
       status: status ?? this.status,
       surfaces: surfaces ?? this.surfaces,

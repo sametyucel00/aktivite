@@ -1,12 +1,14 @@
 import 'package:aktivite/core/enums/activity_category.dart';
 import 'package:aktivite/core/enums/activity_status.dart';
 import 'package:aktivite/core/enums/availability_slot.dart';
+import 'package:aktivite/core/enums/discovery_distance_filter.dart';
 import 'package:aktivite/core/enums/discovery_surface.dart';
 import 'package:aktivite/core/enums/group_preference.dart';
 import 'package:aktivite/core/enums/social_mood.dart';
 import 'package:aktivite/core/enums/verification_level.dart';
 import 'package:aktivite/features/activities/data/activity_repository.dart';
 import 'package:aktivite/features/chat/data/chat_repository.dart';
+import 'package:aktivite/features/explore/application/explore_controller.dart';
 import 'package:aktivite/shared/models/app_user_profile.dart';
 import 'package:aktivite/shared/models/activity_plan.dart';
 import 'package:aktivite/shared/models/chat_message.dart';
@@ -136,6 +138,78 @@ void main() {
     expect(
       container.read(chatThreadsProvider).valueOrNull?.single.id,
       'thread-visible',
+    );
+  });
+
+  test('filteredPlansProvider applies surface category and distance filters',
+      () async {
+    final container = ProviderContainer(
+      overrides: [
+        activityRepositoryProvider.overrideWithValue(
+          _StaticActivityRepository([
+            ActivityPlan(
+              id: 'near-coffee',
+              ownerUserId: 'guest-near',
+              title: 'Near coffee',
+              category: ActivityCategory.coffee,
+              description: 'Close enough',
+              city: 'Istanbul',
+              approximateLocation: 'Kadikoy',
+              timeLabel: 'Tonight',
+              scheduledAt: DateTime(2026, 4, 19, 20),
+              durationMinutes: 60,
+              participantCount: 1,
+              maxParticipants: 4,
+              distanceKm: 2,
+              isIndoor: true,
+              status: ActivityStatus.open,
+              surfaces: const [DiscoverySurface.tonight],
+            ),
+            ActivityPlan(
+              id: 'far-coffee',
+              ownerUserId: 'guest-far',
+              title: 'Far coffee',
+              category: ActivityCategory.coffee,
+              description: 'Too far for this filter',
+              city: 'Istanbul',
+              approximateLocation: 'Besiktas',
+              timeLabel: 'Tonight',
+              scheduledAt: DateTime(2026, 4, 19, 21),
+              durationMinutes: 60,
+              participantCount: 1,
+              maxParticipants: 4,
+              distanceKm: 8,
+              isIndoor: true,
+              status: ActivityStatus.open,
+              surfaces: const [DiscoverySurface.tonight],
+            ),
+          ]),
+        ),
+        currentUserProfileProvider.overrideWith(
+          (ref) => const Stream<AppUserProfile>.empty(),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    await container.read(allPlansProvider.future);
+    container
+        .read(exploreControllerProvider.notifier)
+        .setSurface(DiscoverySurface.tonight);
+    container
+        .read(exploreControllerProvider.notifier)
+        .setCategory(ActivityCategory.coffee);
+    container
+        .read(exploreControllerProvider.notifier)
+        .setDistanceFilter(DiscoveryDistanceFilter.three);
+
+    expect(
+      container
+          .read(filteredPlansProvider)
+          .valueOrNull
+          ?.map((plan) => plan.id)
+          .toList(growable: false),
+      ['near-coffee'],
     );
   });
 }

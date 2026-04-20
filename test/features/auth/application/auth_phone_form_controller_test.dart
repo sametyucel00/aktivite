@@ -47,6 +47,24 @@ class _RecordingAuthRepository implements AuthRepository {
   }
 
   @override
+  Future<PhoneAuthResult> signInWithEmail({
+    required String email,
+    required String password,
+  }) async {
+    return const PhoneAuthResult.unsupported();
+  }
+
+  @override
+  Future<PhoneAuthResult> signInWithGoogle() async {
+    return const PhoneAuthResult.unsupported();
+  }
+
+  @override
+  Future<PhoneAuthResult> signInWithApple() async {
+    return const PhoneAuthResult.unsupported();
+  }
+
+  @override
   Future<void> signOut() async {
     _currentUserId = null;
     _controller.add(null);
@@ -72,6 +90,24 @@ class _UnsupportedAuthRepository implements AuthRepository {
     return Future<PhoneAuthResult>.value(
       const PhoneAuthResult.unsupported(),
     );
+  }
+
+  @override
+  Future<PhoneAuthResult> signInWithEmail({
+    required String email,
+    required String password,
+  }) async {
+    return const PhoneAuthResult.unsupported();
+  }
+
+  @override
+  Future<PhoneAuthResult> signInWithGoogle() async {
+    return const PhoneAuthResult.unsupported();
+  }
+
+  @override
+  Future<PhoneAuthResult> signInWithApple() async {
+    return const PhoneAuthResult.unsupported();
   }
 
   @override
@@ -108,6 +144,24 @@ class _CodeSentAuthRepository implements AuthRepository {
         failureReason: PhoneAuthFailureReason.invalidCode,
       ),
     );
+  }
+
+  @override
+  Future<PhoneAuthResult> signInWithEmail({
+    required String email,
+    required String password,
+  }) async {
+    return const PhoneAuthResult.unsupported();
+  }
+
+  @override
+  Future<PhoneAuthResult> signInWithGoogle() async {
+    return const PhoneAuthResult.unsupported();
+  }
+
+  @override
+  Future<PhoneAuthResult> signInWithApple() async {
+    return const PhoneAuthResult.unsupported();
   }
 
   @override

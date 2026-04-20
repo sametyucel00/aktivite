@@ -70,6 +70,77 @@ class FirebaseAuthRepository implements AuthRepository {
     return _auth().signOut();
   }
 
+  @override
+  Future<PhoneAuthResult> signInWithEmail({
+    required String email,
+    required String password,
+  }) async {
+    final normalizedEmail = email.trim();
+    if (normalizedEmail.isEmpty || password.length < 6) {
+      return const PhoneAuthResult.failed();
+    }
+
+    try {
+      await _auth().signInWithEmailAndPassword(
+        email: normalizedEmail,
+        password: password,
+      );
+      return const PhoneAuthResult.signedIn();
+    } on FirebaseAuthException catch (error) {
+      if (error.code == 'user-not-found' ||
+          error.code == 'invalid-credential') {
+        try {
+          await _auth().createUserWithEmailAndPassword(
+            email: normalizedEmail,
+            password: password,
+          );
+          return const PhoneAuthResult.signedIn();
+        } on FirebaseAuthException catch (createError) {
+          return PhoneAuthResult.failed(
+            message: createError.message,
+            failureReason: _mapFailureReason(createError.code),
+          );
+        }
+      }
+      return PhoneAuthResult.failed(
+        message: error.message,
+        failureReason: _mapFailureReason(error.code),
+      );
+    } catch (error) {
+      return PhoneAuthResult.failed(message: error.toString());
+    }
+  }
+
+  @override
+  Future<PhoneAuthResult> signInWithGoogle() async {
+    if (kIsWeb) {
+      try {
+        await _auth().signInWithPopup(GoogleAuthProvider());
+        return const PhoneAuthResult.signedIn();
+      } on FirebaseAuthException catch (error) {
+        return PhoneAuthResult.failed(message: error.message);
+      }
+    }
+    return const PhoneAuthResult.unsupported(
+      message: 'Google sign-in needs a mobile OAuth provider package.',
+    );
+  }
+
+  @override
+  Future<PhoneAuthResult> signInWithApple() async {
+    if (kIsWeb) {
+      try {
+        await _auth().signInWithPopup(AppleAuthProvider());
+        return const PhoneAuthResult.signedIn();
+      } on FirebaseAuthException catch (error) {
+        return PhoneAuthResult.failed(message: error.message);
+      }
+    }
+    return const PhoneAuthResult.unsupported(
+      message: 'Apple sign-in needs a mobile OAuth provider package.',
+    );
+  }
+
   Future<PhoneAuthResult> _verifyPhoneNumber(String phoneNumber) async {
     final completer = Completer<PhoneAuthResult>();
 

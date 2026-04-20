@@ -96,7 +96,11 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             children: [
               Card(
                 child: Padding(
-                  padding: const EdgeInsets.all(AppSpacing.lg),
+                  padding: EdgeInsets.all(
+                    MediaQuery.sizeOf(context).width < 420
+                        ? AppSpacing.md
+                        : AppSpacing.lg,
+                  ),
                   child: selectedThread == null
                       ? Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -115,53 +119,118 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                       : Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              l10n.chatSelectedThreadTitle,
-                              style: Theme.of(context).textTheme.titleMedium,
-                            ),
-                            const SizedBox(height: AppSpacing.xs),
-                            Text(
-                              l10n.chatSelectedThreadSubtitle,
-                              style: Theme.of(context).textTheme.bodySmall,
+                            Row(
+                              children: [
+                                Container(
+                                  width: 42,
+                                  height: 42,
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .primaryContainer,
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  child: Icon(
+                                    Icons.forum_outlined,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimaryContainer,
+                                  ),
+                                ),
+                                const SizedBox(width: AppSpacing.sm),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        l10n.chatSelectedThreadTitle,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleMedium,
+                                      ),
+                                      Text(
+                                        l10n.chatSelectedThreadSubtitle,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
                             if (threads.length > 1) ...[
                               const SizedBox(height: AppSpacing.md),
-                              Wrap(
-                                spacing: AppSpacing.sm,
-                                runSpacing: AppSpacing.sm,
-                                children: threads
-                                    .map(
-                                      (thread) => ChoiceChip(
-                                        selected:
-                                            thread.id == selectedThread.id,
-                                        onSelected: (_) {
-                                          setState(() {
-                                            _selectedThreadId = thread.id;
-                                          });
-                                        },
-                                        label: Text(
-                                          l10n.chatThreadChipLabel(
-                                            thread.activityId,
-                                            thread.participantsCount,
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: threads
+                                      .map(
+                                        (thread) => Padding(
+                                          padding: const EdgeInsets.only(
+                                            right: AppSpacing.sm,
+                                          ),
+                                          child: ChoiceChip(
+                                            selected:
+                                                thread.id == selectedThread.id,
+                                            showCheckmark: false,
+                                            visualDensity:
+                                                VisualDensity.compact,
+                                            onSelected: (_) {
+                                              setState(() {
+                                                _selectedThreadId = thread.id;
+                                              });
+                                            },
+                                            label: Text(
+                                              l10n.chatThreadChipLabel(
+                                                thread.activityId,
+                                                thread.participantsCount,
+                                              ),
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    )
-                                    .toList(growable: false),
+                                      )
+                                      .toList(growable: false),
+                                ),
                               ),
                             ],
                             const SizedBox(height: AppSpacing.md),
-                            Text(
-                              l10n.chatActivityLabel(selectedThread.activityId),
-                              style: Theme.of(context).textTheme.labelLarge,
+                            Wrap(
+                              spacing: AppSpacing.sm,
+                              runSpacing: AppSpacing.sm,
+                              children: [
+                                Chip(
+                                  avatar: const Icon(
+                                    Icons.event_note_outlined,
+                                    size: 18,
+                                  ),
+                                  label: Text(
+                                    l10n.chatActivityLabel(
+                                      selectedThread.activityId,
+                                    ),
+                                  ),
+                                  visualDensity: VisualDensity.compact,
+                                ),
+                                Chip(
+                                  avatar: const Icon(
+                                    Icons.groups_outlined,
+                                    size: 18,
+                                  ),
+                                  label: Text(
+                                    l10n.chatParticipantsCount(
+                                      selectedThread.participantsCount,
+                                    ),
+                                  ),
+                                  visualDensity: VisualDensity.compact,
+                                ),
+                              ],
                             ),
-                            const SizedBox(height: AppSpacing.xs),
-                            Text(selectedThread.lastMessagePreview),
-                            const SizedBox(height: AppSpacing.xs),
+                            const SizedBox(height: AppSpacing.sm),
                             Text(
-                              l10n.chatParticipantsCount(
-                                selectedThread.participantsCount,
-                              ),
+                              selectedThread.lastMessagePreview,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                               style: Theme.of(context).textTheme.bodySmall,
                             ),
                           ],
@@ -208,6 +277,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                 );
               },
               decoration: InputDecoration(
+                counterText: '',
                 border: InputBorder.none,
                 hintText: canSendMessage
                     ? l10n.chatComposerHint
@@ -324,7 +394,11 @@ class _ThreadCard extends ConsumerWidget {
 
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.lg),
+        padding: EdgeInsets.all(
+          MediaQuery.sizeOf(context).width < 420
+              ? AppSpacing.md
+              : AppSpacing.lg,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -392,24 +466,29 @@ class _ThreadCard extends ConsumerWidget {
               style: Theme.of(context).textTheme.bodySmall,
             ),
             const SizedBox(height: AppSpacing.sm),
-            Wrap(
-              spacing: AppSpacing.sm,
-              runSpacing: AppSpacing.sm,
-              children: quickReplies
-                  .map(
-                    (reply) => ActionChip(
-                      label: Text(reply),
-                      onPressed: isSendingMessage
-                          ? null
-                          : () async {
-                              if (draftController != null) {
-                                draftController!.text = reply;
-                              }
-                              await onSendMessage(reply);
-                            },
-                    ),
-                  )
-                  .toList(growable: false),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: quickReplies
+                    .map(
+                      (reply) => Padding(
+                        padding: const EdgeInsets.only(right: AppSpacing.sm),
+                        child: ActionChip(
+                          visualDensity: VisualDensity.compact,
+                          label: Text(reply),
+                          onPressed: isSendingMessage
+                              ? null
+                              : () async {
+                                  if (draftController != null) {
+                                    draftController!.text = reply;
+                                  }
+                                  await onSendMessage(reply);
+                                },
+                        ),
+                      ),
+                    )
+                    .toList(growable: false),
+              ),
             ),
             if (isPrimary) ...[
               const SizedBox(height: AppSpacing.sm),

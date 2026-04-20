@@ -11,13 +11,37 @@ import 'package:aktivite/shared/widgets/app_section_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AuthGateScreen extends ConsumerWidget {
+class AuthGateScreen extends ConsumerStatefulWidget {
   const AuthGateScreen({super.key});
 
   static const routePath = AppRoutes.auth;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<AuthGateScreen> createState() => _AuthGateScreenState();
+}
+
+class _AuthGateScreenState extends ConsumerState<AuthGateScreen> {
+  late final TextEditingController _emailController;
+  late final TextEditingController _passwordController;
+  bool _isSubmittingEmail = false;
+  bool _isSubmittingProvider = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _emailController = TextEditingController();
+    _passwordController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final authPhoneState = ref.watch(authPhoneFormControllerProvider);
     final repositorySource = ref.watch(repositorySourceProvider);
@@ -48,34 +72,36 @@ class AuthGateScreen extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: AppSpacing.md),
-                FilledButton(
-                  onPressed: authPhoneState.canSubmit
-                      ? () async {
-                          await ref.read(analyticsServiceProvider).logEvent(
-                                name: AnalyticsEvents.authPhoneSelected,
-                              );
-                          final success = await ref
-                              .read(authPhoneFormControllerProvider.notifier)
-                              .submit();
-                          if (!context.mounted || success) {
-                            return;
+                Center(
+                  child: FilledButton(
+                    onPressed: authPhoneState.canSubmit
+                        ? () async {
+                            await ref.read(analyticsServiceProvider).logEvent(
+                                  name: AnalyticsEvents.authPhoneSelected,
+                                );
+                            final success = await ref
+                                .read(authPhoneFormControllerProvider.notifier)
+                                .submit();
+                            if (!context.mounted || success) {
+                              return;
+                            }
+                            showAppSnackBar(
+                              context,
+                              _errorTextFor(
+                                    context,
+                                    ref
+                                        .read(authPhoneFormControllerProvider)
+                                        .error,
+                                  ) ??
+                                  l10n.authPhoneFailed,
+                            );
                           }
-                          showAppSnackBar(
-                            context,
-                            _errorTextFor(
-                                  context,
-                                  ref
-                                      .read(authPhoneFormControllerProvider)
-                                      .error,
-                                ) ??
-                                l10n.authPhoneFailed,
-                          );
-                        }
-                      : null,
-                  child: Text(
-                    authPhoneState.isSubmitting
-                        ? l10n.authPhoneSubmitting
-                        : l10n.continueWithPhone,
+                        : null,
+                    child: Text(
+                      authPhoneState.isSubmitting
+                          ? l10n.authPhoneSubmitting
+                          : l10n.continueWithPhone,
+                    ),
                   ),
                 ),
                 if (authPhoneState.pendingVerificationId != null) ...[
@@ -185,9 +211,139 @@ class AuthGateScreen extends ConsumerWidget {
               ],
             ),
           ),
+          const SizedBox(height: AppSpacing.md),
+          AppSectionCard(
+            title: l10n.authOtherMethodsTitle,
+            subtitle: l10n.authOtherMethodsSubtitle,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                TextField(
+                  controller: _emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  autofillHints: const [AutofillHints.email],
+                  decoration: InputDecoration(
+                    labelText: l10n.authEmailFieldLabel,
+                    hintText: l10n.authEmailFieldHint,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                TextField(
+                  controller: _passwordController,
+                  obscureText: true,
+                  autofillHints: const [AutofillHints.password],
+                  decoration: InputDecoration(
+                    labelText: l10n.authPasswordFieldLabel,
+                    helperText: l10n.authPasswordFieldHelper,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.md),
+                Center(
+                  child: FilledButton.icon(
+                    onPressed: _isSubmittingEmail
+                        ? null
+                        : () => _submitEmailSignIn(context),
+                    icon: _isSubmittingEmail
+                        ? const SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Icon(Icons.mail_outline),
+                    label: Text(l10n.continueWithEmail),
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                Wrap(
+                  spacing: AppSpacing.sm,
+                  runSpacing: AppSpacing.sm,
+                  alignment: WrapAlignment.center,
+                  children: [
+                    OutlinedButton.icon(
+                      onPressed: _isSubmittingProvider
+                          ? null
+                          : () => _submitProviderSignIn(
+                                context,
+                                provider: _AuthProvider.google,
+                              ),
+                      icon: const Icon(Icons.g_mobiledata_outlined),
+                      label: Text(l10n.continueWithGoogle),
+                    ),
+                    OutlinedButton.icon(
+                      onPressed: _isSubmittingProvider
+                          ? null
+                          : () => _submitProviderSignIn(
+                                context,
+                                provider: _AuthProvider.apple,
+                              ),
+                      icon: const Icon(Icons.apple),
+                      label: Text(l10n.continueWithApple),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
+  }
+
+  Future<void> _submitEmailSignIn(BuildContext context) async {
+    final l10n = AppLocalizations.of(context);
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+    if (!email.contains('@') || password.length < 6) {
+      showAppSnackBar(context, l10n.authEmailInvalid);
+      return;
+    }
+
+    setState(() {
+      _isSubmittingEmail = true;
+    });
+    try {
+      final result =
+          await ref.read(sessionControllerProvider.notifier).signInWithEmail(
+                email: email,
+                password: password,
+              );
+      if (!context.mounted || result.isSignedIn) {
+        return;
+      }
+      showAppSnackBar(context, l10n.authEmailFailed);
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSubmittingEmail = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _submitProviderSignIn(
+    BuildContext context, {
+    required _AuthProvider provider,
+  }) async {
+    setState(() {
+      _isSubmittingProvider = true;
+    });
+    try {
+      final controller = ref.read(sessionControllerProvider.notifier);
+      final result = switch (provider) {
+        _AuthProvider.google => await controller.signInWithGoogle(),
+        _AuthProvider.apple => await controller.signInWithApple(),
+      };
+      if (!context.mounted || result.isSignedIn) {
+        return;
+      }
+      showAppSnackBar(context, AppLocalizations.of(context).authProviderFailed);
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSubmittingProvider = false;
+        });
+      }
+    }
   }
 
   String? _errorTextFor(BuildContext context, AuthPhoneFormError? error) {
@@ -232,3 +388,5 @@ class AuthGateScreen extends ConsumerWidget {
     }
   }
 }
+
+enum _AuthProvider { google, apple }

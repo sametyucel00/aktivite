@@ -18,6 +18,13 @@ class SettingsController extends Notifier<UserPreferences> {
   void setSafeMeetupRemindersEnabled(bool value) {
     state = state.copyWith(safeMeetupRemindersEnabled: value);
   }
+
+  void setLocaleCode(String value) {
+    if (value != 'tr' && value != 'en') {
+      return;
+    }
+    state = state.copyWith(localeCode: value);
+  }
 }
 
 final settingsControllerProvider =

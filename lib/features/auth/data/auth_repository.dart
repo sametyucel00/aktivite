@@ -12,5 +12,20 @@ abstract class AuthRepository {
     required String smsCode,
   });
 
+  Future<PhoneAuthResult> signInWithEmail({
+    required String email,
+    required String password,
+  }) async {
+    return const PhoneAuthResult.unsupported();
+  }
+
+  Future<PhoneAuthResult> signInWithGoogle() async {
+    return const PhoneAuthResult.unsupported();
+  }
+
+  Future<PhoneAuthResult> signInWithApple() async {
+    return const PhoneAuthResult.unsupported();
+  }
+
   Future<void> signOut();
 }

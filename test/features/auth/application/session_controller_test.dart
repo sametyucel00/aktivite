@@ -48,6 +48,30 @@ class _FakeAuthRepository implements AuthRepository {
   }
 
   @override
+  Future<PhoneAuthResult> signInWithEmail({
+    required String email,
+    required String password,
+  }) async {
+    _currentUserId = SampleIds.currentUser;
+    _controller.add(_currentUserId);
+    return const PhoneAuthResult.signedIn();
+  }
+
+  @override
+  Future<PhoneAuthResult> signInWithGoogle() async {
+    _currentUserId = SampleIds.currentUser;
+    _controller.add(_currentUserId);
+    return const PhoneAuthResult.signedIn();
+  }
+
+  @override
+  Future<PhoneAuthResult> signInWithApple() async {
+    _currentUserId = SampleIds.currentUser;
+    _controller.add(_currentUserId);
+    return const PhoneAuthResult.signedIn();
+  }
+
+  @override
   Future<void> signOut() async {
     _currentUserId = null;
     _controller.add(null);

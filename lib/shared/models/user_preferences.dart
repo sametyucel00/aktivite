@@ -3,16 +3,19 @@ class UserPreferences {
     required this.notificationsEnabled,
     required this.approximateLocationEnabled,
     required this.safeMeetupRemindersEnabled,
+    this.localeCode = 'tr',
   });
 
   const UserPreferences.initial()
       : notificationsEnabled = true,
         approximateLocationEnabled = true,
-        safeMeetupRemindersEnabled = true;
+        safeMeetupRemindersEnabled = true,
+        localeCode = 'tr';
 
   final bool notificationsEnabled;
   final bool approximateLocationEnabled;
   final bool safeMeetupRemindersEnabled;
+  final String localeCode;
 
   bool get notificationsAllowed => notificationsEnabled;
 
@@ -26,6 +29,7 @@ class UserPreferences {
     bool? notificationsEnabled,
     bool? approximateLocationEnabled,
     bool? safeMeetupRemindersEnabled,
+    String? localeCode,
   }) {
     return UserPreferences(
       notificationsEnabled: notificationsEnabled ?? this.notificationsEnabled,
@@ -33,6 +37,7 @@ class UserPreferences {
           approximateLocationEnabled ?? this.approximateLocationEnabled,
       safeMeetupRemindersEnabled:
           safeMeetupRemindersEnabled ?? this.safeMeetupRemindersEnabled,
+      localeCode: localeCode ?? this.localeCode,
     );
   }
 }

@@ -39,6 +39,7 @@ class FirebaseDocumentFields {
   static const createdAt = 'createdAt';
   static const description = 'description';
   static const displayName = 'displayName';
+  static const distanceKm = 'distanceKm';
   static const durationMinutes = 'durationMinutes';
   static const favoriteActivities = 'favoriteActivities';
   static const groupPreference = 'groupPreference';

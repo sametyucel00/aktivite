@@ -29,6 +29,16 @@
   "activityStatusDraft": "Draft",
   "activityStatusFull": "Full",
   "activityStatusOpen": "Open",
+  "activityDistanceKm": "{distance} km away",
+  "@activityDistanceKm": {
+    "placeholders": {
+      "distance": {
+        "type": "double",
+        "format": "compact"
+      }
+    }
+  },
+  "activityDistanceUnknown": "Distance shown after location access",
   "activityDurationMinutes": "{minutes} min",
   "@activityDurationMinutes": {
     "placeholders": {
@@ -105,6 +115,15 @@
   "authPhoneSubmitting": "Starting phone sign-in...",
   "authPhoneUnsupported": "Phone verification UI is not fully connected yet on this platform.",
   "authPhoneVerificationPending": "Enter the code we sent to finish sign-in.",
+  "authOtherMethodsTitle": "Other sign-in options",
+  "authOtherMethodsSubtitle": "Use email now, or connect Google and Apple when provider setup is ready.",
+  "authEmailFieldLabel": "Email",
+  "authEmailFieldHint": "you@example.com",
+  "authPasswordFieldLabel": "Password",
+  "authPasswordFieldHelper": "Use at least 6 characters.",
+  "authEmailInvalid": "Enter a valid email and a password with at least 6 characters.",
+  "authEmailFailed": "Email sign-in could not be completed right now.",
+  "authProviderFailed": "This sign-in provider could not be completed right now.",
   "availabilityAfternoons": "Afternoons",
   "availabilityEvenings": "Evenings",
   "availabilityMornings": "Mornings",
@@ -160,6 +179,9 @@
   "commonOff": "Off",
   "commonOn": "On",
   "continueAsGuestPreview": "Preview the experience",
+  "continueWithApple": "Continue with Apple",
+  "continueWithEmail": "Continue with email",
+  "continueWithGoogle": "Continue with Google",
   "continueWithPhone": "Continue with phone",
   "createPlanField": "Field",
   "createPlanFieldCategory": "Category",
@@ -176,10 +198,14 @@
   "exploreCategoryAll": "All",
   "exploreCategoryFilters": "Categories",
   "exploreCategoryHint": "Choose the kinds of plans you want to see first.",
+  "exploreClearFilters": "Reset filters",
   "exploreDiscoveryHint": "Time and proximity lead the experience, not endless browsing.",
   "exploreDiscoverySections": "Discovery surfaces",
+  "exploreDistanceFilters": "Distance",
+  "exploreDistanceHint": "Choose how far you want to browse. Exact locations stay private.",
   "exploreEmptyMessage": "Try another surface or create a plan so people can find you.",
   "exploreEmptyTitle": "No plans match this view",
+  "exploreFilterTitle": "Filter plans",
   "exploreReasonActivityMatch": "Matches your preferred activities",
   "exploreReasonGroupMatch": "Fits your group preference",
   "exploreReasonOpenNow": "Open for quick coordination",
@@ -357,6 +383,9 @@
   "profileSaved": "Profile saved.",
   "profileTitle": "Your profile",
   "publishPlan": "Publish plan",
+  "premiumBoosts": "Promoted plans",
+  "premiumFilters": "Premium filters",
+  "premiumSlots": "More active plan slots",
   "quickReplyConfirmTime": "Can we confirm the time?",
   "quickReplyOnMyWay": "I am on my way.",
   "quickReplyRunningLate": "Running a little late.",
@@ -430,7 +459,11 @@
   "safetyUserBlockedToast": "User blocked.",
   "saveProfile": "Save profile",
   "settingsApproximateLocation": "Use approximate location",
+  "settingsLanguageSubtitle": "Choose the app language for all screens.",
+  "settingsLanguageTitle": "Language",
   "settingsNotifications": "Notifications",
+  "settingsPremiumSubtitle": "Not sold yet; the app is ready for future paid options without dating-style mechanics.",
+  "settingsPremiumTitle": "Premium readiness",
   "settingsPreferences": "Preferences",
   "settingsPreferencesSubtitle": "Tune privacy, reminders, and coordination defaults.",
   "settingsProfileShortcutSubtitle": "Open your profile and update visible details.",
@@ -445,6 +478,17 @@
   "settingsSummarySubtitle": "Review your current coordination preferences.",
   "settingsSummaryTitle": "Current settings",
   "settingsTitle": "Settings",
+  "languageEnglish": "English",
+  "languageTurkish": "Turkish",
+  "distanceFilterAny": "Any distance",
+  "distanceFilterKm": "Within {km} km",
+  "@distanceFilterKm": {
+    "placeholders": {
+      "km": {
+        "type": "int"
+      }
+    }
+  },
   "signOut": "Sign out",
   "surfaceGroups": "Groups",
   "surfaceNearby": "Nearby",
@@ -455,8 +499,15 @@
   "trustApprovalLabel": "Approval before chat",
   "trustApproximateLocationDescription": "Public discovery stays at area level by default.",
   "trustApproximateLocationLabel": "Approximate location",
-  "trustApprovalDescription": "Chat opens only after the plan owner approves the request.",
   "trustToolsDescription": "Report and block tools stay easy to reach.",
   "trustToolsLabel": "Trust tools",
-  "verificationPhone": "Phone verified"
+  "verificationPhone": "Phone verified",
+  "planOwnerLabel": "Plan owner: {memberId}",
+  "@planOwnerLabel": {
+    "placeholders": {
+      "memberId": {
+        "type": "String"
+      }
+    }
+  }
 }

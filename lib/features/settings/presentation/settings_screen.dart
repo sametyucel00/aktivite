@@ -95,6 +95,29 @@ class SettingsScreen extends ConsumerWidget {
                   contentPadding: EdgeInsets.zero,
                   title: Text(l10n.settingsSafeMeetupReminders),
                 ),
+                const Divider(),
+                DropdownButtonFormField<String>(
+                  initialValue: preferences.localeCode,
+                  decoration: InputDecoration(
+                    labelText: l10n.settingsLanguageTitle,
+                    helperText: l10n.settingsLanguageSubtitle,
+                  ),
+                  items: [
+                    DropdownMenuItem(
+                      value: 'tr',
+                      child: Text(l10n.languageTurkish),
+                    ),
+                    DropdownMenuItem(
+                      value: 'en',
+                      child: Text(l10n.languageEnglish),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    if (value != null) {
+                      controller.setLocaleCode(value);
+                    }
+                  },
+                ),
               ],
             ),
           ),
@@ -121,6 +144,25 @@ class SettingsScreen extends ConsumerWidget {
                     '${l10n.settingsSafeMeetupReminders}: ${boolStateLabel(l10n, preferences.safeMeetupRemindersActive)}',
                   ),
                 ),
+                Chip(
+                  label: Text(
+                    '${l10n.settingsLanguageTitle}: ${preferences.localeCode == 'tr' ? l10n.languageTurkish : l10n.languageEnglish}',
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          AppSectionCard(
+            title: l10n.settingsPremiumTitle,
+            subtitle: l10n.settingsPremiumSubtitle,
+            child: Wrap(
+              spacing: AppSpacing.sm,
+              runSpacing: AppSpacing.sm,
+              children: [
+                Chip(label: Text(l10n.premiumBoosts)),
+                Chip(label: Text(l10n.premiumFilters)),
+                Chip(label: Text(l10n.premiumSlots)),
               ],
             ),
           ),

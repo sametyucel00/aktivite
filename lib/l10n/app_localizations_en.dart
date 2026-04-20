@@ -79,6 +79,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get activityStatusOpen => 'Open';
 
   @override
+  String activityDistanceKm(double distance) {
+    final intl.NumberFormat distanceNumberFormat = intl.NumberFormat.compact(
+      locale: localeName,
+    );
+    final String distanceString = distanceNumberFormat.format(distance);
+
+    return '$distanceString km away';
+  }
+
+  @override
+  String get activityDistanceUnknown => 'Distance shown after location access';
+
+  @override
   String activityDurationMinutes(int minutes) {
     return '$minutes min';
   }
@@ -239,6 +252,37 @@ class AppLocalizationsEn extends AppLocalizations {
       'Enter the code we sent to finish sign-in.';
 
   @override
+  String get authOtherMethodsTitle => 'Other sign-in options';
+
+  @override
+  String get authOtherMethodsSubtitle =>
+      'Use email now, or connect Google and Apple when provider setup is ready.';
+
+  @override
+  String get authEmailFieldLabel => 'Email';
+
+  @override
+  String get authEmailFieldHint => 'you@example.com';
+
+  @override
+  String get authPasswordFieldLabel => 'Password';
+
+  @override
+  String get authPasswordFieldHelper => 'Use at least 6 characters.';
+
+  @override
+  String get authEmailInvalid =>
+      'Enter a valid email and a password with at least 6 characters.';
+
+  @override
+  String get authEmailFailed =>
+      'Email sign-in could not be completed right now.';
+
+  @override
+  String get authProviderFailed =>
+      'This sign-in provider could not be completed right now.';
+
+  @override
   String get availabilityAfternoons => 'Afternoons';
 
   @override
@@ -348,6 +392,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get continueAsGuestPreview => 'Preview the experience';
 
   @override
+  String get continueWithApple => 'Continue with Apple';
+
+  @override
+  String get continueWithEmail => 'Continue with email';
+
+  @override
+  String get continueWithGoogle => 'Continue with Google';
+
+  @override
   String get continueWithPhone => 'Continue with phone';
 
   @override
@@ -398,6 +451,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'Choose the kinds of plans you want to see first.';
 
   @override
+  String get exploreClearFilters => 'Reset filters';
+
+  @override
   String get exploreDiscoveryHint =>
       'Time and proximity lead the experience, not endless browsing.';
 
@@ -405,11 +461,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get exploreDiscoverySections => 'Discovery surfaces';
 
   @override
+  String get exploreDistanceFilters => 'Distance';
+
+  @override
+  String get exploreDistanceHint =>
+      'Choose how far you want to browse. Exact locations stay private.';
+
+  @override
   String get exploreEmptyMessage =>
       'Try another surface or create a plan so people can find you.';
 
   @override
   String get exploreEmptyTitle => 'No plans match this view';
+
+  @override
+  String get exploreFilterTitle => 'Filter plans';
 
   @override
   String get exploreReasonActivityMatch => 'Matches your preferred activities';
@@ -787,6 +853,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get publishPlan => 'Publish plan';
 
   @override
+  String get premiumBoosts => 'Promoted plans';
+
+  @override
+  String get premiumFilters => 'Premium filters';
+
+  @override
+  String get premiumSlots => 'More active plan slots';
+
+  @override
   String get quickReplyConfirmTime => 'Can we confirm the time?';
 
   @override
@@ -960,7 +1035,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsApproximateLocation => 'Use approximate location';
 
   @override
+  String get settingsLanguageSubtitle =>
+      'Choose the app language for all screens.';
+
+  @override
+  String get settingsLanguageTitle => 'Language';
+
+  @override
   String get settingsNotifications => 'Notifications';
+
+  @override
+  String get settingsPremiumSubtitle =>
+      'Not sold yet; the app is ready for future paid options without dating-style mechanics.';
+
+  @override
+  String get settingsPremiumTitle => 'Premium readiness';
 
   @override
   String get settingsPreferences => 'Preferences';
@@ -1011,6 +1100,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsTitle => 'Settings';
 
   @override
+  String get languageEnglish => 'English';
+
+  @override
+  String get languageTurkish => 'Turkish';
+
+  @override
+  String get distanceFilterAny => 'Any distance';
+
+  @override
+  String distanceFilterKm(int km) {
+    return 'Within $km km';
+  }
+
+  @override
   String get signOut => 'Sign out';
 
   @override
@@ -1051,4 +1154,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get verificationPhone => 'Phone verified';
+
+  @override
+  String planOwnerLabel(String memberId) {
+    return 'Plan owner: $memberId';
+  }
 }

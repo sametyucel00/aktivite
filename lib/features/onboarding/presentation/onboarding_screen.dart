@@ -124,7 +124,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                 const SizedBox(height: AppSpacing.sm),
                 Text(_onboardingPhotoMessage(context, onboarding)),
                 const SizedBox(height: AppSpacing.sm),
-                Row(
+                Wrap(
+                  spacing: AppSpacing.sm,
+                  runSpacing: AppSpacing.sm,
+                  alignment: WrapAlignment.center,
                   children: [
                     OutlinedButton(
                       onPressed: onboarding.isUploadingPhoto
@@ -169,22 +172,22 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                       ),
                     ),
                     if (onboarding.profilePhotoUrl.isNotEmpty ||
-                        onboarding.profilePhotoBytes != null) ...[
-                      const SizedBox(width: AppSpacing.sm),
+                        onboarding.profilePhotoBytes != null)
                       TextButton(
                         onPressed: onboarding.isUploadingPhoto
                             ? null
                             : controller.removeProfilePhoto,
                         child: Text(l10n.profilePhotoRemove),
                       ),
-                    ],
                   ],
                 ),
                 const SizedBox(height: AppSpacing.md),
                 DropdownButtonFormField<SocialMood>(
                   initialValue: onboarding.socialMood,
-                  decoration:
-                      InputDecoration(labelText: l10n.onboardingFieldMood),
+                  decoration: InputDecoration(
+                    labelText: l10n.onboardingFieldMood,
+                    prefixIcon: Icon(socialMoodIcon(onboarding.socialMood)),
+                  ),
                   items: SocialMood.values
                       .map(
                         (mood) => DropdownMenuItem(
@@ -204,6 +207,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   initialValue: onboarding.groupPreference,
                   decoration: InputDecoration(
                     labelText: l10n.onboardingFieldGroupPreference,
+                    prefixIcon: Icon(
+                      groupPreferenceIcon(onboarding.groupPreference),
+                    ),
                   ),
                   items: GroupPreference.values
                       .map(
@@ -228,20 +234,28 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   ),
                 ),
                 const SizedBox(height: AppSpacing.sm),
-                Wrap(
-                  spacing: AppSpacing.sm,
-                  runSpacing: AppSpacing.sm,
-                  children: ActivityCategory.values
-                      .map(
-                        (activity) => FilterChip(
-                          selected:
-                              onboarding.favoriteActivities.contains(activity),
-                          label: Text(activityLabel(l10n, activity)),
-                          onSelected: (_) =>
-                              controller.toggleActivity(activity),
-                        ),
-                      )
-                      .toList(growable: false),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: ActivityCategory.values
+                        .map(
+                          (activity) => Padding(
+                            padding:
+                                const EdgeInsets.only(right: AppSpacing.sm),
+                            child: FilterChip(
+                              selected: onboarding.favoriteActivities
+                                  .contains(activity),
+                              showCheckmark: false,
+                              avatar: Icon(activityIcon(activity), size: 18),
+                              label: Text(activityLabel(l10n, activity)),
+                              visualDensity: VisualDensity.compact,
+                              onSelected: (_) =>
+                                  controller.toggleActivity(activity),
+                            ),
+                          ),
+                        )
+                        .toList(growable: false),
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.md),
                 Align(
@@ -252,18 +266,27 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   ),
                 ),
                 const SizedBox(height: AppSpacing.sm),
-                Wrap(
-                  spacing: AppSpacing.sm,
-                  runSpacing: AppSpacing.sm,
-                  children: AvailabilitySlot.values
-                      .map(
-                        (slot) => FilterChip(
-                          selected: onboarding.activeTimes.contains(slot),
-                          label: Text(availabilityLabel(l10n, slot)),
-                          onSelected: (_) => controller.toggleActiveTime(slot),
-                        ),
-                      )
-                      .toList(growable: false),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: AvailabilitySlot.values
+                        .map(
+                          (slot) => Padding(
+                            padding:
+                                const EdgeInsets.only(right: AppSpacing.sm),
+                            child: FilterChip(
+                              selected: onboarding.activeTimes.contains(slot),
+                              showCheckmark: false,
+                              avatar: Icon(availabilityIcon(slot), size: 18),
+                              label: Text(availabilityLabel(l10n, slot)),
+                              visualDensity: VisualDensity.compact,
+                              onSelected: (_) =>
+                                  controller.toggleActiveTime(slot),
+                            ),
+                          ),
+                        )
+                        .toList(growable: false),
+                  ),
                 ),
               ],
             ),
@@ -298,37 +321,39 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             ),
           ),
           const SizedBox(height: AppSpacing.lg),
-          FilledButton(
-            onPressed: onboarding.canSubmit
-                ? () async {
-                    final userId = ref.read(sessionControllerProvider).userId;
-                    if (userId == null) {
-                      return;
+          Center(
+            child: FilledButton(
+              onPressed: onboarding.canSubmit
+                  ? () async {
+                      final userId = ref.read(sessionControllerProvider).userId;
+                      if (userId == null) {
+                        return;
+                      }
+                      await ref.read(profileRepositoryProvider).saveProfile(
+                            controller.toProfile(
+                              userId: userId,
+                            ),
+                          );
+                      ref
+                          .read(settingsControllerProvider.notifier)
+                          .setSafeMeetupRemindersEnabled(
+                            onboarding.safeMeetupRemindersEnabled,
+                          );
+                      ref.read(analyticsServiceProvider).logEvent(
+                        name: AnalyticsEvents.onboardingCompleted,
+                        parameters: {
+                          'completion_score': onboarding.completionScore,
+                          'activities_count':
+                              onboarding.favoriteActivities.length,
+                        },
+                      );
+                      ref
+                          .read(sessionControllerProvider.notifier)
+                          .completeOnboarding();
                     }
-                    await ref.read(profileRepositoryProvider).saveProfile(
-                          controller.toProfile(
-                            userId: userId,
-                          ),
-                        );
-                    ref
-                        .read(settingsControllerProvider.notifier)
-                        .setSafeMeetupRemindersEnabled(
-                          onboarding.safeMeetupRemindersEnabled,
-                        );
-                    ref.read(analyticsServiceProvider).logEvent(
-                      name: AnalyticsEvents.onboardingCompleted,
-                      parameters: {
-                        'completion_score': onboarding.completionScore,
-                        'activities_count':
-                            onboarding.favoriteActivities.length,
-                      },
-                    );
-                    ref
-                        .read(sessionControllerProvider.notifier)
-                        .completeOnboarding();
-                  }
-                : null,
-            child: Text(l10n.finishSetup),
+                  : null,
+              child: Text(l10n.finishSetup),
+            ),
           ),
         ],
       ),

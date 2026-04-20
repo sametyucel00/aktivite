@@ -10,28 +10,28 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get activePlansEmptyMessage =>
-      'Yakininda koordinasyon baslatmak icin basit bir plan yayinla.';
+      'Yakınında koordinasyon başlatmak için basit bir plan yayınla.';
 
   @override
-  String get activePlansEmptyTitle => 'Henuz aktif plan yok';
+  String get activePlansEmptyTitle => 'Henüz aktif plan yok';
 
   @override
   String activePlansLimit(int limit) {
-    return 'Ayni anda en fazla $limit aktif plan acik tutabilirsin.';
+    return 'Aynı anda en fazla $limit aktif plan açık tutabilirsin.';
   }
 
   @override
-  String get activePlansTitle => 'Aktif planlarin';
+  String get activePlansTitle => 'Aktif planların';
 
   @override
   String get activitiesFocusSubtitle =>
-      'Istekleri incelerken mevcut planini gorunur tut.';
+      'İstekleri incelerken mevcut planını görünür tut.';
 
   @override
   String get activitiesFocusTitle => 'Odaktaki plan';
 
   @override
-  String get activitiesTitle => 'Plan olustur';
+  String get activitiesTitle => 'Plan oluştur';
 
   @override
   String get activity => 'Aktivite';
@@ -43,7 +43,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get activityCoffee => 'Kahve';
 
   @override
-  String get activityCowork => 'Birlikte calisma';
+  String get activityCowork => 'Birlikte çalışma';
 
   @override
   String get activityEvent => 'Etkinlik';
@@ -52,22 +52,22 @@ class AppLocalizationsTr extends AppLocalizations {
   String get activityGames => 'Oyun';
 
   @override
-  String get activityIndoor => 'Kapali mekan';
+  String get activityIndoor => 'Kapalı mekan';
 
   @override
   String get activityMovie => 'Film';
 
   @override
-  String get activityOutdoor => 'Acik hava';
+  String get activityOutdoor => 'Açık hava';
 
   @override
   String get activitySports => 'Spor';
 
   @override
-  String get activityStatusCancelled => 'Iptal edildi';
+  String get activityStatusCancelled => 'İptal edildi';
 
   @override
-  String get activityStatusCompleted => 'Tamamlandi';
+  String get activityStatusCompleted => 'Tamamlandı';
 
   @override
   String get activityStatusDraft => 'Taslak';
@@ -76,7 +76,20 @@ class AppLocalizationsTr extends AppLocalizations {
   String get activityStatusFull => 'Dolu';
 
   @override
-  String get activityStatusOpen => 'Acik';
+  String get activityStatusOpen => 'Açık';
+
+  @override
+  String activityDistanceKm(double distance) {
+    final intl.NumberFormat distanceNumberFormat = intl.NumberFormat.compact(
+      locale: localeName,
+    );
+    final String distanceString = distanceNumberFormat.format(distance);
+
+    return '$distanceString km uzakta';
+  }
+
+  @override
+  String get activityDistanceUnknown => 'Konum izni sonrası mesafe gösterilir';
 
   @override
   String activityDurationMinutes(int minutes) {
@@ -84,82 +97,82 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
-  String get activityWalk => 'Yuruyus';
+  String get activityWalk => 'Yürüyüş';
 
   @override
-  String get analyticsAuthGuestPreviewSelected => 'Misafir onizlemesi secildi';
+  String get analyticsAuthGuestPreviewSelected => 'Misafir önizlemesi seçildi';
 
   @override
-  String get analyticsAuthPhoneSelected => 'Telefonla giris secildi';
+  String get analyticsAuthPhoneSelected => 'Telefonla giriş seçildi';
 
   @override
-  String get analyticsChatMessageSent => 'Sohbet mesaji gonderildi';
+  String get analyticsChatMessageSent => 'Sohbet mesajı gönderildi';
 
   @override
-  String get analyticsExploreCategorySelected => 'Kesif kategorisi secildi';
+  String get analyticsExploreCategorySelected => 'Keşif kategorisi seçildi';
 
   @override
-  String get analyticsExploreSurfaceSelected => 'Kesif yuzeyi secildi';
+  String get analyticsExploreSurfaceSelected => 'Keşif yüzeyi seçildi';
 
   @override
-  String get analyticsJoinRequestApproved => 'Katilim istegi onaylandi';
+  String get analyticsJoinRequestApproved => 'Katılım isteği onaylandı';
 
   @override
-  String get analyticsJoinRequestRejected => 'Katilim istegi reddedildi';
+  String get analyticsJoinRequestRejected => 'Katılım isteği reddedildi';
 
   @override
-  String get analyticsJoinRequestSubmitted => 'Katilim istegi gonderildi';
+  String get analyticsJoinRequestSubmitted => 'Katılım isteği gönderildi';
 
   @override
   String get analyticsMapJoinRequestSubmitted =>
-      'Haritadan katilim istegi gonderildi';
+      'Haritadan katılım isteği gönderildi';
 
   @override
   String get analyticsMapNearbyJoinRequestSubmitted =>
-      'Yakin haritadan katilim istegi gonderildi';
+      'Yakın haritadan katılım isteği gönderildi';
 
   @override
-  String get analyticsOnboardingCompleted => 'Onboarding tamamlandi';
+  String get analyticsOnboardingCompleted => 'Onboarding tamamlandı';
 
   @override
-  String get analyticsPlanPublished => 'Plan yayinlandi';
+  String get analyticsPlanPublished => 'Plan yayınlandı';
 
   @override
-  String get analyticsProfileUpdated => 'Profil guncellendi';
+  String get analyticsProfileUpdated => 'Profil güncellendi';
 
   @override
-  String get analyticsSafetyReportSubmitted => 'Guvenlik bildirimi gonderildi';
+  String get analyticsSafetyReportSubmitted => 'Güvenlik bildirimi gönderildi';
 
   @override
-  String get analyticsSafetyUserBlocked => 'Kullanici engellendi';
+  String get analyticsSafetyUserBlocked => 'Kullanıcı engellendi';
 
   @override
-  String get analyticsSessionSignedOut => 'Cikis yapildi';
+  String get analyticsSessionSignedOut => 'Çıkış yapıldı';
 
   @override
   String get analyticsSettingsLocationPrivacy =>
-      'Yaklasik konum ayari guncellendi';
+      'Yaklaşık konum ayarı güncellendi';
 
   @override
-  String get analyticsSettingsNotifications => 'Bildirim ayari guncellendi';
+  String get analyticsSettingsNotifications => 'Bildirim ayarı güncellendi';
 
   @override
   String get analyticsSettingsSafeMeetup =>
-      'Guvenli bulusma hatirlatmasi guncellendi';
+      'Güvenli buluşma hatırlatması güncellendi';
 
   @override
   String analyticsSummaryAuth(int count) {
-    return '$count kimlik islemi';
+    return '$count kimlik işlemi';
   }
 
   @override
   String analyticsSummaryCoordination(int count) {
-    return '$count koordinasyon islemi';
+    return '$count koordinasyon işlemi';
   }
 
   @override
   String analyticsSummarySafety(int count) {
-    return '$count guvenlik islemi';
+    return '$count güvenlik işlemi';
   }
 
   @override
@@ -167,109 +180,139 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get authSubtitle =>
-      'Yakin planlar olusturmak, baskalarina katilmak ve dusuk baskili sekilde koordine olmak icin giris yap.';
+      'Yakın planlar oluşturmak, başkalarına katılmak ve düşük baskılı şekilde koordine olmak için giriş yap.';
 
   @override
-  String get authTitle => 'Basit bir planla basla';
+  String get authTitle => 'Basit bir planla başla';
 
   @override
-  String get authPhoneEmpty => 'Devam etmek icin bir telefon numarasi gir.';
+  String get authPhoneEmpty => 'Devam etmek için bir telefon numarası gir.';
 
   @override
   String get authPhoneCodeSentMessage =>
-      'Bir dogrulama kodu gonderdik. Telefonla girisi tamamlamak icin asagida gir.';
+      'Bir doğrulama kodu gönderdik. Telefonla girişi tamamlamak için aşağıya gir.';
 
   @override
-  String get authPhoneCodeSentTitle => 'Dogrulama kodu gonderildi';
+  String get authPhoneCodeSentTitle => 'Doğrulama kodu gönderildi';
 
   @override
   String get authCodeConfirm => 'Kodu onayla';
 
   @override
-  String get authCodeEmpty => '6 haneli dogrulama kodunu gir.';
+  String get authCodeEmpty => '6 haneli doğrulama kodunu gir.';
 
   @override
   String get authCodeExpired =>
-      'Bu dogrulama kodunun suresi doldu. Telefonla girisi yeniden baslat.';
+      'Bu doğrulama kodunun süresi doldu. Telefonla girişi yeniden başlat.';
 
   @override
   String get authCodeFieldHint => '123456';
 
   @override
-  String get authCodeFieldLabel => 'Dogrulama kodu';
+  String get authCodeFieldLabel => 'Doğrulama kodu';
 
   @override
-  String get authCodeInvalid => 'Gonderdigimiz guncel 6 haneli kodu gir.';
+  String get authCodeInvalid => 'Gönderdiğimiz güncel 6 haneli kodu gir.';
 
   @override
-  String get authCodeResend => 'Kodu tekrar gonder';
+  String get authCodeResend => 'Kodu tekrar gönder';
 
   @override
-  String get authCodeResent => 'Yeni bir dogrulama kodu gonderdik.';
+  String get authCodeResent => 'Yeni bir doğrulama kodu gönderdik.';
 
   @override
-  String get authCodeSubmitting => 'Kod dogrulaniyor...';
+  String get authCodeSubmitting => 'Kod doğrulanıyor...';
 
   @override
   String get authCodeTooManyRequests =>
-      'Cok fazla deneme yapildi. Biraz bekleyip tekrar dene.';
+      'Çok fazla deneme yapıldı. Biraz bekleyip tekrar dene.';
 
   @override
-  String get authPhoneFailed => 'Telefonla giris su anda baslatilamadi.';
+  String get authPhoneFailed => 'Telefonla giriş şu anda başlatılamadı.';
 
   @override
   String get authPhoneFieldHelper =>
-      'Ulasilabilir bir numara kullan. +90 gibi ulke kodu eklemek dogrulamayi netlestirir.';
+      'Ulaşılabilir bir numara kullan. +90 gibi ülke kodu eklemek doğrulamayı netleştirir.';
 
   @override
   String get authPhoneFieldHint => '+90 555 000 00 00';
 
   @override
-  String get authPhoneFieldLabel => 'Telefon numarasi';
+  String get authPhoneFieldLabel => 'Telefon numarası';
 
   @override
-  String get authPhoneInvalid => 'Gecerli bir telefon numarasi gir.';
+  String get authPhoneInvalid => 'Geçerli bir telefon numarası gir.';
 
   @override
-  String get authPhoneSubmitting => 'Telefonla giris baslatiliyor...';
+  String get authPhoneSubmitting => 'Telefonla giriş başlatılıyor...';
 
   @override
   String get authPhoneUnsupported =>
-      'Telefon dogrulama arayuzu bu platformda henuz tam baglanmadi.';
+      'Telefon doğrulama arayüzü bu platformda henüz tam bağlanmadı.';
 
   @override
   String get authPhoneVerificationPending =>
-      'Girisi tamamlamak icin gonderdigimiz kodu gir.';
+      'Girişi tamamlamak için gönderdiğimiz kodu gir.';
 
   @override
-  String get availabilityAfternoons => 'Ogleden sonralari';
+  String get authOtherMethodsTitle => 'Diğer giriş seçenekleri';
 
   @override
-  String get availabilityEvenings => 'Aksamlari';
+  String get authOtherMethodsSubtitle =>
+      'E-postayı şimdi kullan; Google ve Apple sağlayıcı kurulumu hazır olduğunda bağlanır.';
 
   @override
-  String get availabilityMornings => 'Sabahlari';
+  String get authEmailFieldLabel => 'E-posta';
 
   @override
-  String get availabilityWeekends => 'Hafta sonlari';
+  String get authEmailFieldHint => 'sen@ornek.com';
 
   @override
-  String get blockUser => 'Kullaniciyi engelle';
+  String get authPasswordFieldLabel => 'Şifre';
+
+  @override
+  String get authPasswordFieldHelper => 'En az 6 karakter kullan.';
+
+  @override
+  String get authEmailInvalid =>
+      'Geçerli bir e-posta ve en az 6 karakterlik şifre gir.';
+
+  @override
+  String get authEmailFailed => 'E-posta ile giriş şu anda tamamlanamadı.';
+
+  @override
+  String get authProviderFailed =>
+      'Bu giriş sağlayıcısı şu anda tamamlanamadı.';
+
+  @override
+  String get availabilityAfternoons => 'Öğleden sonraları';
+
+  @override
+  String get availabilityEvenings => 'Akşamları';
+
+  @override
+  String get availabilityMornings => 'Sabahları';
+
+  @override
+  String get availabilityWeekends => 'Hafta sonları';
+
+  @override
+  String get blockUser => 'Kullanıcıyı engelle';
 
   @override
   String get chatSelectedThreadEmpty =>
-      'Koordinasyona baslamak icin onayli bir sohbet sec.';
+      'Koordinasyona başlamak için onaylı bir sohbet seç.';
 
   @override
   String get chatSelectedThreadSubtitle =>
-      'Onayli sohbetler arasinda gecis yap ve tek bir koordinasyon sohbetine odaklan.';
+      'Onaylı sohbetler arasında geçiş yap ve tek bir koordinasyon sohbetine odaklan.';
 
   @override
-  String get chatSelectedThreadTitle => 'Secili sohbet';
+  String get chatSelectedThreadTitle => 'Seçili sohbet';
 
   @override
   String chatThreadChipLabel(String activityId, int count) {
-    return '$activityId · $count kisi';
+    return '$activityId · $count kişi';
   }
 
   @override
@@ -279,38 +322,38 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get chatBlockedThreadsEmptyMessage =>
-      'Engelledigin kullanicilarla baglantili sohbetler koordinasyon alaninda gizli kalir.';
+      'Engellediğin kullanıcılarla bağlantılı sohbetler koordinasyon alanında gizli kalır.';
 
   @override
-  String get chatBlockedThreadsEmptyTitle => 'Engellenen sohbetler gizli kalir';
+  String get chatBlockedThreadsEmptyTitle => 'Engellenen sohbetler gizli kalır';
 
   @override
   String get chatComposerHint => 'Pratik bir mesaj yaz';
 
   @override
   String get chatEmptyMessage =>
-      'Bir katilim istegi onaylandiginda konusma zamanlama ve bulusma detaylarina odaklanabilir.';
+      'Bir katılım isteği onaylandığında konuşma zamanlama ve buluşma detaylarına odaklanabilir.';
 
   @override
-  String get chatEmptyTitle => 'Henuz onayli sohbet yok';
+  String get chatEmptyTitle => 'Henüz onaylı sohbet yok';
 
   @override
-  String get chatHistoryEmpty => 'Henuz mesaj yok.';
+  String get chatHistoryEmpty => 'Henüz mesaj yok.';
 
   @override
   String get chatHistoryTitle => 'Son mesajlar';
 
   @override
-  String get chatMessageSendFailedToast => 'Mesaj su anda gonderilemedi.';
+  String get chatMessageSendFailedToast => 'Mesaj şu anda gönderilemedi.';
 
   @override
   String chatParticipantsCount(int count) {
-    return '$count katilimci';
+    return '$count katılımcı';
   }
 
   @override
   String get chatPrimaryThreadEmpty =>
-      'Koordinasyona baslamak icin onayli bir sohbet sec.';
+      'Koordinasyona başlamak için onaylı bir sohbet seç.';
 
   @override
   String get chatPrimaryThreadSubtitle =>
@@ -321,33 +364,42 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get chatQuickRepliesHint =>
-      'Plani ilerletmek icin kisa koordinasyon yanitlari kullan.';
+      'Planı ilerletmek için kısa koordinasyon yanıtları kullan.';
 
   @override
-  String get chatQuickRepliesTitle => 'Hazir yanitlar';
+  String get chatQuickRepliesTitle => 'Hazır yanıtlar';
 
   @override
   String get chatSafetyBanner =>
-      'Herkese acik ve kolay bulunur bir yerde bulus; tam detaylari sadece onayli sohbette paylas.';
+      'Herkese açık ve kolay bulunur bir yerde buluş; tam detayları sadece onaylı sohbette paylaş.';
 
   @override
   String get chatThreadCreatedPreview =>
-      'Istek onaylandi. Buradan koordine olabilirsiniz.';
+      'İstek onaylandı. Buradan koordine olabilirsiniz.';
 
   @override
   String get chatTitle => 'Koordinasyon sohbeti';
 
   @override
-  String get commonCancel => 'Iptal';
+  String get commonCancel => 'İptal';
 
   @override
-  String get commonOff => 'Kapali';
+  String get commonOff => 'Kapalı';
 
   @override
-  String get commonOn => 'Acik';
+  String get commonOn => 'Açık';
 
   @override
   String get continueAsGuestPreview => 'Deneyimi incele';
+
+  @override
+  String get continueWithApple => 'Apple ile devam et';
+
+  @override
+  String get continueWithEmail => 'E-posta ile devam et';
+
+  @override
+  String get continueWithGoogle => 'Google ile devam et';
 
   @override
   String get continueWithPhone => 'Telefon ile devam et';
@@ -359,82 +411,95 @@ class AppLocalizationsTr extends AppLocalizations {
   String get createPlanFieldCategory => 'Kategori';
 
   @override
-  String get createPlanFieldCity => 'Sehir';
+  String get createPlanFieldCity => 'Şehir';
 
   @override
-  String get createPlanFieldDescription => 'Aciklama';
+  String get createPlanFieldDescription => 'Açıklama';
 
   @override
-  String get createPlanFieldDuration => 'Sure';
+  String get createPlanFieldDuration => 'Süre';
 
   @override
-  String get createPlanFieldIndoor => 'Kapali mekan tercihi';
+  String get createPlanFieldIndoor => 'Kapalı mekan tercihi';
 
   @override
-  String get createPlanFieldLocation => 'Yaklasik konum';
+  String get createPlanFieldLocation => 'Yaklaşık konum';
 
   @override
   String get createPlanFieldTime => 'Tarih ve saat';
 
   @override
-  String get createPlanFieldTitle => 'Baslik';
+  String get createPlanFieldTitle => 'Başlık';
 
   @override
-  String get createPlanPickDateTime => 'Tarih ve saat sec';
+  String get createPlanPickDateTime => 'Tarih ve saat seç';
 
   @override
-  String get createPlanSubtitle => 'Ilani kisa, net ve katilmasi kolay tut.';
+  String get createPlanSubtitle => 'İlanı kısa, net ve katılması kolay tut.';
 
   @override
-  String get createPlanTitle => 'Plan detaylari';
+  String get createPlanTitle => 'Plan detayları';
 
   @override
-  String get exploreCategoryAll => 'Tumleri';
+  String get exploreCategoryAll => 'Tümü';
 
   @override
   String get exploreCategoryFilters => 'Kategoriler';
 
   @override
-  String get exploreCategoryHint => 'Once gormek istedigin plan turlerini sec.';
+  String get exploreCategoryHint => 'Önce görmek istediğin plan türlerini seç.';
+
+  @override
+  String get exploreClearFilters => 'Filtreleri sıfırla';
 
   @override
   String get exploreDiscoveryHint =>
-      'Deneyimi sonsuz gezinme degil, zaman ve yakinlik yonlendirir.';
+      'Deneyimi sonsuz gezinme değil, zaman ve yakınlık yönlendirir.';
 
   @override
-  String get exploreDiscoverySections => 'Kesif yuzeyleri';
+  String get exploreDiscoverySections => 'Keşif yüzeyleri';
+
+  @override
+  String get exploreDistanceFilters => 'Mesafe';
+
+  @override
+  String get exploreDistanceHint =>
+      'Ne kadar uzağa bakmak istediğini seç. Tam konumlar gizli kalır.';
 
   @override
   String get exploreEmptyMessage =>
-      'Baska bir yuzey dene ya da insanlarin seni bulmasi icin plan olustur.';
+      'Başka bir yüzey dene ya da insanların seni bulması için plan oluştur.';
 
   @override
-  String get exploreEmptyTitle => 'Bu gorunume uyan plan yok';
+  String get exploreEmptyTitle => 'Bu görünüme uyan plan yok';
 
   @override
-  String get exploreReasonActivityMatch => 'Sevdigin aktivitelere uyuyor';
+  String get exploreFilterTitle => 'Planları filtrele';
+
+  @override
+  String get exploreReasonActivityMatch => 'Sevdiğin aktivitelere uyuyor';
 
   @override
   String get exploreReasonGroupMatch => 'Grup tercihine uyuyor';
 
   @override
-  String get exploreReasonOpenNow => 'Hizli koordinasyona acik';
+  String get exploreReasonOpenNow => 'Hızlı koordinasyona açık';
 
   @override
-  String get exploreReasonTimeMatch => 'Musait zamanina uyuyor';
+  String get exploreReasonTimeMatch => 'Müsait zamanına uyuyor';
 
   @override
   String get exploreSafetyHint =>
       'Insanlar hizli plan yaparken gizlilik ve guven net kalmali.';
 
   @override
-  String get exploreSuggestedPlans => 'Onerilen planlar';
+  String get exploreSuggestedPlans => 'Önerilen planlar';
 
   @override
   String get exploreSuggestedReasonTitle => 'Neden uygun';
 
   @override
-  String get exploreTitle => 'Planlari kesfet';
+  String get exploreTitle => 'Planları keşfet';
 
   @override
   String get finishSetup => 'Kurulumu bitir';
@@ -446,80 +511,80 @@ class AppLocalizationsTr extends AppLocalizations {
   String get groupPreferenceOneOnOne => 'Bire bir';
 
   @override
-  String get groupPreferenceSmallGroup => 'Kucuk grup';
+  String get groupPreferenceSmallGroup => 'Küçük grup';
 
   @override
   String get joinOwnPlanNotice => 'Bu plan sana ait.';
 
   @override
-  String get joinPlan => 'Katilim istegi gonder';
+  String get joinPlan => 'Katılım isteği gönder';
 
   @override
   String get joinPlanFullNotice => 'Bu plan dolu.';
 
   @override
-  String get joinRequestApprovedNotice => 'Bu plan icin onaylandin.';
+  String get joinRequestApprovedNotice => 'Bu plan için onaylandın.';
 
   @override
   String get joinRequestApprovedFirebaseNotice =>
-      'Istek onaylandi. Backend kontrolleri bitince sohbet acilacak.';
+      'İstek onaylandı. Backend kontrolleri bitince sohbet açılacak.';
 
   @override
   String get joinRequestApprovedLocalNotice =>
-      'Istek onaylandi. Koordinasyon sohbeti hazir.';
+      'İstek onaylandı. Koordinasyon sohbeti hazır.';
 
   @override
   String get joinRequestAwaitingApproval => 'Onay bekleniyor.';
 
   @override
-  String get joinRequestCancel => 'Istegi iptal et';
+  String get joinRequestCancel => 'İsteği iptal et';
 
   @override
-  String get joinRequestCancelled => 'Katilim istegi iptal edildi.';
+  String get joinRequestCancelled => 'Katılım isteği iptal edildi.';
 
   @override
   String get joinRequestDefaultMessage =>
-      'Merhaba, katilabilirim ve kolayca koordine olabilirim.';
+      'Merhaba, katılabilirim ve kolayca koordine olabilirim.';
 
   @override
-  String get joinRequestDialogHint => 'Mesaji kisa ve pratik tut.';
+  String get joinRequestDialogHint => 'Mesajı kısa ve pratik tut.';
 
   @override
-  String get joinRequestDialogTitle => 'Katilim istegi gonder';
+  String get joinRequestDialogTitle => 'Katılım isteği gönder';
 
   @override
   String get joinRequestFieldLabel => 'Mesaj';
 
   @override
   String get joinRequestPresetFlexible =>
-      'Gerekirse saate uyum saglayabilirim.';
+      'Gerekirse saate uyum sağlayabilirim.';
 
   @override
-  String get joinRequestPresetNearby => 'Yakinim ve kolayca gelebilirim.';
+  String get joinRequestPresetNearby => 'Yakınım ve kolayca gelebilirim.';
 
   @override
-  String get joinRequestPresetTimeFit => 'Bu saat benim icin uygun.';
+  String get joinRequestPresetTimeFit => 'Bu saat benim için uygun.';
 
   @override
-  String get joinRequestPresetTitle => 'Hazir mesaj fikirleri';
+  String get joinRequestPresetTitle => 'Hazır mesaj fikirleri';
 
   @override
-  String get joinRequestRejectedNotice => 'Bu istek onaylanmadi.';
+  String get joinRequestRejectedNotice => 'Bu istek onaylanmadı.';
 
   @override
-  String get joinRequestRejectedLocalNotice => 'Istek reddedildi.';
+  String get joinRequestRejectedLocalNotice => 'İstek reddedildi.';
 
   @override
-  String get joinRequestsEmpty => 'Henuz katilim istegi yok.';
+  String get joinRequestsEmpty => 'Henüz katılım isteği yok.';
 
   @override
   String joinRequestsPlanContext(String title, String schedule) {
-    return '$title · $schedule icin istekler inceleniyor';
+    return '$title · $schedule için istekler inceleniyor';
   }
 
   @override
   String get joinRequestsNoPlanSelected =>
-      'Istekleri gormek icin bir plan sec veya olustur.';
+      'İstekleri görmek için bir plan seç veya oluştur.';
 
   @override
   String joinRequestsPendingCount(int count) {
@@ -528,44 +593,44 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get joinRequestsSubtitle =>
-      'Istekleri incele ve onay surecini hafif tut.';
+      'İstekleri incele ve onay sürecini hafif tut.';
 
   @override
-  String get joinRequestsTitle => 'Katilim istekleri';
+  String get joinRequestsTitle => 'Katılım istekleri';
 
   @override
-  String get joinRequestSend => 'Istegi gonder';
+  String get joinRequestSend => 'İsteği gönder';
 
   @override
-  String get joinRequestSent => 'Katilim istegi gonderildi.';
+  String get joinRequestSent => 'Katılım isteği gönderildi.';
 
   @override
-  String get mapNearbyPlansTitle => 'Yakindaki planlar';
+  String get mapNearbyPlansTitle => 'Yakındaki planlar';
 
   @override
-  String get mapPlaceholder => 'Yaklasik aktivite haritasi onizlemesi';
+  String get mapPlaceholder => 'Yaklaşık aktivite haritası önizlemesi';
 
   @override
-  String get mapPrivacyApproximate => 'Yaklasik alan gorunur';
+  String get mapPrivacyApproximate => 'Yaklaşık alan görünür';
 
   @override
-  String get mapPrivacyHidden => 'Harita gorunurlugu su an gizli.';
+  String get mapPrivacyHidden => 'Harita görünürlüğü şu an gizli.';
 
   @override
   String get mapPrivacyMessage =>
-      'Herkese acik haritalar tam bulusma noktasi degil, bolge duzeyi baglam gostermeli.';
+      'Herkese açık haritalar tam buluşma noktası değil, bölge düzeyi bağlam göstermeli.';
 
   @override
-  String get mapPrivacyTitle => 'Sadece yaklasik harita';
+  String get mapPrivacyTitle => 'Sadece yaklaşık harita';
 
   @override
-  String get mapRecommendedEmpty => 'Henuz harita onerisi yok.';
+  String get mapRecommendedEmpty => 'Henüz harita önerisi yok.';
 
   @override
-  String get mapRecommendedTitle => 'Onerilen yakin planlar';
+  String get mapRecommendedTitle => 'Önerilen yakın planlar';
 
   @override
-  String get mapTitle => 'Yakinindaki harita';
+  String get mapTitle => 'Yakınındaki harita';
 
   @override
   String get moodCalm => 'Sakin';
@@ -577,7 +642,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get moodEnergetic => 'Enerjik';
 
   @override
-  String get moodFocused => 'Odakli';
+  String get moodFocused => 'Odaklı';
 
   @override
   String get moodGroupFriendly => 'Grup uyumlu';
@@ -586,7 +651,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get navChat => 'Sohbet';
 
   @override
-  String get navExplore => 'Kesfet';
+  String get navExplore => 'Keşfet';
 
   @override
   String get navMap => 'Harita';
@@ -598,14 +663,14 @@ class AppLocalizationsTr extends AppLocalizations {
   String get navProfile => 'Profil';
 
   @override
-  String get onboardingActivityPreferencesTitle => 'Sevdigin aktivite turleri';
+  String get onboardingActivityPreferencesTitle => 'Sevdiğin aktivite türleri';
 
   @override
-  String get onboardingAvailabilityTitle => 'Musaitlik';
+  String get onboardingAvailabilityTitle => 'Müsaitlik';
 
   @override
   String onboardingCompletionScore(int score) {
-    return '%$score tamamlandi';
+    return '%$score tamamlandı';
   }
 
   @override
@@ -615,7 +680,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get onboardingFieldBio => 'Kisa biyografi';
 
   @override
-  String get onboardingFieldCity => 'Sehir';
+  String get onboardingFieldCity => 'Şehir';
 
   @override
   String get onboardingFieldGroupPreference => 'Grup tercihi';
@@ -624,7 +689,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get onboardingFieldMood => 'Sosyal ruh hali';
 
   @override
-  String get onboardingFieldName => 'Gorunen ad';
+  String get onboardingFieldName => 'Görünen ad';
 
   @override
   String get onboardingItemAvailability => 'Musaitlik ve bildirimler';
@@ -669,37 +734,37 @@ class AppLocalizationsTr extends AppLocalizations {
   String get onboardingTitle => 'Guven veren bir profil olustur';
 
   @override
-  String get openExploreAction => 'Kesfi ac';
+  String get openExploreAction => 'Keşfi aç';
 
   @override
-  String get openPlansAction => 'Planlari ac';
+  String get openPlansAction => 'Planları aç';
 
   @override
   String get openProfileAction => 'Profili ac';
 
   @override
-  String get openSafetyCenterAction => 'Guvenlik merkezini ac';
+  String get openSafetyCenterAction => 'Güvenlik merkezini aç';
 
   @override
-  String get guestPreviewLabel => 'Misafir onizlemesi';
+  String get guestPreviewLabel => 'Misafir önizlemesi';
 
   @override
   String get openSettingsAction => 'Ayarlari ac';
 
   @override
   String peopleCount(int current, int max) {
-    return '$current/$max kisi';
+    return '$current/$max kişi';
   }
 
   @override
-  String get planPublishedToast => 'Plan yayinlandi.';
+  String get planPublishedToast => 'Plan yayınlandı.';
 
   @override
   String get profileAvailabilityTitle => 'Aktif zamanlar';
 
   @override
   String profileCompletion(int percent) {
-    return '%$percent tamamlandi';
+    return '%$percent tamamlandı';
   }
 
   @override
@@ -707,13 +772,13 @@ class AppLocalizationsTr extends AppLocalizations {
       'Insanlarin seninle kolay koordine olmasina yardim eden detaylari guncelle.';
 
   @override
-  String get profileEditTitle => 'Profili duzenle';
+  String get profileEditTitle => 'Profili düzenle';
 
   @override
-  String get profilePhotoAdd => 'Fotograf ekle';
+  String get profilePhotoAdd => 'Fotoğraf ekle';
 
   @override
-  String get profilePhotoChange => 'Fotografi degistir';
+  String get profilePhotoChange => 'Fotoğrafı değiştir';
 
   @override
   String get profilePhotoEmpty => 'Bos olmayan bir gorsel dosyasi sec.';
@@ -725,14 +790,14 @@ class AppLocalizationsTr extends AppLocalizations {
   String get profilePhotoReady => 'Profil fotografi kaydetmeye hazir.';
 
   @override
-  String get profilePhotoRemove => 'Fotografi kaldir';
+  String get profilePhotoRemove => 'Fotoğrafı kaldır';
 
   @override
   String get profilePhotoSectionSubtitle =>
       'Net ve samimi bir fotograf, bulusma oncesinde insanlarin seni tanimasini kolaylastirir.';
 
   @override
-  String get profilePhotoSectionTitle => 'Profil fotografi';
+  String get profilePhotoSectionTitle => 'Profil fotoğrafı';
 
   @override
   String get profilePhotoTooLarge => '5 MB\'den kucuk bir gorsel sec.';
@@ -751,7 +816,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String profileGateMessage(int completion) {
-    return 'Profiline birkaç detay daha ekleyip %$completion seviyesine ulas, planlara daha rahat katil veya plan olustur.';
+    return 'Profiline birkaç detay daha ekleyip %$completion tamamlanma seviyesine ulaş; planlara daha rahat katılabilir veya plan oluşturabilirsin.';
   }
 
   @override
@@ -762,7 +827,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String memberLabel(String memberId) {
-    return 'Uye $memberId';
+    return 'Üye $memberId';
   }
 
   @override
@@ -775,7 +840,7 @@ class AppLocalizationsTr extends AppLocalizations {
       'Guven ve tercih araclarina hizlica gec.';
 
   @override
-  String get profileQuickActionsTitle => 'Hizli islevler';
+  String get profileQuickActionsTitle => 'Hızlı işlemler';
 
   @override
   String get profileSaved => 'Profil kaydedildi.';
@@ -784,31 +849,40 @@ class AppLocalizationsTr extends AppLocalizations {
   String get profileTitle => 'Profilin';
 
   @override
-  String get publishPlan => 'Plani yayinla';
+  String get publishPlan => 'Planı yayınla';
 
   @override
-  String get quickReplyConfirmTime => 'Saati netlestirebilir miyiz?';
+  String get premiumBoosts => 'Öne çıkarılan planlar';
 
   @override
-  String get quickReplyOnMyWay => 'Yoldayim.';
+  String get premiumFilters => 'Premium filtreler';
 
   @override
-  String get quickReplyRunningLate => 'Biraz gecikecegim.';
+  String get premiumSlots => 'Daha fazla aktif plan hakkı';
 
   @override
-  String get quickReplyShareArea => 'Yaklasik bolgeyi paylasacagim.';
+  String get quickReplyConfirmTime => 'Saati netleştirebilir miyiz?';
+
+  @override
+  String get quickReplyOnMyWay => 'Yoldayım.';
+
+  @override
+  String get quickReplyRunningLate => 'Biraz gecikeceğim.';
+
+  @override
+  String get quickReplyShareArea => 'Yaklaşık bölgeyi paylaşacağım.';
 
   @override
   String get rejectRequest => 'Reddet';
 
   @override
-  String get reportUser => 'Kullaniciyi bildir';
+  String get reportUser => 'Kullanıcıyı bildir';
 
   @override
-  String get requestStatusApproved => 'Onaylandi';
+  String get requestStatusApproved => 'Onaylandı';
 
   @override
-  String get requestStatusCancelled => 'Iptal edildi';
+  String get requestStatusCancelled => 'İptal edildi';
 
   @override
   String get requestStatusPending => 'Bekliyor';
@@ -956,31 +1030,45 @@ class AppLocalizationsTr extends AppLocalizations {
   String get saveProfile => 'Profili kaydet';
 
   @override
-  String get settingsApproximateLocation => 'Yaklasik konum kullan';
+  String get settingsApproximateLocation => 'Yaklaşık konum kullan';
+
+  @override
+  String get settingsLanguageSubtitle =>
+      'Tüm ekranlarda kullanılacak uygulama dilini seç.';
+
+  @override
+  String get settingsLanguageTitle => 'Dil';
 
   @override
   String get settingsNotifications => 'Bildirimler';
+
+  @override
+  String get settingsPremiumSubtitle =>
+      'Henüz satışta değil; uygulama, flört mekaniğine dönüşmeden ilerideki ücretli seçeneklere hazır.';
+
+  @override
+  String get settingsPremiumTitle => 'Premium hazırlığı';
 
   @override
   String get settingsPreferences => 'Tercihler';
 
   @override
   String get settingsPreferencesSubtitle =>
-      'Gizlilik, hatirlatma ve koordinasyon varsayilanlarini ayarla.';
+      'Gizlilik, hatırlatma ve koordinasyon varsayılanlarını ayarla.';
 
   @override
   String get settingsProfileShortcutSubtitle =>
       'Profilini ac ve gorunen detaylari guncelle.';
 
   @override
-  String get settingsSafeMeetupReminders => 'Guvenli bulusma hatirlatmalari';
+  String get settingsSafeMeetupReminders => 'Güvenli buluşma hatırlatmaları';
 
   @override
   String get settingsSafetyLinkSubtitle =>
-      'Bildirme, engelleme ve guven zaman cizelgesi araclarini ac.';
+      'Bildirme, engelleme ve güven zaman çizelgesi araçlarını aç.';
 
   @override
-  String get settingsSafetyLinkTitle => 'Guvenlik araclari';
+  String get settingsSafetyLinkTitle => 'Güvenlik araçları';
 
   @override
   String get settingsSignalsEmpty => 'Henuz sinyal yok.';
@@ -1001,7 +1089,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get settingsSummarySubtitle =>
-      'Mevcut koordinasyon tercihlerini gozden gecir.';
+      'Mevcut koordinasyon tercihlerini gözden geçir.';
 
   @override
   String get settingsSummaryTitle => 'Mevcut ayarlar';
@@ -1010,19 +1098,33 @@ class AppLocalizationsTr extends AppLocalizations {
   String get settingsTitle => 'Ayarlar';
 
   @override
-  String get signOut => 'Cikis yap';
+  String get languageEnglish => 'İngilizce';
+
+  @override
+  String get languageTurkish => 'Türkçe';
+
+  @override
+  String get distanceFilterAny => 'Tüm mesafeler';
+
+  @override
+  String distanceFilterKm(int km) {
+    return '$km km içinde';
+  }
+
+  @override
+  String get signOut => 'Çıkış yap';
 
   @override
   String get surfaceGroups => 'Gruplar';
 
   @override
-  String get surfaceNearby => 'Yakininda';
+  String get surfaceNearby => 'Yakınında';
 
   @override
-  String get surfaceNow => 'Simdi';
+  String get surfaceNow => 'Şimdi';
 
   @override
-  String get surfaceTonight => 'Bu aksam';
+  String get surfaceTonight => 'Bu akşam';
 
   @override
   String get surfaceWeekend => 'Hafta sonu';
@@ -1039,7 +1141,7 @@ class AppLocalizationsTr extends AppLocalizations {
       'Herkese acik kesif varsayilan olarak bolge duzeyinde kalir.';
 
   @override
-  String get trustApproximateLocationLabel => 'Yaklasik konum';
+  String get trustApproximateLocationLabel => 'Yaklaşık konum';
 
   @override
   String get trustToolsDescription =>
@@ -1049,5 +1151,10 @@ class AppLocalizationsTr extends AppLocalizations {
   String get trustToolsLabel => 'Guven araclari';
 
   @override
-  String get verificationPhone => 'Telefon dogrulandi';
+  String get verificationPhone => 'Telefon doğrulandı';
+
+  @override
+  String planOwnerLabel(String memberId) {
+    return 'Plan sahibi: $memberId';
+  }
 }

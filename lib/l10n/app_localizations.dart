@@ -230,6 +230,18 @@ abstract class AppLocalizations {
   /// **'Open'**
   String get activityStatusOpen;
 
+  /// No description provided for @activityDistanceKm.
+  ///
+  /// In en, this message translates to:
+  /// **'{distance} km away'**
+  String activityDistanceKm(double distance);
+
+  /// No description provided for @activityDistanceUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Distance shown after location access'**
+  String get activityDistanceUnknown;
+
   /// No description provided for @activityDurationMinutes.
   ///
   /// In en, this message translates to:
@@ -518,6 +530,60 @@ abstract class AppLocalizations {
   /// **'Enter the code we sent to finish sign-in.'**
   String get authPhoneVerificationPending;
 
+  /// No description provided for @authOtherMethodsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Other sign-in options'**
+  String get authOtherMethodsTitle;
+
+  /// No description provided for @authOtherMethodsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Use email now, or connect Google and Apple when provider setup is ready.'**
+  String get authOtherMethodsSubtitle;
+
+  /// No description provided for @authEmailFieldLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get authEmailFieldLabel;
+
+  /// No description provided for @authEmailFieldHint.
+  ///
+  /// In en, this message translates to:
+  /// **'you@example.com'**
+  String get authEmailFieldHint;
+
+  /// No description provided for @authPasswordFieldLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get authPasswordFieldLabel;
+
+  /// No description provided for @authPasswordFieldHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'Use at least 6 characters.'**
+  String get authPasswordFieldHelper;
+
+  /// No description provided for @authEmailInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid email and a password with at least 6 characters.'**
+  String get authEmailInvalid;
+
+  /// No description provided for @authEmailFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Email sign-in could not be completed right now.'**
+  String get authEmailFailed;
+
+  /// No description provided for @authProviderFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'This sign-in provider could not be completed right now.'**
+  String get authProviderFailed;
+
   /// No description provided for @availabilityAfternoons.
   ///
   /// In en, this message translates to:
@@ -704,6 +770,24 @@ abstract class AppLocalizations {
   /// **'Preview the experience'**
   String get continueAsGuestPreview;
 
+  /// No description provided for @continueWithApple.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Apple'**
+  String get continueWithApple;
+
+  /// No description provided for @continueWithEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with email'**
+  String get continueWithEmail;
+
+  /// No description provided for @continueWithGoogle.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Google'**
+  String get continueWithGoogle;
+
   /// No description provided for @continueWithPhone.
   ///
   /// In en, this message translates to:
@@ -800,6 +884,12 @@ abstract class AppLocalizations {
   /// **'Choose the kinds of plans you want to see first.'**
   String get exploreCategoryHint;
 
+  /// No description provided for @exploreClearFilters.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset filters'**
+  String get exploreClearFilters;
+
   /// No description provided for @exploreDiscoveryHint.
   ///
   /// In en, this message translates to:
@@ -812,6 +902,18 @@ abstract class AppLocalizations {
   /// **'Discovery surfaces'**
   String get exploreDiscoverySections;
 
+  /// No description provided for @exploreDistanceFilters.
+  ///
+  /// In en, this message translates to:
+  /// **'Distance'**
+  String get exploreDistanceFilters;
+
+  /// No description provided for @exploreDistanceHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose how far you want to browse. Exact locations stay private.'**
+  String get exploreDistanceHint;
+
   /// No description provided for @exploreEmptyMessage.
   ///
   /// In en, this message translates to:
@@ -823,6 +925,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No plans match this view'**
   String get exploreEmptyTitle;
+
+  /// No description provided for @exploreFilterTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter plans'**
+  String get exploreFilterTitle;
 
   /// No description provided for @exploreReasonActivityMatch.
   ///
@@ -1514,6 +1622,24 @@ abstract class AppLocalizations {
   /// **'Publish plan'**
   String get publishPlan;
 
+  /// No description provided for @premiumBoosts.
+  ///
+  /// In en, this message translates to:
+  /// **'Promoted plans'**
+  String get premiumBoosts;
+
+  /// No description provided for @premiumFilters.
+  ///
+  /// In en, this message translates to:
+  /// **'Premium filters'**
+  String get premiumFilters;
+
+  /// No description provided for @premiumSlots.
+  ///
+  /// In en, this message translates to:
+  /// **'More active plan slots'**
+  String get premiumSlots;
+
   /// No description provided for @quickReplyConfirmTime.
   ///
   /// In en, this message translates to:
@@ -1826,11 +1952,35 @@ abstract class AppLocalizations {
   /// **'Use approximate location'**
   String get settingsApproximateLocation;
 
+  /// No description provided for @settingsLanguageSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the app language for all screens.'**
+  String get settingsLanguageSubtitle;
+
+  /// No description provided for @settingsLanguageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get settingsLanguageTitle;
+
   /// No description provided for @settingsNotifications.
   ///
   /// In en, this message translates to:
   /// **'Notifications'**
   String get settingsNotifications;
+
+  /// No description provided for @settingsPremiumSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Not sold yet; the app is ready for future paid options without dating-style mechanics.'**
+  String get settingsPremiumSubtitle;
+
+  /// No description provided for @settingsPremiumTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Premium readiness'**
+  String get settingsPremiumTitle;
 
   /// No description provided for @settingsPreferences.
   ///
@@ -1916,6 +2066,30 @@ abstract class AppLocalizations {
   /// **'Settings'**
   String get settingsTitle;
 
+  /// No description provided for @languageEnglish.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get languageEnglish;
+
+  /// No description provided for @languageTurkish.
+  ///
+  /// In en, this message translates to:
+  /// **'Turkish'**
+  String get languageTurkish;
+
+  /// No description provided for @distanceFilterAny.
+  ///
+  /// In en, this message translates to:
+  /// **'Any distance'**
+  String get distanceFilterAny;
+
+  /// No description provided for @distanceFilterKm.
+  ///
+  /// In en, this message translates to:
+  /// **'Within {km} km'**
+  String distanceFilterKm(int km);
+
   /// No description provided for @signOut.
   ///
   /// In en, this message translates to:
@@ -1993,6 +2167,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Phone verified'**
   String get verificationPhone;
+
+  /// No description provided for @planOwnerLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan owner: {memberId}'**
+  String planOwnerLabel(String memberId);
 }
 
 class _AppLocalizationsDelegate

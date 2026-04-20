@@ -13,10 +13,10 @@ void main() {
             (ref) => RepositorySource.inMemory,
           ),
         ],
-        child: AktiviteApp(),
+        child: const AktiviteApp(),
       ),
     );
     await tester.pumpAndSettle();
-    expect(find.text('Start with a simple plan'), findsWidgets);
+    expect(find.text('Basit bir planla başla'), findsWidgets);
   });
 }

@@ -10,6 +10,7 @@ class InMemoryAuthRepository implements AuthRepository {
   String? _currentUserId;
   static const _demoVerificationId = 'demo-verification-id';
   static const _demoSmsCode = '123456';
+  static const _demoEmailPassword = '123456';
 
   @override
   Stream<String?> authStateChanges() {
@@ -56,6 +57,38 @@ class InMemoryAuthRepository implements AuthRepository {
       );
     }
 
+    _currentUserId = SampleIds.currentUser;
+    _controller.add(_currentUserId);
+    return const PhoneAuthResult.signedIn();
+  }
+
+  @override
+  Future<PhoneAuthResult> signInWithEmail({
+    required String email,
+    required String password,
+  }) async {
+    final normalizedEmail = email.trim().toLowerCase();
+    if (!normalizedEmail.contains('@') || password.length < 6) {
+      return const PhoneAuthResult.failed();
+    }
+
+    _currentUserId =
+        normalizedEmail == 'demo@togio.app' && password == _demoEmailPassword
+            ? SampleIds.currentUser
+            : 'email-${normalizedEmail.hashCode.abs()}';
+    _controller.add(_currentUserId);
+    return const PhoneAuthResult.signedIn();
+  }
+
+  @override
+  Future<PhoneAuthResult> signInWithGoogle() async {
+    _currentUserId = SampleIds.currentUser;
+    _controller.add(_currentUserId);
+    return const PhoneAuthResult.signedIn();
+  }
+
+  @override
+  Future<PhoneAuthResult> signInWithApple() async {
     _currentUserId = SampleIds.currentUser;
     _controller.add(_currentUserId);
     return const PhoneAuthResult.signedIn();

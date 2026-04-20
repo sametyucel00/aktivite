@@ -130,6 +130,8 @@ service cloud.firestore {
         request.resource.data.city.size() > 0 &&
         request.resource.data.approximateLocation is string &&
         request.resource.data.approximateLocation.size() > 0 &&
+        (!('distanceKm' in request.resource.data) ||
+          request.resource.data.distanceKm is number) &&
         publicActivityHasNoExactLocation();
     }
 
