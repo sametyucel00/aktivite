@@ -113,32 +113,44 @@ class FirebaseAuthRepository implements AuthRepository {
 
   @override
   Future<PhoneAuthResult> signInWithGoogle() async {
-    if (kIsWeb) {
-      try {
-        await _auth().signInWithPopup(GoogleAuthProvider());
-        return const PhoneAuthResult.signedIn();
-      } on FirebaseAuthException catch (error) {
-        return PhoneAuthResult.failed(message: error.message);
+    final provider = GoogleAuthProvider();
+    try {
+      if (kIsWeb) {
+        await _auth().signInWithPopup(provider);
+      } else {
+        await _auth().signInWithProvider(provider);
       }
+      return const PhoneAuthResult.signedIn();
+    } on FirebaseAuthException catch (error) {
+      return PhoneAuthResult.failed(
+        message: error.message,
+        failureReason: _mapFailureReason(error.code),
+      );
+    } catch (error) {
+      return PhoneAuthResult.failed(message: error.toString());
     }
-    return const PhoneAuthResult.unsupported(
-      message: 'Google sign-in needs a mobile OAuth provider package.',
-    );
   }
 
   @override
   Future<PhoneAuthResult> signInWithApple() async {
-    if (kIsWeb) {
-      try {
-        await _auth().signInWithPopup(AppleAuthProvider());
-        return const PhoneAuthResult.signedIn();
-      } on FirebaseAuthException catch (error) {
-        return PhoneAuthResult.failed(message: error.message);
+    final provider = AppleAuthProvider()
+      ..addScope('email')
+      ..addScope('name');
+    try {
+      if (kIsWeb) {
+        await _auth().signInWithPopup(provider);
+      } else {
+        await _auth().signInWithProvider(provider);
       }
+      return const PhoneAuthResult.signedIn();
+    } on FirebaseAuthException catch (error) {
+      return PhoneAuthResult.failed(
+        message: error.message,
+        failureReason: _mapFailureReason(error.code),
+      );
+    } catch (error) {
+      return PhoneAuthResult.failed(message: error.toString());
     }
-    return const PhoneAuthResult.unsupported(
-      message: 'Apple sign-in needs a mobile OAuth provider package.',
-    );
   }
 
   Future<PhoneAuthResult> _verifyPhoneNumber(String phoneNumber) async {

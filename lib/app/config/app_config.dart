@@ -7,7 +7,7 @@ abstract final class AppConfig {
 
   static RepositorySource get repositorySource {
     if (kIsWeb) {
-      return RepositorySource.inMemory;
+      return RepositorySource.firebase;
     }
 
     switch (defaultTargetPlatform) {

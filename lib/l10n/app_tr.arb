@@ -256,6 +256,11 @@
   "joinRequestSend": "İsteği gönder",
   "joinRequestSent": "Katılım isteği gönderildi.",
   "mapNearbyPlansTitle": "Yakındaki planlar",
+  "mapLocationUnavailableMessage": "Haritayı bulunduğun bölgeye göre ortalamak ve plan işaretlerini yaklaşık tutmak için konum izni ver.",
+  "mapLocationUnavailableTitle": "Yakındaki harita için konum gerekli",
+  "mapOpenLocationSettingsAction": "Konum ayarlarını aç",
+  "mapCurrentAreaLabel": "Bulunduğun bölge",
+  "mapApproximateMarkerHint": "Plan işaretleri tam buluşma noktası yerine yakın yaklaşık alanlara bilinçli olarak kaydırılır.",
   "mapPlaceholder": "Yaklaşık aktivite haritası önizlemesi",
   "mapPrivacyApproximate": "Yaklaşık alan görünür",
   "mapPrivacyHidden": "Harita görünürlüğü şu an gizli.",
@@ -264,6 +269,7 @@
   "mapRecommendedEmpty": "Henüz harita önerisi yok.",
   "mapRecommendedTitle": "Önerilen yakın planlar",
   "mapTitle": "Yakınındaki harita",
+  "mapUnsupportedPlatform": "Etkileşimli harita şu anda Android, iOS ve Web üzerinde kullanılabiliyor.",
   "moodCalm": "Sakin",
   "moodCasual": "Rahat",
   "moodEnergetic": "Enerjik",
@@ -308,7 +314,9 @@
   "openProfileAction": "Profili ac",
   "openSafetyCenterAction": "Güvenlik merkezini aç",
   "guestPreviewLabel": "Misafir önizlemesi",
-  "openSettingsAction": "Ayarlari ac",
+  "openSettingsAction": "Ayarları aç",
+  "exploreOpenSpotsOnly": "Sadece boş yeri olanlar",
+  "exploreAdvancedFiltersUpsell": "İç mekân ve uygunluk filtrelerinin gelişmiş sürümü Plus veya Pro ile açılır.",
   "peopleCount": "{current}/{max} kişi",
   "@peopleCount": {
     "placeholders": {
@@ -486,11 +494,67 @@
   "exploreFilterTitle": "Planları filtrele",
   "premiumBoosts": "Öne çıkarılan planlar",
   "premiumFilters": "Premium filtreler",
+  "premiumRecurringPlans": "Tekrarlayan planlar",
   "premiumSlots": "Daha fazla aktif plan hakkı",
+  "premiumTierPlus": "Plus",
+  "premiumTierPro": "Pro / Host",
+  "premiumPlusSummary": "Daha fazla aktif plan, gelişmiş filtreler, geniş keşif alanı ve dahil boost hakları.",
+  "premiumProSummary": "Tekrarlayan planlar, host kontrolleri, daha güçlü görünürlük araçları ve gelişmiş katılım yönetimi.",
+  "boostedBadge": "Öne çıktı",
+  "boostPlanAction": "Planı öne çıkar",
+  "boostPlanWithAdAction": "Reklam izle, öne çıkar",
+  "unlockBoostAction": "Boost kilidini aç",
+  "activityBoostHint": "Boost verilen planlar normal içerikleri gizlemeden keşifte biraz daha yukarı çıkar.",
+  "activityBoostedToast": "{title} planı sınırlı süre için öne çıkarıldı.",
+  "@activityBoostedToast": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "activityBoostedUntil": "Boost şu zamana kadar aktif: {time}.",
+  "@activityBoostedUntil": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "monetizationVisibilityToolsTitle": "Görünürlük araçları",
+  "monetizationVisibilityToolsFreeSubtitle": "Boost tamamen isteğe bağlıdır. Ücretsiz kullanıcılar isterse ödüllü reklam ile ek görünürlük alabilir.",
+  "monetizationVisibilityToolsPremiumSubtitle": "{tier}, keşifte adil ek görünürlük ve ek araçlar sunar.",
+  "@monetizationVisibilityToolsPremiumSubtitle": {
+    "placeholders": {
+      "tier": {
+        "type": "String"
+      }
+    }
+  },
+  "monetizationBoostCredits": "{count} dahil boost hakkı",
+  "@monetizationBoostCredits": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "monetizationRewardedBoost": "Ödüllü boost hazır",
+  "monetizationRewardedAdUnavailable": "Ödüllü reklam şu anda kullanılamıyor.",
+  "monetizationPremiumComingSoon": "Premium ödeme akışı hazırlandı ama satış henüz açılmadı.",
+  "monetizationRewardedAdsHint": "Ödüllü reklamlar isteğe bağlıdır; sohbeti, katılımı veya plan oluşturmayı bölmez.",
   "settingsLanguageSubtitle": "Tüm ekranlarda kullanılacak uygulama dilini seç.",
   "settingsLanguageTitle": "Dil",
   "settingsPremiumSubtitle": "Henüz satışta değil; uygulama, flört mekaniğine dönüşmeden ilerideki ücretli seçeneklere hazır.",
   "settingsPremiumTitle": "Premium hazırlığı",
+  "settingsPremiumCurrentTier": "Mevcut paket: {tier}",
+  "@settingsPremiumCurrentTier": {
+    "placeholders": {
+      "tier": {
+        "type": "String"
+      }
+    }
+  },
   "languageEnglish": "İngilizce",
   "languageTurkish": "Türkçe",
   "distanceFilterAny": "Tüm mesafeler",

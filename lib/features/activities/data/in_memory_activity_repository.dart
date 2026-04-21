@@ -115,6 +115,24 @@ class InMemoryActivityRepository implements ActivityRepository {
   }
 
   @override
+  Future<void> applyBoost({
+    required String activityId,
+    required DateTime expiresAt,
+    int boostLevel = 1,
+  }) async {
+    final index = _plans.indexWhere((plan) => plan.id == activityId);
+    if (index < 0) {
+      return;
+    }
+
+    _plans[index] = _plans[index].copyWith(
+      boostLevel: boostLevel.clamp(0, 10),
+      boostExpiresAt: expiresAt,
+    );
+    _controller.add(_snapshot());
+  }
+
+  @override
   Stream<List<ActivityPlan>> watchNearbyPlans() {
     return Stream<List<ActivityPlan>>.multi((multi) {
       multi.add(_snapshot());

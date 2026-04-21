@@ -17,6 +17,8 @@ import 'package:aktivite/shared/providers/profile_media_providers.dart';
 import 'package:aktivite/shared/providers/repository_providers.dart';
 import 'package:aktivite/shared/widgets/app_section_card.dart';
 import 'package:aktivite/shared/widgets/async_value_view.dart';
+import 'package:aktivite/shared/widgets/app_page_scaffold.dart';
+import 'package:aktivite/shared/widgets/app_section_header.dart';
 import 'package:aktivite/shared/widgets/route_action_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -87,19 +89,21 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       );
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.profileTitle),
-        actions: [
-          IconButton(
-            onPressed: () => context.go(AppRoutes.settings),
-            icon: const Icon(Icons.settings_outlined),
-          ),
-        ],
-      ),
-      body: ListView(
-        padding: const EdgeInsets.all(AppSpacing.lg),
+    return AppPageScaffold(
+      title: l10n.profileTitle,
+      actions: [
+        IconButton(
+          onPressed: () => context.go(AppRoutes.settings),
+          icon: const Icon(Icons.settings_outlined),
+        ),
+      ],
+      child: ListView(
         children: [
+          AppSectionHeader(
+            title: l10n.profileTitle,
+            subtitle: l10n.profileEditSubtitle,
+          ),
+          const SizedBox(height: AppSpacing.md),
           profileAsync.when(
             data: (loadedProfile) => AppSectionCard(
               title: loadedProfile.displayName.trim().isEmpty

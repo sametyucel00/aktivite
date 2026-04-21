@@ -608,6 +608,24 @@ class AppLocalizationsTr extends AppLocalizations {
   String get mapNearbyPlansTitle => 'Yakındaki planlar';
 
   @override
+  String get mapLocationUnavailableMessage =>
+      'Haritayı bulunduğun bölgeye göre ortalamak ve plan işaretlerini yaklaşık tutmak için konum izni ver.';
+
+  @override
+  String get mapLocationUnavailableTitle =>
+      'Yakındaki harita için konum gerekli';
+
+  @override
+  String get mapOpenLocationSettingsAction => 'Konum ayarlarını aç';
+
+  @override
+  String get mapCurrentAreaLabel => 'Bulunduğun bölge';
+
+  @override
+  String get mapApproximateMarkerHint =>
+      'Plan işaretleri tam buluşma noktası yerine yakın yaklaşık alanlara bilinçli olarak kaydırılır.';
+
+  @override
   String get mapPlaceholder => 'Yaklaşık aktivite haritası önizlemesi';
 
   @override
@@ -631,6 +649,10 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get mapTitle => 'Yakınındaki harita';
+
+  @override
+  String get mapUnsupportedPlatform =>
+      'Etkileşimli harita şu anda Android, iOS ve Web üzerinde kullanılabiliyor.';
 
   @override
   String get moodCalm => 'Sakin';
@@ -749,7 +771,14 @@ class AppLocalizationsTr extends AppLocalizations {
   String get guestPreviewLabel => 'Misafir önizlemesi';
 
   @override
-  String get openSettingsAction => 'Ayarlari ac';
+  String get openSettingsAction => 'Ayarları aç';
+
+  @override
+  String get exploreOpenSpotsOnly => 'Sadece boş yeri olanlar';
+
+  @override
+  String get exploreAdvancedFiltersUpsell =>
+      'İç mekân ve uygunluk filtrelerinin gelişmiş sürümü Plus veya Pro ile açılır.';
 
   @override
   String peopleCount(int current, int max) {
@@ -858,7 +887,82 @@ class AppLocalizationsTr extends AppLocalizations {
   String get premiumFilters => 'Premium filtreler';
 
   @override
+  String get premiumRecurringPlans => 'Tekrarlayan planlar';
+
+  @override
   String get premiumSlots => 'Daha fazla aktif plan hakkı';
+
+  @override
+  String get premiumTierPlus => 'Plus';
+
+  @override
+  String get premiumTierPro => 'Pro / Host';
+
+  @override
+  String get premiumPlusSummary =>
+      'Daha fazla aktif plan, gelişmiş filtreler, geniş keşif alanı ve dahil boost hakları.';
+
+  @override
+  String get premiumProSummary =>
+      'Tekrarlayan planlar, host kontrolleri, daha güçlü görünürlük araçları ve gelişmiş katılım yönetimi.';
+
+  @override
+  String get boostedBadge => 'Öne çıktı';
+
+  @override
+  String get boostPlanAction => 'Planı öne çıkar';
+
+  @override
+  String get boostPlanWithAdAction => 'Reklam izle, öne çıkar';
+
+  @override
+  String get unlockBoostAction => 'Boost kilidini aç';
+
+  @override
+  String get activityBoostHint =>
+      'Boost verilen planlar normal içerikleri gizlemeden keşifte biraz daha yukarı çıkar.';
+
+  @override
+  String activityBoostedToast(String title) {
+    return '$title planı sınırlı süre için öne çıkarıldı.';
+  }
+
+  @override
+  String activityBoostedUntil(String time) {
+    return 'Boost şu zamana kadar aktif: $time.';
+  }
+
+  @override
+  String get monetizationVisibilityToolsTitle => 'Görünürlük araçları';
+
+  @override
+  String get monetizationVisibilityToolsFreeSubtitle =>
+      'Boost tamamen isteğe bağlıdır. Ücretsiz kullanıcılar isterse ödüllü reklam ile ek görünürlük alabilir.';
+
+  @override
+  String monetizationVisibilityToolsPremiumSubtitle(String tier) {
+    return '$tier, keşifte adil ek görünürlük ve ek araçlar sunar.';
+  }
+
+  @override
+  String monetizationBoostCredits(int count) {
+    return '$count dahil boost hakkı';
+  }
+
+  @override
+  String get monetizationRewardedBoost => 'Ödüllü boost hazır';
+
+  @override
+  String get monetizationRewardedAdUnavailable =>
+      'Ödüllü reklam şu anda kullanılamıyor.';
+
+  @override
+  String get monetizationPremiumComingSoon =>
+      'Premium ödeme akışı hazırlandı ama satış henüz açılmadı.';
+
+  @override
+  String get monetizationRewardedAdsHint =>
+      'Ödüllü reklamlar isteğe bağlıdır; sohbeti, katılımı veya plan oluşturmayı bölmez.';
 
   @override
   String get quickReplyConfirmTime => 'Saati netleştirebilir miyiz?';
@@ -1048,6 +1152,11 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get settingsPremiumTitle => 'Premium hazırlığı';
+
+  @override
+  String settingsPremiumCurrentTier(String tier) {
+    return 'Mevcut paket: $tier';
+  }
 
   @override
   String get settingsPreferences => 'Tercihler';

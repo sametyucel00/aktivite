@@ -132,12 +132,18 @@ service cloud.firestore {
         request.resource.data.approximateLocation.size() > 0 &&
         (!('distanceKm' in request.resource.data) ||
           request.resource.data.distanceKm is number) &&
+        (!('boostLevel' in request.resource.data) ||
+          request.resource.data.boostLevel is int) &&
+        (!('boostExpiresAt' in request.resource.data) ||
+          request.resource.data.boostExpiresAt is string) &&
         publicActivityHasNoExactLocation();
     }
 
     function updatesOnlyActivityClientFields() {
       return request.resource.data.diff(resource.data).affectedKeys().hasOnly([
         'participantCount',
+        'boostLevel',
+        'boostExpiresAt',
         'status',
         'workflowSource',
         'updatedAt'
@@ -183,6 +189,11 @@ service cloud.firestore {
 
     match /users/{userId}/notificationTokens/{tokenId} {
       allow read, create, update, delete: if isSelf(userId);
+    }
+
+    match /users/{userId}/entitlements/{documentId} {
+      allow read: if isSelf(userId);
+      allow create, update, delete: if false;
     }
 
     match /activities/{activityId} {

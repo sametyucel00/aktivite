@@ -1172,6 +1172,36 @@ abstract class AppLocalizations {
   /// **'Nearby plans'**
   String get mapNearbyPlansTitle;
 
+  /// No description provided for @mapLocationUnavailableMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow location access to center the map around your area and keep plan markers approximate.'**
+  String get mapLocationUnavailableMessage;
+
+  /// No description provided for @mapLocationUnavailableTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Location needed for nearby map'**
+  String get mapLocationUnavailableTitle;
+
+  /// No description provided for @mapOpenLocationSettingsAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Open location settings'**
+  String get mapOpenLocationSettingsAction;
+
+  /// No description provided for @mapCurrentAreaLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Your current area'**
+  String get mapCurrentAreaLabel;
+
+  /// No description provided for @mapApproximateMarkerHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan markers are intentionally shifted to nearby approximate areas instead of exact meetup points.'**
+  String get mapApproximateMarkerHint;
+
   /// No description provided for @mapPlaceholder.
   ///
   /// In en, this message translates to:
@@ -1219,6 +1249,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Nearby map'**
   String get mapTitle;
+
+  /// No description provided for @mapUnsupportedPlatform.
+  ///
+  /// In en, this message translates to:
+  /// **'Interactive maps are currently available on Android, iOS, and Web.'**
+  String get mapUnsupportedPlatform;
 
   /// No description provided for @moodCalm.
   ///
@@ -1448,6 +1484,18 @@ abstract class AppLocalizations {
   /// **'Open settings'**
   String get openSettingsAction;
 
+  /// No description provided for @exploreOpenSpotsOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Open spots only'**
+  String get exploreOpenSpotsOnly;
+
+  /// No description provided for @exploreAdvancedFiltersUpsell.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced indoor and availability filters are available with Plus or Pro.'**
+  String get exploreAdvancedFiltersUpsell;
+
   /// No description provided for @peopleCount.
   ///
   /// In en, this message translates to:
@@ -1634,11 +1682,131 @@ abstract class AppLocalizations {
   /// **'Premium filters'**
   String get premiumFilters;
 
+  /// No description provided for @premiumRecurringPlans.
+  ///
+  /// In en, this message translates to:
+  /// **'Recurring plans'**
+  String get premiumRecurringPlans;
+
   /// No description provided for @premiumSlots.
   ///
   /// In en, this message translates to:
   /// **'More active plan slots'**
   String get premiumSlots;
+
+  /// No description provided for @premiumTierPlus.
+  ///
+  /// In en, this message translates to:
+  /// **'Plus'**
+  String get premiumTierPlus;
+
+  /// No description provided for @premiumTierPro.
+  ///
+  /// In en, this message translates to:
+  /// **'Pro / Host'**
+  String get premiumTierPro;
+
+  /// No description provided for @premiumPlusSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'More active plans, advanced filters, wider discovery, and included visibility boosts.'**
+  String get premiumPlusSummary;
+
+  /// No description provided for @premiumProSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Recurring plans, host controls, stronger visibility tools, and advanced participation management.'**
+  String get premiumProSummary;
+
+  /// No description provided for @boostedBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Boosted'**
+  String get boostedBadge;
+
+  /// No description provided for @boostPlanAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Boost plan'**
+  String get boostPlanAction;
+
+  /// No description provided for @boostPlanWithAdAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Boost with rewarded ad'**
+  String get boostPlanWithAdAction;
+
+  /// No description provided for @unlockBoostAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock boost'**
+  String get unlockBoostAction;
+
+  /// No description provided for @activityBoostHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Boosted plans rise gently in discovery without hiding regular plans.'**
+  String get activityBoostHint;
+
+  /// No description provided for @activityBoostedToast.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} is boosted in discovery for a limited time.'**
+  String activityBoostedToast(String title);
+
+  /// No description provided for @activityBoostedUntil.
+  ///
+  /// In en, this message translates to:
+  /// **'Boost active until {time}.'**
+  String activityBoostedUntil(String time);
+
+  /// No description provided for @monetizationVisibilityToolsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Visibility tools'**
+  String get monetizationVisibilityToolsTitle;
+
+  /// No description provided for @monetizationVisibilityToolsFreeSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Boosting stays optional. Free users can watch a rewarded ad when they want extra visibility.'**
+  String get monetizationVisibilityToolsFreeSubtitle;
+
+  /// No description provided for @monetizationVisibilityToolsPremiumSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{tier} includes extra discovery tools and fair boost access.'**
+  String monetizationVisibilityToolsPremiumSubtitle(String tier);
+
+  /// No description provided for @monetizationBoostCredits.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} included boost credits'**
+  String monetizationBoostCredits(int count);
+
+  /// No description provided for @monetizationRewardedBoost.
+  ///
+  /// In en, this message translates to:
+  /// **'Rewarded boost available'**
+  String get monetizationRewardedBoost;
+
+  /// No description provided for @monetizationRewardedAdUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Rewarded ad is not available right now.'**
+  String get monetizationRewardedAdUnavailable;
+
+  /// No description provided for @monetizationPremiumComingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Premium checkout is prepared but not opened for sale yet.'**
+  String get monetizationPremiumComingSoon;
+
+  /// No description provided for @monetizationRewardedAdsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Rewarded ads are optional and never interrupt chat, join, or plan creation.'**
+  String get monetizationRewardedAdsHint;
 
   /// No description provided for @quickReplyConfirmTime.
   ///
@@ -1981,6 +2149,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Premium readiness'**
   String get settingsPremiumTitle;
+
+  /// No description provided for @settingsPremiumCurrentTier.
+  ///
+  /// In en, this message translates to:
+  /// **'Current tier: {tier}'**
+  String settingsPremiumCurrentTier(String tier);
 
   /// No description provided for @settingsPreferences.
   ///

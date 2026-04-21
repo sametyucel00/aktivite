@@ -133,20 +133,27 @@ class _AppShell extends ConsumerWidget {
 
     return Scaffold(
       body: child,
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: selectedIndex,
-        destinations: tabs
-            .map(
-              (tab) => NavigationDestination(
-                icon: _TabIcon(
-                  icon: tab.icon,
-                  badgeCount: tab.badgeCount,
-                ),
-                label: tab.label,
-              ),
-            )
-            .toList(),
-        onDestinationSelected: (index) => context.go(tabs[index].path),
+      bottomNavigationBar: SafeArea(
+        top: false,
+        minimum: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(28),
+          child: NavigationBar(
+            selectedIndex: selectedIndex,
+            destinations: tabs
+                .map(
+                  (tab) => NavigationDestination(
+                    icon: _TabIcon(
+                      icon: tab.icon,
+                      badgeCount: tab.badgeCount,
+                    ),
+                    label: tab.label,
+                  ),
+                )
+                .toList(),
+            onDestinationSelected: (index) => context.go(tabs[index].path),
+          ),
+        ),
       ),
     );
   }

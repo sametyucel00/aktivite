@@ -6,4 +6,10 @@ abstract class ActivityRepository {
   Future<void> createPlan(ActivityPlan plan);
 
   Future<void> incrementParticipantCount(String activityId);
+
+  Future<void> applyBoost({
+    required String activityId,
+    required DateTime expiresAt,
+    int boostLevel = 1,
+  });
 }

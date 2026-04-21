@@ -1,9 +1,12 @@
 import 'package:aktivite/app/app_routes.dart';
 import 'package:aktivite/core/constants/app_spacing.dart';
 import 'package:aktivite/core/utils/analytics_events.dart';
+import 'package:aktivite/core/utils/app_feedback.dart';
 import 'package:aktivite/core/utils/event_formatters.dart';
 import 'package:aktivite/core/utils/trust_event_factory.dart';
 import 'package:aktivite/features/auth/application/session_controller.dart';
+import 'package:aktivite/features/monetization/domain/premium_tier.dart';
+import 'package:aktivite/features/monetization/domain/user_entitlement.dart';
 import 'package:aktivite/features/settings/application/settings_controller.dart';
 import 'package:aktivite/l10n/app_localizations.dart';
 import 'package:aktivite/shared/models/moderation_event.dart';
@@ -11,6 +14,8 @@ import 'package:aktivite/shared/providers/app_providers.dart';
 import 'package:aktivite/shared/providers/repository_providers.dart';
 import 'package:aktivite/shared/widgets/app_section_card.dart';
 import 'package:aktivite/shared/widgets/async_value_view.dart';
+import 'package:aktivite/shared/widgets/app_page_scaffold.dart';
+import 'package:aktivite/shared/widgets/app_section_header.dart';
 import 'package:aktivite/shared/widgets/route_action_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -28,12 +33,20 @@ class SettingsScreen extends ConsumerWidget {
     final analyticsEventsAsync = ref.watch(analyticsEventsProvider);
     final trustEventsAsync = ref.watch(currentUserModerationEventsProvider);
     final analyticsSummaryAsync = ref.watch(analyticsSignalSummaryProvider);
+    final entitlement = ref.watch(currentUserEntitlementProvider).valueOrNull ??
+        const UserEntitlement.free(userId: 'signed-out');
+    final premiumEnabled = ref.watch(premiumEnabledProvider);
+    final rewardedAdsEnabled = ref.watch(rewardedAdsEnabledProvider);
 
-    return Scaffold(
-      appBar: AppBar(title: Text(l10n.settingsTitle)),
-      body: ListView(
-        padding: const EdgeInsets.all(AppSpacing.lg),
+    return AppPageScaffold(
+      title: l10n.settingsTitle,
+      child: ListView(
         children: [
+          AppSectionHeader(
+            title: l10n.settingsTitle,
+            subtitle: l10n.settingsPreferencesSubtitle,
+          ),
+          const SizedBox(height: AppSpacing.md),
           AppSectionCard(
             title: l10n.settingsPreferences,
             subtitle: l10n.settingsPreferencesSubtitle,
@@ -153,19 +166,84 @@ class SettingsScreen extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: AppSpacing.md),
-          AppSectionCard(
-            title: l10n.settingsPremiumTitle,
-            subtitle: l10n.settingsPremiumSubtitle,
-            child: Wrap(
-              spacing: AppSpacing.sm,
-              runSpacing: AppSpacing.sm,
-              children: [
-                Chip(label: Text(l10n.premiumBoosts)),
-                Chip(label: Text(l10n.premiumFilters)),
-                Chip(label: Text(l10n.premiumSlots)),
-              ],
+          if (premiumEnabled)
+            AppSectionCard(
+              title: l10n.settingsPremiumTitle,
+              subtitle: entitlement.hasPremium
+                  ? l10n.settingsPremiumCurrentTier(
+                      entitlement.tier == PremiumTier.pro
+                          ? l10n.premiumTierPro
+                          : l10n.premiumTierPlus,
+                    )
+                  : l10n.settingsPremiumSubtitle,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Wrap(
+                    spacing: AppSpacing.sm,
+                    runSpacing: AppSpacing.sm,
+                    children: [
+                      Chip(label: Text(l10n.premiumBoosts)),
+                      Chip(label: Text(l10n.premiumFilters)),
+                      Chip(label: Text(l10n.premiumSlots)),
+                      if (entitlement.isPro)
+                        Chip(label: Text(l10n.premiumRecurringPlans)),
+                    ],
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  _TierTile(
+                    title: l10n.premiumTierPlus,
+                    subtitle: l10n.premiumPlusSummary,
+                    isCurrent: entitlement.tier == PremiumTier.plus,
+                    onTap: () async {
+                      await ref.read(analyticsServiceProvider).logEvent(
+                        name: AnalyticsEvents.premiumClicked,
+                        parameters: {'placement': 'settings_plus'},
+                      );
+                      await ref.read(purchaseServiceProvider).openPremiumOffer(
+                            placement: 'settings_plus',
+                            targetTier: PremiumTier.plus,
+                          );
+                      if (context.mounted) {
+                        showAppSnackBar(
+                          context,
+                          l10n.monetizationPremiumComingSoon,
+                        );
+                      }
+                    },
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+                  _TierTile(
+                    title: l10n.premiumTierPro,
+                    subtitle: l10n.premiumProSummary,
+                    isCurrent: entitlement.tier == PremiumTier.pro,
+                    onTap: () async {
+                      await ref.read(analyticsServiceProvider).logEvent(
+                        name: AnalyticsEvents.premiumClicked,
+                        parameters: {'placement': 'settings_pro'},
+                      );
+                      await ref.read(purchaseServiceProvider).openPremiumOffer(
+                            placement: 'settings_pro',
+                            targetTier: PremiumTier.pro,
+                          );
+                      if (context.mounted) {
+                        showAppSnackBar(
+                          context,
+                          l10n.monetizationPremiumComingSoon,
+                        );
+                      }
+                    },
+                  ),
+                  if (rewardedAdsEnabled) ...[
+                    const SizedBox(height: AppSpacing.md),
+                    Text(
+                      l10n.monetizationRewardedAdsHint,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  ],
+                ],
+              ),
             ),
-          ),
           const SizedBox(height: AppSpacing.md),
           AppSectionCard(
             title: l10n.profileTitle,
@@ -260,6 +338,46 @@ class SettingsScreen extends ConsumerWidget {
             child: Text(l10n.signOut),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _TierTile extends StatelessWidget {
+  const _TierTile({
+    required this.title,
+    required this.subtitle,
+    required this.isCurrent,
+    required this.onTap,
+  });
+
+  final String title;
+  final String subtitle;
+  final bool isCurrent;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        color: isCurrent ? scheme.primaryContainer : scheme.surface,
+        border: Border.all(
+          color: isCurrent ? scheme.primary : scheme.outlineVariant,
+        ),
+      ),
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: AppSpacing.xs,
+        ),
+        title: Text(title),
+        subtitle: Text(subtitle),
+        trailing: isCurrent
+            ? const Icon(Icons.check_circle_outline)
+            : const Icon(Icons.chevron_right),
+        onTap: onTap,
       ),
     );
   }

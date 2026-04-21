@@ -20,6 +20,11 @@ import 'package:aktivite/features/chat/data/in_memory_chat_repository.dart';
 import 'package:aktivite/features/profile/data/firestore_profile_repository.dart';
 import 'package:aktivite/features/profile/data/in_memory_profile_repository.dart';
 import 'package:aktivite/features/profile/data/profile_repository.dart';
+import 'package:aktivite/features/monetization/data/firestore_monetization_repository.dart';
+import 'package:aktivite/features/monetization/data/in_memory_monetization_repository.dart';
+import 'package:aktivite/features/monetization/data/monetization_repository.dart';
+import 'package:aktivite/features/monetization/services/purchase_service.dart';
+import 'package:aktivite/features/monetization/services/rewarded_ads_service.dart';
 import 'package:aktivite/features/safety/data/firestore_moderation_repository.dart';
 import 'package:aktivite/features/safety/data/firestore_safety_repository.dart';
 import 'package:aktivite/features/safety/data/in_memory_moderation_repository.dart';
@@ -72,6 +77,15 @@ ProfileRepository buildProfileRepository(RepositorySource source) {
   }
 }
 
+MonetizationRepository buildMonetizationRepository(RepositorySource source) {
+  switch (source) {
+    case RepositorySource.inMemory:
+      return InMemoryMonetizationRepository();
+    case RepositorySource.firebase:
+      return FirestoreMonetizationRepository();
+  }
+}
+
 SafetyRepository buildSafetyRepository(RepositorySource source) {
   switch (source) {
     case RepositorySource.inMemory:
@@ -106,4 +120,12 @@ RemoteConfigService buildRemoteConfigService(RepositorySource source) {
     case RepositorySource.firebase:
       return FirebaseRemoteConfigService();
   }
+}
+
+RewardedAdsService buildRewardedAdsService() {
+  return GoogleMobileRewardedAdsService();
+}
+
+PurchaseService buildPurchaseService() {
+  return PlaceholderPurchaseService();
 }

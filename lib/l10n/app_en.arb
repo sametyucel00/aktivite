@@ -263,6 +263,11 @@
   "joinRequestSend": "Send request",
   "joinRequestSent": "Join request sent.",
   "mapNearbyPlansTitle": "Nearby plans",
+  "mapLocationUnavailableMessage": "Allow location access to center the map around your area and keep plan markers approximate.",
+  "mapLocationUnavailableTitle": "Location needed for nearby map",
+  "mapOpenLocationSettingsAction": "Open location settings",
+  "mapCurrentAreaLabel": "Your current area",
+  "mapApproximateMarkerHint": "Plan markers are intentionally shifted to nearby approximate areas instead of exact meetup points.",
   "mapPlaceholder": "Approximate activity map preview",
   "mapPrivacyApproximate": "Approximate area visible",
   "mapPrivacyHidden": "Map visibility is hidden right now.",
@@ -271,6 +276,7 @@
   "mapRecommendedEmpty": "No map suggestions yet.",
   "mapRecommendedTitle": "Recommended nearby",
   "mapTitle": "Nearby map",
+  "mapUnsupportedPlatform": "Interactive maps are currently available on Android, iOS, and Web.",
   "moodCalm": "Calm",
   "moodCasual": "Casual",
   "moodEnergetic": "Energetic",
@@ -316,6 +322,8 @@
   "openSafetyCenterAction": "Open safety center",
   "guestPreviewLabel": "Guest preview",
   "openSettingsAction": "Open settings",
+  "exploreOpenSpotsOnly": "Open spots only",
+  "exploreAdvancedFiltersUpsell": "Advanced indoor and availability filters are available with Plus or Pro.",
   "peopleCount": "{current}/{max} people",
   "@peopleCount": {
     "placeholders": {
@@ -385,7 +393,55 @@
   "publishPlan": "Publish plan",
   "premiumBoosts": "Promoted plans",
   "premiumFilters": "Premium filters",
+  "premiumRecurringPlans": "Recurring plans",
   "premiumSlots": "More active plan slots",
+  "premiumTierPlus": "Plus",
+  "premiumTierPro": "Pro / Host",
+  "premiumPlusSummary": "More active plans, advanced filters, wider discovery, and included visibility boosts.",
+  "premiumProSummary": "Recurring plans, host controls, stronger visibility tools, and advanced participation management.",
+  "boostedBadge": "Boosted",
+  "boostPlanAction": "Boost plan",
+  "boostPlanWithAdAction": "Boost with rewarded ad",
+  "unlockBoostAction": "Unlock boost",
+  "activityBoostHint": "Boosted plans rise gently in discovery without hiding regular plans.",
+  "activityBoostedToast": "{title} is boosted in discovery for a limited time.",
+  "@activityBoostedToast": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "activityBoostedUntil": "Boost active until {time}.",
+  "@activityBoostedUntil": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "monetizationVisibilityToolsTitle": "Visibility tools",
+  "monetizationVisibilityToolsFreeSubtitle": "Boosting stays optional. Free users can watch a rewarded ad when they want extra visibility.",
+  "monetizationVisibilityToolsPremiumSubtitle": "{tier} includes extra discovery tools and fair boost access.",
+  "@monetizationVisibilityToolsPremiumSubtitle": {
+    "placeholders": {
+      "tier": {
+        "type": "String"
+      }
+    }
+  },
+  "monetizationBoostCredits": "{count} included boost credits",
+  "@monetizationBoostCredits": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "monetizationRewardedBoost": "Rewarded boost available",
+  "monetizationRewardedAdUnavailable": "Rewarded ad is not available right now.",
+  "monetizationPremiumComingSoon": "Premium checkout is prepared but not opened for sale yet.",
+  "monetizationRewardedAdsHint": "Rewarded ads are optional and never interrupt chat, join, or plan creation.",
   "quickReplyConfirmTime": "Can we confirm the time?",
   "quickReplyOnMyWay": "I am on my way.",
   "quickReplyRunningLate": "Running a little late.",
@@ -464,6 +520,14 @@
   "settingsNotifications": "Notifications",
   "settingsPremiumSubtitle": "Not sold yet; the app is ready for future paid options without dating-style mechanics.",
   "settingsPremiumTitle": "Premium readiness",
+  "settingsPremiumCurrentTier": "Current tier: {tier}",
+  "@settingsPremiumCurrentTier": {
+    "placeholders": {
+      "tier": {
+        "type": "String"
+      }
+    }
+  },
   "settingsPreferences": "Preferences",
   "settingsPreferencesSubtitle": "Tune privacy, reminders, and coordination defaults.",
   "settingsProfileShortcutSubtitle": "Open your profile and update visible details.",

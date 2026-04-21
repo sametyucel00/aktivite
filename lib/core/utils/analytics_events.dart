@@ -13,13 +13,20 @@ abstract final class AnalyticsEvents {
   static const mapNearbyJoinRequestSubmitted =
       'map_nearby_join_request_submitted';
   static const chatMessageSent = 'chat_message_sent';
+  static const chatStarted = 'chat_started';
   static const activityPlanPublished = 'activity_plan_published';
+  static const activityCreated = 'activity_created';
+  static const activityBoosted = 'activity_boosted';
   static const exploreSurfaceSelected = 'explore_surface_selected';
   static const exploreCategorySelected = 'explore_category_selected';
   static const onboardingCompleted = 'onboarding_completed';
   static const profileUpdated = 'profile_updated';
   static const joinRequestApproved = 'join_request_approved';
   static const joinRequestRejected = 'join_request_rejected';
+  static const adWatched = 'ad_watched';
+  static const premiumClicked = 'premium_clicked';
+  static const premiumConverted = 'premium_converted';
+  static const planCompleted = 'plan_completed';
 
   static bool isAuthAction(String name) {
     return name == authPhoneSelected ||
@@ -38,7 +45,10 @@ abstract final class AnalyticsEvents {
         name == mapJoinRequestSubmitted ||
         name == mapNearbyJoinRequestSubmitted ||
         name == chatMessageSent ||
+        name == chatStarted ||
         name == activityPlanPublished ||
+        name == activityCreated ||
+        name == activityBoosted ||
         name == joinRequestApproved ||
         name == joinRequestRejected;
   }

@@ -18,22 +18,25 @@ class RouteActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (filled) {
-      return FilledButton(
+      return FilledButton.icon(
         onPressed: () => context.go(route),
-        child: Text(label),
+        icon: const Icon(Icons.arrow_forward_rounded, size: 18),
+        label: Text(label),
       );
     }
 
     if (tonal) {
-      return FilledButton.tonal(
+      return FilledButton.tonalIcon(
         onPressed: () => context.go(route),
-        child: Text(label),
+        icon: const Icon(Icons.arrow_forward_rounded, size: 18),
+        label: Text(label),
       );
     }
 
-    return OutlinedButton(
+    return OutlinedButton.icon(
       onPressed: () => context.go(route),
-      child: Text(label),
+      icon: const Icon(Icons.arrow_forward_rounded, size: 18),
+      label: Text(label),
     );
   }
 }

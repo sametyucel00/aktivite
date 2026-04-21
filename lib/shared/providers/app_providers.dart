@@ -1,12 +1,17 @@
 import 'package:aktivite/core/config/remote_config_keys.dart';
+import 'package:aktivite/core/enums/discovery_distance_filter.dart';
+import 'package:aktivite/core/enums/discovery_surface.dart';
 import 'package:aktivite/core/enums/map_privacy_mode.dart';
 import 'package:aktivite/core/services/app_bootstrap_service.dart';
 import 'package:aktivite/core/enums/activity_status.dart';
 import 'package:aktivite/core/utils/analytics_events.dart';
+import 'package:aktivite/core/utils/monetization_policy.dart';
 import 'package:aktivite/core/utils/plan_matching.dart';
 import 'package:aktivite/features/auth/application/session_controller.dart';
 import 'package:aktivite/features/explore/application/explore_controller.dart';
+import 'package:aktivite/features/monetization/domain/user_entitlement.dart';
 import 'package:aktivite/features/settings/application/settings_controller.dart';
+import 'package:aktivite/core/services/location_service.dart';
 import 'package:aktivite/shared/models/chat_message.dart';
 import 'package:aktivite/shared/models/chat_thread.dart';
 import 'package:aktivite/shared/models/activity_plan.dart';
@@ -209,6 +214,7 @@ final filteredPlansProvider = Provider<AsyncValue<List<ActivityPlan>>>((ref) {
   final exploreState = ref.watch(exploreControllerProvider);
   final plansAsync = ref.watch(featuredPlansProvider);
   final profileAsync = ref.watch(currentUserProfileProvider);
+  final remoteConfig = ref.watch(remoteConfigServiceProvider);
 
   return plansAsync.whenData((plans) {
     final filtered = plans
@@ -219,16 +225,44 @@ final filteredPlansProvider = Provider<AsyncValue<List<ActivityPlan>>>((ref) {
               plan.category == exploreState.category,
         )
         .where((plan) => exploreState.distanceFilter.includes(plan.distanceKm))
+        .where((plan) => !exploreState.indoorOnly || plan.isIndoor)
+        .where((plan) => !exploreState.openSpotsOnly || plan.hasCapacity)
         .toList(growable: true);
 
     final profile = profileAsync.valueOrNull;
     if (profile == null) {
+      filtered.sort(
+        (left, right) => boostedVisibilityScore(
+          plan: right,
+          surface: exploreState.surface,
+          remoteConfig: remoteConfig,
+        ).compareTo(
+          boostedVisibilityScore(
+            plan: left,
+            surface: exploreState.surface,
+            remoteConfig: remoteConfig,
+          ),
+        ),
+      );
       return List<ActivityPlan>.unmodifiable(filtered);
     }
 
     filtered.sort(
-      (left, right) => planMatchScore(profile, right)
-          .compareTo(planMatchScore(profile, left)),
+      (left, right) {
+        final rightScore = planMatchScore(profile, right) +
+            boostedVisibilityScore(
+              plan: right,
+              surface: exploreState.surface,
+              remoteConfig: remoteConfig,
+            );
+        final leftScore = planMatchScore(profile, left) +
+            boostedVisibilityScore(
+              plan: left,
+              surface: exploreState.surface,
+              remoteConfig: remoteConfig,
+            );
+        return rightScore.compareTo(leftScore);
+      },
     );
     return List<ActivityPlan>.unmodifiable(filtered);
   });
@@ -247,8 +281,21 @@ final recommendedPlansProvider =
     }
 
     ranked.sort(
-      (left, right) => planMatchScore(profile, right)
-          .compareTo(planMatchScore(profile, left)),
+      (left, right) {
+        final rightScore = planMatchScore(profile, right) +
+            boostedVisibilityScore(
+              plan: right,
+              surface: DiscoverySurface.nearby,
+              remoteConfig: ref.read(remoteConfigServiceProvider),
+            );
+        final leftScore = planMatchScore(profile, left) +
+            boostedVisibilityScore(
+              plan: left,
+              surface: DiscoverySurface.nearby,
+              remoteConfig: ref.read(remoteConfigServiceProvider),
+            );
+        return rightScore.compareTo(leftScore);
+      },
     );
     return List<ActivityPlan>.unmodifiable(ranked);
   });
@@ -378,9 +425,44 @@ final effectiveMapPrivacyProvider = Provider<MapPrivacyMode>((ref) {
   return ref.watch(mapPrivacyModeProvider);
 });
 
+final currentDeviceLocationProvider = FutureProvider<DeviceLocation?>((ref) {
+  final locationService = ref.watch(locationServiceProvider);
+  return locationService.getCurrentLocation();
+});
+
 final activePlansLimitProvider = Provider<int>((ref) {
   final remoteConfig = ref.watch(remoteConfigServiceProvider);
   return activePlansLimit(remoteConfig);
+});
+
+final currentUserEntitlementProvider = StreamProvider<UserEntitlement>((ref) {
+  final userId = ref.watch(currentUserIdProvider);
+  final repository = ref.watch(monetizationRepositoryProvider);
+  return repository.watchCurrentEntitlement(userId);
+});
+
+final effectiveActivePlansLimitProvider = Provider<int>((ref) {
+  final remoteConfig = ref.watch(remoteConfigServiceProvider);
+  final entitlement = ref.watch(currentUserEntitlementProvider).valueOrNull ??
+      const UserEntitlement.free(userId: 'signed-out');
+  return effectiveActivePlansLimit(remoteConfig, entitlement);
+});
+
+final availableDistanceFiltersProvider =
+    Provider<List<DiscoveryDistanceFilter>>((ref) {
+  final entitlement = ref.watch(currentUserEntitlementProvider).valueOrNull ??
+      const UserEntitlement.free(userId: 'signed-out');
+  return availableDistanceFilters(entitlement);
+});
+
+final premiumEnabledProvider = Provider<bool>((ref) {
+  final remoteConfig = ref.watch(remoteConfigServiceProvider);
+  return premiumEnabled(remoteConfig);
+});
+
+final rewardedAdsEnabledProvider = Provider<bool>((ref) {
+  final remoteConfig = ref.watch(remoteConfigServiceProvider);
+  return rewardedAdsEnabled(remoteConfig);
 });
 
 final safetyBannerEnabledProvider = Provider<bool>((ref) {

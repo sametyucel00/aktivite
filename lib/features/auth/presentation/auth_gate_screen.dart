@@ -1,4 +1,5 @@
 import 'package:aktivite/app/app_routes.dart';
+import 'package:flutter/foundation.dart';
 import 'package:aktivite/core/constants/app_spacing.dart';
 import 'package:aktivite/core/utils/app_feedback.dart';
 import 'package:aktivite/core/utils/analytics_events.dart';
@@ -8,6 +9,8 @@ import 'package:aktivite/l10n/app_localizations.dart';
 import 'package:aktivite/core/config/repository_source.dart';
 import 'package:aktivite/shared/providers/repository_providers.dart';
 import 'package:aktivite/shared/widgets/app_section_card.dart';
+import 'package:aktivite/shared/widgets/app_page_scaffold.dart';
+import 'package:aktivite/shared/widgets/app_section_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -45,66 +48,85 @@ class _AuthGateScreenState extends ConsumerState<AuthGateScreen> {
     final l10n = AppLocalizations.of(context);
     final authPhoneState = ref.watch(authPhoneFormControllerProvider);
     final repositorySource = ref.watch(repositorySourceProvider);
-    return Scaffold(
-      appBar: AppBar(title: Text(l10n.authTitle)),
-      body: ListView(
-        padding: const EdgeInsets.all(AppSpacing.lg),
+    const supportsPhoneAuth = !kIsWeb;
+    final supportsGoogle = kIsWeb ||
+        defaultTargetPlatform == TargetPlatform.android ||
+        defaultTargetPlatform == TargetPlatform.iOS;
+    final supportsApple = kIsWeb || defaultTargetPlatform == TargetPlatform.iOS;
+    return AppPageScaffold(
+      title: l10n.authTitle,
+      child: ListView(
         children: [
+          AppSectionHeader(
+            title: l10n.authTitle,
+            subtitle: l10n.authSubtitle,
+            centered: true,
+          ),
+          const SizedBox(height: AppSpacing.md),
           AppSectionCard(
             title: l10n.authTitle,
             subtitle: l10n.authSubtitle,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                TextFormField(
-                  keyboardType: TextInputType.phone,
-                  textInputAction: TextInputAction.done,
-                  autofillHints: const [AutofillHints.telephoneNumber],
-                  initialValue: authPhoneState.phoneNumber,
-                  onChanged: ref
-                      .read(authPhoneFormControllerProvider.notifier)
-                      .setPhoneNumber,
-                  decoration: InputDecoration(
-                    labelText: l10n.authPhoneFieldLabel,
-                    hintText: l10n.authPhoneFieldHint,
-                    helperText: l10n.authPhoneFieldHelper,
-                    errorText: _errorTextFor(context, authPhoneState.error),
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.md),
-                Center(
-                  child: FilledButton(
-                    onPressed: authPhoneState.canSubmit
-                        ? () async {
-                            await ref.read(analyticsServiceProvider).logEvent(
-                                  name: AnalyticsEvents.authPhoneSelected,
-                                );
-                            final success = await ref
-                                .read(authPhoneFormControllerProvider.notifier)
-                                .submit();
-                            if (!context.mounted || success) {
-                              return;
-                            }
-                            showAppSnackBar(
-                              context,
-                              _errorTextFor(
-                                    context,
-                                    ref
-                                        .read(authPhoneFormControllerProvider)
-                                        .error,
-                                  ) ??
-                                  l10n.authPhoneFailed,
-                            );
-                          }
-                        : null,
-                    child: Text(
-                      authPhoneState.isSubmitting
-                          ? l10n.authPhoneSubmitting
-                          : l10n.continueWithPhone,
+                if (supportsPhoneAuth) ...[
+                  TextFormField(
+                    keyboardType: TextInputType.phone,
+                    textInputAction: TextInputAction.done,
+                    autofillHints: const [AutofillHints.telephoneNumber],
+                    initialValue: authPhoneState.phoneNumber,
+                    onChanged: ref
+                        .read(authPhoneFormControllerProvider.notifier)
+                        .setPhoneNumber,
+                    decoration: InputDecoration(
+                      labelText: l10n.authPhoneFieldLabel,
+                      hintText: l10n.authPhoneFieldHint,
+                      helperText: l10n.authPhoneFieldHelper,
+                      errorText: _errorTextFor(context, authPhoneState.error),
                     ),
                   ),
-                ),
-                if (authPhoneState.pendingVerificationId != null) ...[
+                  const SizedBox(height: AppSpacing.md),
+                  Center(
+                    child: FilledButton(
+                      onPressed: authPhoneState.canSubmit
+                          ? () async {
+                              await ref.read(analyticsServiceProvider).logEvent(
+                                    name: AnalyticsEvents.authPhoneSelected,
+                                  );
+                              final success = await ref
+                                  .read(
+                                      authPhoneFormControllerProvider.notifier)
+                                  .submit();
+                              if (!context.mounted || success) {
+                                return;
+                              }
+                              showAppSnackBar(
+                                context,
+                                _errorTextFor(
+                                      context,
+                                      ref
+                                          .read(authPhoneFormControllerProvider)
+                                          .error,
+                                    ) ??
+                                    l10n.authPhoneFailed,
+                              );
+                            }
+                          : null,
+                      child: Text(
+                        authPhoneState.isSubmitting
+                            ? l10n.authPhoneSubmitting
+                            : l10n.continueWithPhone,
+                      ),
+                    ),
+                  ),
+                ] else
+                  Text(
+                    l10n.authPhoneUnsupported,
+                    style: Theme.of(context).textTheme.bodySmall,
+                    textAlign: TextAlign.center,
+                  ),
+                if (supportsPhoneAuth &&
+                    authPhoneState.pendingVerificationId != null) ...[
                   const SizedBox(height: AppSpacing.md),
                   AppSectionCard(
                     title: l10n.authPhoneCodeSentTitle,
@@ -259,26 +281,28 @@ class _AuthGateScreenState extends ConsumerState<AuthGateScreen> {
                   runSpacing: AppSpacing.sm,
                   alignment: WrapAlignment.center,
                   children: [
-                    OutlinedButton.icon(
-                      onPressed: _isSubmittingProvider
-                          ? null
-                          : () => _submitProviderSignIn(
-                                context,
-                                provider: _AuthProvider.google,
-                              ),
-                      icon: const Icon(Icons.g_mobiledata_outlined),
-                      label: Text(l10n.continueWithGoogle),
-                    ),
-                    OutlinedButton.icon(
-                      onPressed: _isSubmittingProvider
-                          ? null
-                          : () => _submitProviderSignIn(
-                                context,
-                                provider: _AuthProvider.apple,
-                              ),
-                      icon: const Icon(Icons.apple),
-                      label: Text(l10n.continueWithApple),
-                    ),
+                    if (supportsGoogle)
+                      OutlinedButton.icon(
+                        onPressed: _isSubmittingProvider
+                            ? null
+                            : () => _submitProviderSignIn(
+                                  context,
+                                  provider: _AuthProvider.google,
+                                ),
+                        icon: const Icon(Icons.g_mobiledata_outlined),
+                        label: Text(l10n.continueWithGoogle),
+                      ),
+                    if (supportsApple)
+                      OutlinedButton.icon(
+                        onPressed: _isSubmittingProvider
+                            ? null
+                            : () => _submitProviderSignIn(
+                                  context,
+                                  provider: _AuthProvider.apple,
+                                ),
+                        icon: const Icon(Icons.apple),
+                        label: Text(l10n.continueWithApple),
+                      ),
                   ],
                 ),
               ],

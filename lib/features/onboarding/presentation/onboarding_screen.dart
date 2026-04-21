@@ -16,6 +16,8 @@ import 'package:aktivite/l10n/app_localizations.dart';
 import 'package:aktivite/shared/providers/profile_media_providers.dart';
 import 'package:aktivite/shared/providers/repository_providers.dart';
 import 'package:aktivite/shared/widgets/app_section_card.dart';
+import 'package:aktivite/shared/widgets/app_page_scaffold.dart';
+import 'package:aktivite/shared/widgets/app_section_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -75,11 +77,15 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       );
     }
 
-    return Scaffold(
-      appBar: AppBar(title: Text(l10n.onboardingTitle)),
-      body: ListView(
-        padding: const EdgeInsets.all(AppSpacing.lg),
+    return AppPageScaffold(
+      title: l10n.onboardingTitle,
+      child: ListView(
         children: [
+          AppSectionHeader(
+            title: l10n.onboardingTitle,
+            subtitle: l10n.onboardingProfileHint,
+          ),
+          const SizedBox(height: AppSpacing.md),
           AppSectionCard(
             title: l10n.onboardingProfileSection,
             subtitle: l10n.onboardingProfileHint,

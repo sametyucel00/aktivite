@@ -27,6 +27,13 @@ class FakeActivityRepository implements ActivityRepository {
   Future<void> incrementParticipantCount(String activityId) async {}
 
   @override
+  Future<void> applyBoost({
+    required String activityId,
+    required DateTime expiresAt,
+    int boostLevel = 1,
+  }) async {}
+
+  @override
   Stream<List<ActivityPlan>> watchNearbyPlans() => Stream.value(plans);
 }
 

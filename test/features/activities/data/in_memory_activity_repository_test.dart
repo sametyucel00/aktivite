@@ -204,5 +204,24 @@ void main() {
       expect(plans.map((plan) => plan.id), isNot(contains('missing-activity')));
       expect(plans.length, 3);
     });
+
+    test('applyBoost stores boost metadata on matching activity', () async {
+      final repository = InMemoryActivityRepository();
+      final expiresAt = DateTime(2026, 4, 20, 23, 30);
+
+      await repository.applyBoost(
+        activityId: SampleIds.coffeeActivity,
+        expiresAt: expiresAt,
+        boostLevel: 1,
+      );
+
+      final plans = await repository.watchNearbyPlans().first;
+      final boosted =
+          plans.singleWhere((plan) => plan.id == SampleIds.coffeeActivity);
+
+      expect(boosted.boostLevel, 1);
+      expect(boosted.boostExpiresAt, expiresAt);
+      expect(boosted.hasActiveBoostAt(DateTime(2026, 4, 20, 12, 0)), isTrue);
+    });
   });
 }

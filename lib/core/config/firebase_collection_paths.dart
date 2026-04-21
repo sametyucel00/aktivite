@@ -12,6 +12,7 @@ class FirebaseCollectionPaths {
   static const reports = 'reports';
   static const blocks = 'blocks';
   static const notificationTokens = 'notificationTokens';
+  static const entitlements = 'entitlements';
 
   static String activityJoinRequests(String activityId) {
     return '$activities/$activityId/$joinRequests';
@@ -23,6 +24,10 @@ class FirebaseCollectionPaths {
 
   static String userNotificationTokens(String userId) {
     return '$users/$userId/$notificationTokens';
+  }
+
+  static String userEntitlement(String userId) {
+    return '$users/$userId/$entitlements/current';
   }
 }
 
@@ -41,6 +46,9 @@ class FirebaseDocumentFields {
   static const displayName = 'displayName';
   static const distanceKm = 'distanceKm';
   static const durationMinutes = 'durationMinutes';
+  static const boostCredits = 'boostCredits';
+  static const boostExpiresAt = 'boostExpiresAt';
+  static const boostLevel = 'boostLevel';
   static const favoriteActivities = 'favoriteActivities';
   static const groupPreference = 'groupPreference';
   static const id = 'id';
@@ -64,7 +72,9 @@ class FirebaseDocumentFields {
   static const socialMood = 'socialMood';
   static const status = 'status';
   static const subjectUserId = 'subjectUserId';
+  static const subscriptionExpiresAt = 'subscriptionExpiresAt';
   static const surfaces = 'surfaces';
+  static const tier = 'tier';
   static const targetUserId = 'targetUserId';
   static const text = 'text';
   static const threadId = 'threadId';
@@ -73,6 +83,7 @@ class FirebaseDocumentFields {
   static const title = 'title';
   static const updatedAt = 'updatedAt';
   static const userId = 'userId';
+  static const rewardedExtraSlots = 'rewardedExtraSlots';
   static const verificationLabel = 'verificationLabel';
   static const verificationLevel = 'verificationLevel';
   static const workflowSource = 'workflowSource';

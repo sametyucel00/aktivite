@@ -21,6 +21,8 @@ class ActivityPlan {
     required this.participantCount,
     required this.maxParticipants,
     this.distanceKm,
+    this.boostLevel = 0,
+    this.boostExpiresAt,
     required this.isIndoor,
     required this.status,
     required this.surfaces,
@@ -40,6 +42,8 @@ class ActivityPlan {
   final int participantCount;
   final int maxParticipants;
   final double? distanceKm;
+  final int boostLevel;
+  final DateTime? boostExpiresAt;
   final bool isIndoor;
   final ActivityStatus status;
   final List<DiscoverySurface> surfaces;
@@ -76,6 +80,11 @@ class ActivityPlan {
 
   bool get hasApproximateDistance => distanceKm != null && distanceKm! >= 0;
 
+  bool hasActiveBoostAt(DateTime value) =>
+      boostLevel > 0 &&
+      boostExpiresAt != null &&
+      boostExpiresAt!.isAfter(value);
+
   bool get canPublish =>
       hasValidIdentity &&
       hasValidCreateDetails &&
@@ -99,6 +108,8 @@ class ActivityPlan {
     int? participantCount,
     int? maxParticipants,
     Object? distanceKm = _unset,
+    int? boostLevel,
+    Object? boostExpiresAt = _unset,
     bool? isIndoor,
     ActivityStatus? status,
     List<DiscoverySurface>? surfaces,
@@ -122,6 +133,10 @@ class ActivityPlan {
       distanceKm: identical(distanceKm, _unset)
           ? this.distanceKm
           : distanceKm as double?,
+      boostLevel: boostLevel ?? this.boostLevel,
+      boostExpiresAt: identical(boostExpiresAt, _unset)
+          ? this.boostExpiresAt
+          : boostExpiresAt as DateTime?,
       isIndoor: isIndoor ?? this.isIndoor,
       status: status ?? this.status,
       surfaces: surfaces ?? this.surfaces,

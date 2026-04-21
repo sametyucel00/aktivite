@@ -76,6 +76,22 @@ class FirestoreActivityRepository implements ActivityRepository {
     });
   }
 
+  @override
+  Future<void> applyBoost({
+    required String activityId,
+    required DateTime expiresAt,
+    int boostLevel = 1,
+  }) {
+    return _activities.doc(activityId).set(
+      {
+        FirebaseDocumentFields.boostLevel: boostLevel.clamp(0, 10),
+        FirebaseDocumentFields.boostExpiresAt: expiresAt.toIso8601String(),
+        FirebaseDocumentFields.updatedAt: FieldValue.serverTimestamp(),
+      },
+      SetOptions(merge: true),
+    );
+  }
+
   ActivityPlan? _normalizedCreatePlan(ActivityPlan plan) {
     final title = plan.title.trim();
     final description = plan.description.trim();

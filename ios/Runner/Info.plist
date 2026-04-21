@@ -17,7 +17,9 @@
 		<key>CFBundleName</key>
 		<string>togio</string>
 		<key>GoogleMapsApiKey</key>
-		<string>$(GOOGLE_MAPS_API_KEY)</string>
+		<string>AIzaSyBOk1kzqJ-7u-yH30T-mO3SXW9XfblRS6o</string>
+		<key>NSLocationWhenInUseUsageDescription</key>
+		<string>Yakındaki planları yaklaşık bölgede gösterebilmek için konumun kullanılır.</string>
 		<key>CFBundlePackageType</key>
 		<string>APPL</string>
 		<key>CFBundleShortVersionString</key>

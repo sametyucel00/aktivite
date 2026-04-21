@@ -29,6 +29,9 @@ ModelMap activityPlanToMap(ActivityPlan plan) {
     FirebaseDocumentFields.participantCount: plan.participantCount,
     FirebaseDocumentFields.maxParticipants: plan.maxParticipants,
     FirebaseDocumentFields.distanceKm: plan.distanceKm,
+    FirebaseDocumentFields.boostLevel: plan.boostLevel,
+    FirebaseDocumentFields.boostExpiresAt:
+        plan.boostExpiresAt?.toIso8601String(),
     FirebaseDocumentFields.isIndoor: plan.isIndoor,
     FirebaseDocumentFields.status: enumName(plan.status),
     FirebaseDocumentFields.surfaces: enumNames(plan.surfaces),
@@ -64,6 +67,8 @@ ActivityPlan activityPlanFromMap(String id, ModelMap map) {
     maxParticipants:
         _int(map[FirebaseDocumentFields.maxParticipants], fallback: 2),
     distanceKm: _doubleOrNull(map[FirebaseDocumentFields.distanceKm]),
+    boostLevel: _int(map[FirebaseDocumentFields.boostLevel]),
+    boostExpiresAt: _dateTimeOrNull(map[FirebaseDocumentFields.boostExpiresAt]),
     isIndoor: _bool(map[FirebaseDocumentFields.isIndoor], fallback: true),
     status: activityStatusFromName(map[FirebaseDocumentFields.status]),
     surfaces: surfaces.isEmpty ? const [DiscoverySurface.nearby] : surfaces,
@@ -72,6 +77,7 @@ ActivityPlan activityPlanFromMap(String id, ModelMap map) {
 
 ModelMap appUserProfileToMap(AppUserProfile profile) {
   return {
+    FirebaseDocumentFields.id: profile.id,
     FirebaseDocumentFields.displayName: profile.displayName,
     FirebaseDocumentFields.profilePhotoUrl: profile.profilePhotoUrl,
     FirebaseDocumentFields.city: profile.city,
@@ -234,4 +240,17 @@ DateTime _dateTime(Object? value) {
     return DateTime.tryParse(value) ?? DateTime.fromMillisecondsSinceEpoch(0);
   }
   return DateTime.fromMillisecondsSinceEpoch(0);
+}
+
+DateTime? _dateTimeOrNull(Object? value) {
+  if (value == null) {
+    return null;
+  }
+  if (value is DateTime) {
+    return value;
+  }
+  if (value is String) {
+    return DateTime.tryParse(value);
+  }
+  return null;
 }

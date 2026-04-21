@@ -609,6 +609,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String get mapNearbyPlansTitle => 'Nearby plans';
 
   @override
+  String get mapLocationUnavailableMessage =>
+      'Allow location access to center the map around your area and keep plan markers approximate.';
+
+  @override
+  String get mapLocationUnavailableTitle => 'Location needed for nearby map';
+
+  @override
+  String get mapOpenLocationSettingsAction => 'Open location settings';
+
+  @override
+  String get mapCurrentAreaLabel => 'Your current area';
+
+  @override
+  String get mapApproximateMarkerHint =>
+      'Plan markers are intentionally shifted to nearby approximate areas instead of exact meetup points.';
+
+  @override
   String get mapPlaceholder => 'Approximate activity map preview';
 
   @override
@@ -632,6 +649,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get mapTitle => 'Nearby map';
+
+  @override
+  String get mapUnsupportedPlatform =>
+      'Interactive maps are currently available on Android, iOS, and Web.';
 
   @override
   String get moodCalm => 'Calm';
@@ -753,6 +774,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get openSettingsAction => 'Open settings';
 
   @override
+  String get exploreOpenSpotsOnly => 'Open spots only';
+
+  @override
+  String get exploreAdvancedFiltersUpsell =>
+      'Advanced indoor and availability filters are available with Plus or Pro.';
+
+  @override
   String peopleCount(int current, int max) {
     return '$current/$max people';
   }
@@ -859,7 +887,82 @@ class AppLocalizationsEn extends AppLocalizations {
   String get premiumFilters => 'Premium filters';
 
   @override
+  String get premiumRecurringPlans => 'Recurring plans';
+
+  @override
   String get premiumSlots => 'More active plan slots';
+
+  @override
+  String get premiumTierPlus => 'Plus';
+
+  @override
+  String get premiumTierPro => 'Pro / Host';
+
+  @override
+  String get premiumPlusSummary =>
+      'More active plans, advanced filters, wider discovery, and included visibility boosts.';
+
+  @override
+  String get premiumProSummary =>
+      'Recurring plans, host controls, stronger visibility tools, and advanced participation management.';
+
+  @override
+  String get boostedBadge => 'Boosted';
+
+  @override
+  String get boostPlanAction => 'Boost plan';
+
+  @override
+  String get boostPlanWithAdAction => 'Boost with rewarded ad';
+
+  @override
+  String get unlockBoostAction => 'Unlock boost';
+
+  @override
+  String get activityBoostHint =>
+      'Boosted plans rise gently in discovery without hiding regular plans.';
+
+  @override
+  String activityBoostedToast(String title) {
+    return '$title is boosted in discovery for a limited time.';
+  }
+
+  @override
+  String activityBoostedUntil(String time) {
+    return 'Boost active until $time.';
+  }
+
+  @override
+  String get monetizationVisibilityToolsTitle => 'Visibility tools';
+
+  @override
+  String get monetizationVisibilityToolsFreeSubtitle =>
+      'Boosting stays optional. Free users can watch a rewarded ad when they want extra visibility.';
+
+  @override
+  String monetizationVisibilityToolsPremiumSubtitle(String tier) {
+    return '$tier includes extra discovery tools and fair boost access.';
+  }
+
+  @override
+  String monetizationBoostCredits(int count) {
+    return '$count included boost credits';
+  }
+
+  @override
+  String get monetizationRewardedBoost => 'Rewarded boost available';
+
+  @override
+  String get monetizationRewardedAdUnavailable =>
+      'Rewarded ad is not available right now.';
+
+  @override
+  String get monetizationPremiumComingSoon =>
+      'Premium checkout is prepared but not opened for sale yet.';
+
+  @override
+  String get monetizationRewardedAdsHint =>
+      'Rewarded ads are optional and never interrupt chat, join, or plan creation.';
 
   @override
   String get quickReplyConfirmTime => 'Can we confirm the time?';
@@ -1050,6 +1153,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsPremiumTitle => 'Premium readiness';
+
+  @override
+  String settingsPremiumCurrentTier(String tier) {
+    return 'Current tier: $tier';
+  }
 
   @override
   String get settingsPreferences => 'Preferences';

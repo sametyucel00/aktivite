@@ -11,7 +11,7 @@ plugins {
 
 val googleMapsApiKey = providers.gradleProperty("GOOGLE_MAPS_API_KEY")
     .orElse(providers.environmentVariable("GOOGLE_MAPS_API_KEY"))
-    .orElse("")
+    .orElse("AIzaSyBOk1kzqJ-7u-yH30T-mO3SXW9XfblRS6o")
 
 android {
     namespace = "com.togio.app"

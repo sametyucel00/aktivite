@@ -1,4 +1,5 @@
 import 'package:aktivite/app/app_routes.dart';
+import 'package:aktivite/app/theme/app_radii.dart';
 import 'package:aktivite/core/constants/app_spacing.dart';
 import 'package:aktivite/core/constants/safety_report_reasons.dart';
 import 'package:aktivite/core/utils/analytics_events.dart';
@@ -11,6 +12,9 @@ import 'package:aktivite/shared/providers/app_providers.dart';
 import 'package:aktivite/shared/providers/repository_providers.dart';
 import 'package:aktivite/shared/widgets/app_section_card.dart';
 import 'package:aktivite/shared/widgets/async_value_view.dart';
+import 'package:aktivite/shared/widgets/app_page_scaffold.dart';
+import 'package:aktivite/shared/widgets/app_section_header.dart';
+import 'package:aktivite/shared/widgets/app_surface.dart';
 import 'package:aktivite/shared/widgets/trust_signal_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -59,11 +63,15 @@ class _SafetyScreenState extends ConsumerState<SafetyScreen> {
     final hasReportedSelectedTarget = hasSelectedTarget &&
         (reportedReasonsByUser[selectedTargetUserId]?.isNotEmpty ?? false);
 
-    return Scaffold(
-      appBar: AppBar(title: Text(l10n.safetyTitle)),
-      body: ListView(
-        padding: const EdgeInsets.all(AppSpacing.lg),
+    return AppPageScaffold(
+      title: l10n.safetyTitle,
+      child: ListView(
         children: [
+          AppSectionHeader(
+            title: l10n.safetyTitle,
+            subtitle: l10n.safetyCenterSubtitle,
+          ),
+          const SizedBox(height: AppSpacing.md),
           AppSectionCard(
             title: l10n.safetyCenterTitle,
             subtitle: l10n.safetyCenterSubtitle,
@@ -118,6 +126,154 @@ class _SafetyScreenState extends ConsumerState<SafetyScreen> {
             ),
           ),
           const SizedBox(height: AppSpacing.md),
+          AppSurface(
+            tonal: true,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AppSectionHeader(
+                  title: l10n.safetyReportsTitle,
+                  subtitle: l10n.safetyReportsPrivateSummary,
+                ),
+                const SizedBox(height: AppSpacing.md),
+                Text(
+                  l10n.safetyReportsPrivateHint(
+                    safetySummaryAsync.valueOrNull?.reportCount ?? 0,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.md),
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    final stacked = constraints.maxWidth < 480;
+                    final reportButton = FilledButton.tonalIcon(
+                      onPressed: !hasSelectedTarget || hasReportedSelectedTarget
+                          ? null
+                          : () async {
+                              final userId = session.userId;
+                              if (userId == null) {
+                                showAppSnackBar(
+                                  context,
+                                  l10n.safetyActionUnavailableToast,
+                                );
+                                return;
+                              }
+                              final reason =
+                                  await _showReportReasonDialog(context, l10n);
+                              if (reason == null) {
+                                return;
+                              }
+                              try {
+                                await ref
+                                    .read(safetyRepositoryProvider)
+                                    .reportUser(
+                                      targetUserId: selectedTargetUserId,
+                                      reason: reason,
+                                    );
+                                await ref
+                                    .read(analyticsServiceProvider)
+                                    .logEvent(
+                                  name: AnalyticsEvents.safetyReportSubmitted,
+                                  parameters: {
+                                    'target_user_id': selectedTargetUserId,
+                                  },
+                                );
+                                if (!context.mounted) {
+                                  return;
+                                }
+                                showAppSnackBar(
+                                  context,
+                                  l10n.safetyReportSubmittedToast,
+                                );
+                              } catch (_) {
+                                if (!context.mounted) {
+                                  return;
+                                }
+                                showAppSnackBar(
+                                  context,
+                                  l10n.safetyActionFailedToast,
+                                );
+                              }
+                            },
+                      icon: const Icon(Icons.report_outlined),
+                      label: Text(
+                        hasReportedSelectedTarget
+                            ? l10n.safetyReportAlreadySubmitted
+                            : l10n.reportUser,
+                      ),
+                    );
+                    final blockButton = OutlinedButton.icon(
+                      onPressed: !hasSelectedTarget || isSelectedTargetBlocked
+                          ? null
+                          : () async {
+                              final userId = session.userId;
+                              if (userId == null) {
+                                showAppSnackBar(
+                                  context,
+                                  l10n.safetyActionUnavailableToast,
+                                );
+                                return;
+                              }
+                              try {
+                                await ref
+                                    .read(safetyRepositoryProvider)
+                                    .blockUser(
+                                      targetUserId: selectedTargetUserId,
+                                    );
+                                await ref
+                                    .read(analyticsServiceProvider)
+                                    .logEvent(
+                                  name: AnalyticsEvents.safetyUserBlocked,
+                                  parameters: {
+                                    'target_user_id': selectedTargetUserId,
+                                  },
+                                );
+                                if (!context.mounted) {
+                                  return;
+                                }
+                                showAppSnackBar(
+                                  context,
+                                  l10n.safetyUserBlockedToast,
+                                );
+                              } catch (_) {
+                                if (!context.mounted) {
+                                  return;
+                                }
+                                showAppSnackBar(
+                                  context,
+                                  l10n.safetyActionFailedToast,
+                                );
+                              }
+                            },
+                      icon: const Icon(Icons.block_outlined),
+                      label: Text(
+                        isSelectedTargetBlocked
+                            ? l10n.safetyUserAlreadyBlocked
+                            : l10n.blockUser,
+                      ),
+                    );
+
+                    return stacked
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              reportButton,
+                              const SizedBox(height: AppSpacing.sm),
+                              blockButton,
+                            ],
+                          )
+                        : Row(
+                            children: [
+                              Expanded(child: reportButton),
+                              const SizedBox(width: AppSpacing.sm),
+                              Expanded(child: blockButton),
+                            ],
+                          );
+                  },
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: AppSpacing.md),
           AppSectionCard(
             title: l10n.safetyTimelineTitle,
             subtitle: l10n.safetyTimelineSubtitle,
@@ -131,10 +287,24 @@ class _SafetyScreenState extends ConsumerState<SafetyScreen> {
                       .map(
                         (event) => ListTile(
                           contentPadding: EdgeInsets.zero,
-                          leading: Icon(
-                            event.isUserVisible
-                                ? Icons.visibility_outlined
-                                : Icons.lock_outline,
+                          leading: Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              color: event.isUserVisible
+                                  ? Theme.of(context)
+                                      .colorScheme
+                                      .primaryContainer
+                                  : Theme.of(context)
+                                      .colorScheme
+                                      .surfaceContainerHighest,
+                              borderRadius: BorderRadius.circular(AppRadii.md),
+                            ),
+                            child: Icon(
+                              event.isUserVisible
+                                  ? Icons.visibility_outlined
+                                  : Icons.lock_outline,
+                            ),
                           ),
                           title: Text(trustEventTitle(l10n, event)),
                           subtitle: Text(
@@ -170,11 +340,55 @@ class _SafetyScreenState extends ConsumerState<SafetyScreen> {
                   child: Column(
                     children: blockedUserIds
                         .map(
-                          (userId) => ListTile(
-                            contentPadding: EdgeInsets.zero,
-                            leading: const Icon(Icons.block_outlined),
-                            title: Text(_safetyUserLabel(l10n, userId)),
-                            subtitle: Text(userId),
+                          (userId) => Container(
+                            width: double.infinity,
+                            margin:
+                                const EdgeInsets.only(bottom: AppSpacing.sm),
+                            padding: const EdgeInsets.all(AppSpacing.md),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .surfaceContainerLow,
+                              borderRadius: BorderRadius.circular(AppRadii.md),
+                            ),
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 38,
+                                  height: 38,
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .errorContainer,
+                                    borderRadius: BorderRadius.circular(
+                                      AppRadii.md,
+                                    ),
+                                  ),
+                                  child: Icon(
+                                    Icons.block_outlined,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onErrorContainer,
+                                  ),
+                                ),
+                                const SizedBox(width: AppSpacing.sm),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(_safetyUserLabel(l10n, userId)),
+                                      Text(
+                                        userId,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         )
                         .toList(growable: false),
@@ -186,102 +400,6 @@ class _SafetyScreenState extends ConsumerState<SafetyScreen> {
             error: (error, stackTrace) => <Widget>[
               AsyncErrorView(message: error.toString()),
             ],
-          ),
-          const SizedBox(height: AppSpacing.md),
-          AppSectionCard(
-            title: l10n.safetyReportsTitle,
-            subtitle: l10n.safetyReportsPrivateSummary,
-            child: Text(
-              l10n.safetyReportsPrivateHint(
-                safetySummaryAsync.valueOrNull?.reportCount ?? 0,
-              ),
-            ),
-          ),
-          const SizedBox(height: AppSpacing.md),
-          FilledButton.tonalIcon(
-            onPressed: !hasSelectedTarget || hasReportedSelectedTarget
-                ? null
-                : () async {
-                    final userId = session.userId;
-                    if (userId == null) {
-                      showAppSnackBar(
-                        context,
-                        l10n.safetyActionUnavailableToast,
-                      );
-                      return;
-                    }
-                    final reason = await _showReportReasonDialog(context, l10n);
-                    if (reason == null) {
-                      return;
-                    }
-                    try {
-                      await ref.read(safetyRepositoryProvider).reportUser(
-                            targetUserId: selectedTargetUserId,
-                            reason: reason,
-                          );
-                      await ref.read(analyticsServiceProvider).logEvent(
-                        name: AnalyticsEvents.safetyReportSubmitted,
-                        parameters: {'target_user_id': selectedTargetUserId},
-                      );
-                      if (!context.mounted) {
-                        return;
-                      }
-                      showAppSnackBar(
-                        context,
-                        l10n.safetyReportSubmittedToast,
-                      );
-                    } catch (_) {
-                      if (!context.mounted) {
-                        return;
-                      }
-                      showAppSnackBar(context, l10n.safetyActionFailedToast);
-                    }
-                  },
-            icon: const Icon(Icons.report_outlined),
-            label: Text(
-              hasReportedSelectedTarget
-                  ? l10n.safetyReportAlreadySubmitted
-                  : l10n.reportUser,
-            ),
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          OutlinedButton.icon(
-            onPressed: !hasSelectedTarget || isSelectedTargetBlocked
-                ? null
-                : () async {
-                    final userId = session.userId;
-                    if (userId == null) {
-                      showAppSnackBar(
-                        context,
-                        l10n.safetyActionUnavailableToast,
-                      );
-                      return;
-                    }
-                    try {
-                      await ref.read(safetyRepositoryProvider).blockUser(
-                            targetUserId: selectedTargetUserId,
-                          );
-                      await ref.read(analyticsServiceProvider).logEvent(
-                        name: AnalyticsEvents.safetyUserBlocked,
-                        parameters: {'target_user_id': selectedTargetUserId},
-                      );
-                      if (!context.mounted) {
-                        return;
-                      }
-                      showAppSnackBar(context, l10n.safetyUserBlockedToast);
-                    } catch (_) {
-                      if (!context.mounted) {
-                        return;
-                      }
-                      showAppSnackBar(context, l10n.safetyActionFailedToast);
-                    }
-                  },
-            icon: const Icon(Icons.block_outlined),
-            label: Text(
-              isSelectedTargetBlocked
-                  ? l10n.safetyUserAlreadyBlocked
-                  : l10n.blockUser,
-            ),
           ),
         ],
       ),

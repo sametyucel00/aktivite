@@ -1,4 +1,6 @@
 import 'package:aktivite/app/app_routes.dart';
+import 'package:aktivite/app/theme/app_breakpoints.dart';
+import 'package:aktivite/app/theme/app_radii.dart';
 import 'package:aktivite/core/constants/app_spacing.dart';
 import 'package:aktivite/core/utils/analytics_events.dart';
 import 'package:aktivite/core/utils/app_feedback.dart';
@@ -8,6 +10,9 @@ import 'package:aktivite/shared/models/chat_thread.dart';
 import 'package:aktivite/shared/providers/app_providers.dart';
 import 'package:aktivite/shared/providers/repository_providers.dart';
 import 'package:aktivite/shared/widgets/async_value_view.dart';
+import 'package:aktivite/shared/widgets/app_page_scaffold.dart';
+import 'package:aktivite/shared/widgets/app_section_header.dart';
+import 'package:aktivite/shared/widgets/app_surface.dart';
 import 'package:aktivite/shared/widgets/empty_state_view.dart';
 import 'package:aktivite/shared/widgets/route_action_button.dart';
 import 'package:flutter/material.dart';
@@ -62,208 +67,20 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         (composerThread?.hasParticipant(currentUserId) ?? false) &&
             !_isSendingMessage;
 
-    return Scaffold(
-      appBar: AppBar(title: Text(l10n.chatTitle)),
-      body: threadsAsync.when(
-        data: (threads) {
-          final effectiveThreadId = threads.any(
-            (thread) => thread.id == _selectedThreadId,
-          )
-              ? _selectedThreadId
-              : threads.isEmpty
-                  ? null
-                  : threads.first.id;
-          final selectedThread = effectiveThreadId == null
-              ? null
-              : threads.firstWhere((thread) => thread.id == effectiveThreadId);
-
-          if (threads.isEmpty) {
-            return EmptyStateView(
-              title: blockedChatThreadsCount > 0
-                  ? l10n.chatBlockedThreadsEmptyTitle
-                  : l10n.chatEmptyTitle,
-              message: blockedChatThreadsCount > 0
-                  ? l10n.chatBlockedThreadsEmptyMessage
-                  : l10n.chatEmptyMessage,
-              action: RouteActionButton(
-                label: l10n.openExploreAction,
-                route: AppRoutes.explore,
-              ),
-            );
-          }
-          return ListView(
-            padding: const EdgeInsets.all(AppSpacing.lg),
-            children: [
-              Card(
-                child: Padding(
-                  padding: EdgeInsets.all(
-                    MediaQuery.sizeOf(context).width < 420
-                        ? AppSpacing.md
-                        : AppSpacing.lg,
-                  ),
-                  child: selectedThread == null
-                      ? Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              l10n.chatSelectedThreadTitle,
-                              style: Theme.of(context).textTheme.titleMedium,
-                            ),
-                            const SizedBox(height: AppSpacing.xs),
-                            Text(
-                              l10n.chatSelectedThreadEmpty,
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ],
-                        )
-                      : Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Container(
-                                  width: 42,
-                                  height: 42,
-                                  decoration: BoxDecoration(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .primaryContainer,
-                                    borderRadius: BorderRadius.circular(16),
-                                  ),
-                                  child: Icon(
-                                    Icons.forum_outlined,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onPrimaryContainer,
-                                  ),
-                                ),
-                                const SizedBox(width: AppSpacing.sm),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        l10n.chatSelectedThreadTitle,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleMedium,
-                                      ),
-                                      Text(
-                                        l10n.chatSelectedThreadSubtitle,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            if (threads.length > 1) ...[
-                              const SizedBox(height: AppSpacing.md),
-                              SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Row(
-                                  children: threads
-                                      .map(
-                                        (thread) => Padding(
-                                          padding: const EdgeInsets.only(
-                                            right: AppSpacing.sm,
-                                          ),
-                                          child: ChoiceChip(
-                                            selected:
-                                                thread.id == selectedThread.id,
-                                            showCheckmark: false,
-                                            visualDensity:
-                                                VisualDensity.compact,
-                                            onSelected: (_) {
-                                              setState(() {
-                                                _selectedThreadId = thread.id;
-                                              });
-                                            },
-                                            label: Text(
-                                              l10n.chatThreadChipLabel(
-                                                thread.activityId,
-                                                thread.participantsCount,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                      .toList(growable: false),
-                                ),
-                              ),
-                            ],
-                            const SizedBox(height: AppSpacing.md),
-                            Wrap(
-                              spacing: AppSpacing.sm,
-                              runSpacing: AppSpacing.sm,
-                              children: [
-                                Chip(
-                                  avatar: const Icon(
-                                    Icons.event_note_outlined,
-                                    size: 18,
-                                  ),
-                                  label: Text(
-                                    l10n.chatActivityLabel(
-                                      selectedThread.activityId,
-                                    ),
-                                  ),
-                                  visualDensity: VisualDensity.compact,
-                                ),
-                                Chip(
-                                  avatar: const Icon(
-                                    Icons.groups_outlined,
-                                    size: 18,
-                                  ),
-                                  label: Text(
-                                    l10n.chatParticipantsCount(
-                                      selectedThread.participantsCount,
-                                    ),
-                                  ),
-                                  visualDensity: VisualDensity.compact,
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: AppSpacing.sm),
-                            Text(
-                              selectedThread.lastMessagePreview,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ],
-                        ),
-                ),
-              ),
-              const SizedBox(height: AppSpacing.md),
-              _ThreadCard(
-                thread: selectedThread!,
-                isPrimary: true,
-                isSendingMessage: _isSendingMessage,
-                currentUserId: currentUserId,
-                draftController: _messageController,
-                onSendMessage: (message) => _sendMessage(
-                  threadId: selectedThread.id,
-                  senderUserId: currentUserId,
-                  message: message,
-                ),
-              ),
-            ],
-          );
-        },
-        loading: () => const AsyncLoadingView(),
-        error: (error, stackTrace) => AsyncErrorView(message: error.toString()),
-      ),
+    return AppPageScaffold(
+      title: l10n.chatTitle,
       bottomNavigationBar: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.md),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-            decoration: BoxDecoration(
-              color: Theme.of(context).cardColor,
-              borderRadius: BorderRadius.circular(20),
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.md,
+            AppSpacing.sm,
+            AppSpacing.md,
+            AppSpacing.md,
+          ),
+          child: AppSurface(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.md,
+              vertical: AppSpacing.sm,
             ),
             child: TextField(
               controller: _messageController,
@@ -307,6 +124,197 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             ),
           ),
         ),
+      ),
+      child: threadsAsync.when(
+        data: (threads) {
+          final effectiveThreadId = threads.any(
+            (thread) => thread.id == _selectedThreadId,
+          )
+              ? _selectedThreadId
+              : threads.isEmpty
+                  ? null
+                  : threads.first.id;
+          final selectedThread = effectiveThreadId == null
+              ? null
+              : threads.firstWhere((thread) => thread.id == effectiveThreadId);
+
+          if (threads.isEmpty) {
+            return EmptyStateView(
+              title: blockedChatThreadsCount > 0
+                  ? l10n.chatBlockedThreadsEmptyTitle
+                  : l10n.chatEmptyTitle,
+              message: blockedChatThreadsCount > 0
+                  ? l10n.chatBlockedThreadsEmptyMessage
+                  : l10n.chatEmptyMessage,
+              action: RouteActionButton(
+                label: l10n.openExploreAction,
+                route: AppRoutes.explore,
+              ),
+            );
+          }
+          return ListView(
+            children: [
+              AppSectionHeader(
+                title: l10n.chatTitle,
+                subtitle: l10n.chatSelectedThreadSubtitle,
+              ),
+              const SizedBox(height: AppSpacing.md),
+              AppSurface(
+                child: selectedThread == null
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            l10n.chatSelectedThreadTitle,
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                          const SizedBox(height: AppSpacing.xs),
+                          Text(
+                            l10n.chatSelectedThreadEmpty,
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ],
+                      )
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                width: 46,
+                                height: 46,
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .primaryContainer,
+                                  borderRadius:
+                                      BorderRadius.circular(AppRadii.md),
+                                ),
+                                child: Icon(
+                                  Icons.forum_outlined,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onPrimaryContainer,
+                                ),
+                              ),
+                              const SizedBox(width: AppSpacing.sm),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      l10n.chatSelectedThreadTitle,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium,
+                                    ),
+                                    Text(
+                                      selectedThread.lastMessagePreview,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style:
+                                          Theme.of(context).textTheme.bodySmall,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          if (threads.length > 1) ...[
+                            const SizedBox(height: AppSpacing.md),
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: threads
+                                    .map(
+                                      (thread) => Padding(
+                                        padding: const EdgeInsets.only(
+                                          right: AppSpacing.sm,
+                                        ),
+                                        child: ChoiceChip(
+                                          selected:
+                                              thread.id == selectedThread.id,
+                                          showCheckmark: false,
+                                          visualDensity: VisualDensity.compact,
+                                          onSelected: (_) {
+                                            setState(() {
+                                              _selectedThreadId = thread.id;
+                                            });
+                                          },
+                                          label: Text(
+                                            l10n.chatThreadChipLabel(
+                                              thread.activityId,
+                                              thread.participantsCount,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                    .toList(growable: false),
+                              ),
+                            ),
+                          ],
+                          const SizedBox(height: AppSpacing.md),
+                          LayoutBuilder(
+                            builder: (context, constraints) {
+                              final stacked =
+                                  constraints.maxWidth < AppBreakpoints.medium;
+                              final chips = [
+                                Chip(
+                                  avatar: const Icon(
+                                    Icons.event_note_outlined,
+                                    size: 18,
+                                  ),
+                                  label: Text(
+                                    l10n.chatActivityLabel(
+                                      selectedThread.activityId,
+                                    ),
+                                  ),
+                                  visualDensity: VisualDensity.compact,
+                                ),
+                                Chip(
+                                  avatar: const Icon(
+                                    Icons.groups_outlined,
+                                    size: 18,
+                                  ),
+                                  label: Text(
+                                    l10n.chatParticipantsCount(
+                                      selectedThread.participantsCount,
+                                    ),
+                                  ),
+                                  visualDensity: VisualDensity.compact,
+                                ),
+                              ];
+                              return stacked
+                                  ? Wrap(
+                                      spacing: AppSpacing.sm,
+                                      runSpacing: AppSpacing.sm,
+                                      children: chips,
+                                    )
+                                  : Row(children: chips);
+                            },
+                          ),
+                        ],
+                      ),
+              ),
+              const SizedBox(height: AppSpacing.md),
+              _ThreadCard(
+                thread: selectedThread!,
+                isPrimary: true,
+                isSendingMessage: _isSendingMessage,
+                currentUserId: currentUserId,
+                draftController: _messageController,
+                onSendMessage: (message) => _sendMessage(
+                  threadId: selectedThread.id,
+                  senderUserId: currentUserId,
+                  message: message,
+                ),
+              ),
+            ],
+          );
+        },
+        loading: () => const AsyncLoadingView(),
+        error: (error, stackTrace) => AsyncErrorView(message: error.toString()),
       ),
     );
   }
@@ -392,113 +400,109 @@ class _ThreadCard extends ConsumerWidget {
       l10n.quickReplyConfirmTime,
     ];
 
-    return Card(
-      child: Padding(
-        padding: EdgeInsets.all(
-          MediaQuery.sizeOf(context).width < 420
-              ? AppSpacing.md
-              : AppSpacing.lg,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (thread.shouldShowSafetyBanner(safetyBannerEnabled)) ...[
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(AppSpacing.md),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.secondaryContainer,
-                  borderRadius: BorderRadius.circular(18),
-                ),
-                child: Text(l10n.chatSafetyBanner),
+    return AppSurface(
+      padding: EdgeInsets.all(
+        MediaQuery.sizeOf(context).width < 420 ? AppSpacing.md : AppSpacing.lg,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (thread.shouldShowSafetyBanner(safetyBannerEnabled)) ...[
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(AppSpacing.md),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.secondaryContainer,
+                borderRadius: BorderRadius.circular(AppRadii.md),
               ),
-              const SizedBox(height: AppSpacing.md),
-            ],
-            Text(
-              l10n.chatActivityLabel(thread.activityId),
-              style: Theme.of(context).textTheme.titleMedium,
+              child: Text(l10n.chatSafetyBanner),
             ),
-            const SizedBox(height: AppSpacing.sm),
-            Text(thread.lastMessagePreview),
             const SizedBox(height: AppSpacing.md),
-            Text(
-              l10n.chatHistoryTitle,
-              style: Theme.of(context).textTheme.labelLarge,
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            messagesAsync.when(
-              data: (messages) {
-                if (messages.isEmpty) {
-                  return Text(
-                    l10n.chatHistoryEmpty,
-                    style: Theme.of(context).textTheme.bodySmall,
-                  );
-                }
-                final recentMessages = messages.length <= 4
-                    ? messages
-                    : messages.sublist(messages.length - 4);
-                return Column(
-                  children: recentMessages
-                      .map(
-                        (message) => Padding(
-                          padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-                          child: _MessageBubble(
-                            message: message,
-                            isOwnMessage: message.senderUserId == currentUserId,
-                          ),
-                        ),
-                      )
-                      .toList(growable: false),
+          ],
+          Text(
+            l10n.chatActivityLabel(thread.activityId),
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          Text(thread.lastMessagePreview),
+          const SizedBox(height: AppSpacing.md),
+          Text(
+            l10n.chatHistoryTitle,
+            style: Theme.of(context).textTheme.labelLarge,
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          messagesAsync.when(
+            data: (messages) {
+              if (messages.isEmpty) {
+                return Text(
+                  l10n.chatHistoryEmpty,
+                  style: Theme.of(context).textTheme.bodySmall,
                 );
-              },
-              loading: () => const AsyncLoadingView(),
-              error: (error, stackTrace) =>
-                  AsyncErrorView(message: error.toString()),
-            ),
-            const SizedBox(height: AppSpacing.md),
-            Text(
-              l10n.chatQuickRepliesTitle,
-              style: Theme.of(context).textTheme.labelLarge,
-            ),
-            const SizedBox(height: AppSpacing.xs),
-            Text(
-              l10n.chatQuickRepliesHint,
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: quickReplies
+              }
+              final recentMessages = messages.length <= 4
+                  ? messages
+                  : messages.sublist(messages.length - 4);
+              return Column(
+                children: recentMessages
                     .map(
-                      (reply) => Padding(
-                        padding: const EdgeInsets.only(right: AppSpacing.sm),
-                        child: ActionChip(
-                          visualDensity: VisualDensity.compact,
-                          label: Text(reply),
-                          onPressed: isSendingMessage
-                              ? null
-                              : () async {
-                                  if (draftController != null) {
-                                    draftController!.text = reply;
-                                  }
-                                  await onSendMessage(reply);
-                                },
+                      (message) => Padding(
+                        padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                        child: _MessageBubble(
+                          message: message,
+                          isOwnMessage: message.senderUserId == currentUserId,
                         ),
                       ),
                     )
                     .toList(growable: false),
-              ),
+              );
+            },
+            loading: () => const AsyncLoadingView(),
+            error: (error, stackTrace) =>
+                AsyncErrorView(message: error.toString()),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          Text(
+            l10n.chatQuickRepliesTitle,
+            style: Theme.of(context).textTheme.labelLarge,
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            l10n.chatQuickRepliesHint,
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: quickReplies
+                  .map(
+                    (reply) => Padding(
+                      padding: const EdgeInsets.only(right: AppSpacing.sm),
+                      child: ActionChip(
+                        visualDensity: VisualDensity.compact,
+                        label: Text(reply),
+                        onPressed: isSendingMessage
+                            ? null
+                            : () async {
+                                if (draftController != null) {
+                                  draftController!.text = reply;
+                                }
+                                await onSendMessage(reply);
+                              },
+                      ),
+                    ),
+                  )
+                  .toList(growable: false),
             ),
-            if (isPrimary) ...[
-              const SizedBox(height: AppSpacing.sm),
-              Text(
-                l10n.chatComposerHint,
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
-            ],
+          ),
+          if (isPrimary) ...[
+            const SizedBox(height: AppSpacing.sm),
+            Text(
+              l10n.chatComposerHint,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
           ],
-        ),
+        ],
       ),
     );
   }
@@ -531,7 +535,7 @@ class _MessageBubble extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           color: backgroundColor,
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(AppRadii.md),
         ),
         child: Text(message.text),
       ),

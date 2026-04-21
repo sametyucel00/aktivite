@@ -1,4 +1,6 @@
 import 'package:aktivite/core/constants/app_spacing.dart';
+import 'package:aktivite/shared/widgets/app_section_header.dart';
+import 'package:aktivite/shared/widgets/app_surface.dart';
 import 'package:flutter/material.dart';
 
 class AppSectionCard extends StatelessWidget {
@@ -16,26 +18,18 @@ class AppSectionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isCompact = MediaQuery.sizeOf(context).width < 420;
-    return Card(
-      child: Padding(
-        padding: EdgeInsets.all(isCompact ? AppSpacing.md : AppSpacing.lg),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: isCompact
-                  ? Theme.of(context).textTheme.titleMedium
-                  : Theme.of(context).textTheme.titleLarge,
-            ),
-            if (subtitle != null) ...[
-              const SizedBox(height: AppSpacing.sm),
-              Text(subtitle!, style: Theme.of(context).textTheme.bodyMedium),
-            ],
-            const SizedBox(height: AppSpacing.md),
-            child,
-          ],
-        ),
+    return AppSurface(
+      padding: EdgeInsets.all(isCompact ? AppSpacing.md : AppSpacing.lg),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          AppSectionHeader(
+            title: title,
+            subtitle: subtitle,
+          ),
+          const SizedBox(height: AppSpacing.md),
+          child,
+        ],
       ),
     );
   }

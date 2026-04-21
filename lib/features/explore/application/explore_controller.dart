@@ -8,27 +8,37 @@ class ExploreState {
     required this.surface,
     required this.category,
     required this.distanceFilter,
+    required this.indoorOnly,
+    required this.openSpotsOnly,
   });
 
   const ExploreState.initial()
       : surface = DiscoverySurface.nearby,
         category = null,
-        distanceFilter = DiscoveryDistanceFilter.any;
+        distanceFilter = DiscoveryDistanceFilter.five,
+        indoorOnly = false,
+        openSpotsOnly = false;
 
   final DiscoverySurface surface;
   final ActivityCategory? category;
   final DiscoveryDistanceFilter distanceFilter;
+  final bool indoorOnly;
+  final bool openSpotsOnly;
 
   ExploreState copyWith({
     DiscoverySurface? surface,
     ActivityCategory? category,
     DiscoveryDistanceFilter? distanceFilter,
+    bool? indoorOnly,
+    bool? openSpotsOnly,
     bool clearCategory = false,
   }) {
     return ExploreState(
       surface: surface ?? this.surface,
       category: clearCategory ? null : (category ?? this.category),
       distanceFilter: distanceFilter ?? this.distanceFilter,
+      indoorOnly: indoorOnly ?? this.indoorOnly,
+      openSpotsOnly: openSpotsOnly ?? this.openSpotsOnly,
     );
   }
 }
@@ -56,6 +66,14 @@ class ExploreController extends Notifier<ExploreState> {
 
   void resetFilters() {
     state = const ExploreState.initial();
+  }
+
+  void setIndoorOnly(bool value) {
+    state = state.copyWith(indoorOnly: value);
+  }
+
+  void setOpenSpotsOnly(bool value) {
+    state = state.copyWith(openSpotsOnly: value);
   }
 }
 

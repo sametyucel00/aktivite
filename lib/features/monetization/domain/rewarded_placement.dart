@@ -1,0 +1,4 @@
+enum RewardedPlacement {
+  planBoost,
+  extraSlot,
+}

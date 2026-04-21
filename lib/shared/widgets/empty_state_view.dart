@@ -1,4 +1,5 @@
 import 'package:aktivite/core/constants/app_spacing.dart';
+import 'package:aktivite/shared/widgets/app_surface.dart';
 import 'package:flutter/material.dart';
 
 class EmptyStateView extends StatelessWidget {
@@ -15,25 +16,35 @@ class EmptyStateView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.xl),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(title, style: Theme.of(context).textTheme.titleLarge),
-            const SizedBox(height: AppSpacing.sm),
-            Text(
-              message,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            if (action != null) ...[
-              const SizedBox(height: AppSpacing.md),
-              action!,
-            ],
+    return AppSurface(
+      alignment: Alignment.center,
+      padding: const EdgeInsets.all(AppSpacing.xl),
+      tonal: true,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.explore_outlined,
+            size: 32,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+          const SizedBox(height: AppSpacing.md),
+          Text(
+            title,
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          Text(
+            message,
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+          if (action != null) ...[
+            const SizedBox(height: AppSpacing.md),
+            action!,
           ],
-        ),
+        ],
       ),
     );
   }

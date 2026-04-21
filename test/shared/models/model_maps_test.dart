@@ -34,6 +34,8 @@ void main() {
         durationMinutes: 45,
         participantCount: 2,
         maxParticipants: 4,
+        boostLevel: 1,
+        boostExpiresAt: DateTime.utc(2026, 4, 19, 23, 30),
         isIndoor: true,
         status: ActivityStatus.open,
         surfaces: [
@@ -50,6 +52,8 @@ void main() {
       expect(restored.surfaces, plan.surfaces);
       expect(restored.approximateLocation, plan.approximateLocation);
       expect(restored.durationMinutes, plan.durationMinutes);
+      expect(restored.boostLevel, 1);
+      expect(restored.boostExpiresAt, plan.boostExpiresAt);
     });
 
     test('activityPlan fallback keeps nearby surface when list is missing', () {

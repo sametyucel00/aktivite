@@ -10,6 +10,7 @@ import 'package:aktivite/shared/providers/app_providers.dart';
 import 'package:aktivite/shared/providers/repository_providers.dart';
 import 'package:aktivite/shared/widgets/async_value_view.dart';
 import 'package:aktivite/shared/widgets/join_request_dialog.dart';
+import 'package:aktivite/shared/widgets/app_surface.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -194,11 +195,19 @@ class _JoinPlanUnavailableAction extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     return Wrap(
       spacing: AppSpacing.sm,
+      runSpacing: AppSpacing.sm,
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
-        Text(
-          label,
-          style: Theme.of(context).textTheme.bodySmall,
+        AppSurface(
+          tonal: true,
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.md,
+            vertical: AppSpacing.sm,
+          ),
+          child: Text(
+            label,
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
         ),
         switch (style) {
           JoinPlanActionStyle.tonal => FilledButton.tonal(
@@ -252,11 +261,19 @@ class _JoinRequestStatusActionsState
     final l10n = AppLocalizations.of(context);
     return Wrap(
       spacing: AppSpacing.sm,
+      runSpacing: AppSpacing.sm,
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
-        Text(
-          widget.label,
-          style: Theme.of(context).textTheme.bodySmall,
+        AppSurface(
+          tonal: true,
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.md,
+            vertical: AppSpacing.sm,
+          ),
+          child: Text(
+            widget.label,
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
         ),
         TextButton(
           onPressed: _isCancelling

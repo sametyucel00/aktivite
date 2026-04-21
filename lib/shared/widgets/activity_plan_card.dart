@@ -1,9 +1,11 @@
+import 'package:aktivite/app/theme/app_radii.dart';
 import 'package:aktivite/core/constants/app_spacing.dart';
 import 'package:aktivite/core/enums/activity_status.dart';
 import 'package:aktivite/core/utils/localized_labels.dart';
 import 'package:aktivite/l10n/app_localizations.dart';
 import 'package:aktivite/shared/design_system/app_badge.dart';
 import 'package:aktivite/shared/models/activity_plan.dart';
+import 'package:aktivite/shared/widgets/app_surface.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -22,9 +24,9 @@ class ActivityPlanCard extends StatelessWidget {
     final l10n = AppLocalizations.of(context);
     final typography = Theme.of(context).textTheme;
     final scheme = Theme.of(context).colorScheme;
-    return Card(
-      margin: const EdgeInsets.only(bottom: AppSpacing.md),
-      child: Padding(
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.md),
+      child: AppSurface(
         padding: EdgeInsets.all(
           MediaQuery.sizeOf(context).width < 420
               ? AppSpacing.md
@@ -37,11 +39,11 @@ class ActivityPlanCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  width: 46,
-                  height: 46,
+                  width: 48,
+                  height: 48,
                   decoration: BoxDecoration(
                     color: scheme.primaryContainer,
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(AppRadii.md),
                   ),
                   child: Icon(
                     activityIcon(plan.category),
@@ -53,7 +55,17 @@ class ActivityPlanCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(plan.title, style: typography.titleMedium),
+                      Wrap(
+                        spacing: AppSpacing.sm,
+                        runSpacing: AppSpacing.xs,
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        children: [
+                          Text(plan.title, style: typography.titleMedium),
+                          AppBadge(label: _statusLabel(l10n, plan.status)),
+                          if (plan.hasActiveBoostAt(DateTime.now()))
+                            AppBadge(label: l10n.boostedBadge),
+                        ],
+                      ),
                       const SizedBox(height: AppSpacing.xs),
                       Text(
                         activityLabel(l10n, plan.category),
@@ -64,72 +76,73 @@ class ActivityPlanCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                const SizedBox(width: AppSpacing.sm),
-                AppBadge(label: _statusLabel(l10n, plan.status)),
               ],
             ),
-            const SizedBox(height: AppSpacing.sm),
-            Text(plan.description, style: typography.bodyMedium),
-            const SizedBox(height: AppSpacing.sm),
-            Row(
+            const SizedBox(height: AppSpacing.md),
+            Text(
+              plan.description,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: typography.bodyMedium,
+            ),
+            const SizedBox(height: AppSpacing.md),
+            Wrap(
+              spacing: AppSpacing.sm,
+              runSpacing: AppSpacing.sm,
               children: [
-                Icon(Icons.person_outline, size: 16, color: scheme.primary),
-                const SizedBox(width: AppSpacing.xs),
-                Expanded(
-                  child: Text(
-                    l10n.planOwnerLabel(_compactMemberId(plan.ownerUserId)),
-                    overflow: TextOverflow.ellipsis,
-                    style: typography.bodySmall,
-                  ),
+                _MetaPill(
+                  icon: Icons.schedule_outlined,
+                  label: DateFormat('dd MMM, HH:mm').format(plan.scheduledAt),
                 ),
-                const SizedBox(width: AppSpacing.sm),
-                Icon(
-                  Icons.groups_2_outlined,
-                  size: 16,
-                  color: scheme.onSurfaceVariant,
+                _MetaPill(
+                  icon: Icons.timer_outlined,
+                  label: l10n.activityDurationMinutes(plan.durationMinutes),
                 ),
-                const SizedBox(width: AppSpacing.xs),
-                Text(
-                  l10n.peopleCount(
+                _MetaPill(
+                  icon: Icons.groups_2_outlined,
+                  label: l10n.peopleCount(
                     plan.participantCount,
                     plan.maxParticipants,
                   ),
-                  style: typography.bodySmall,
+                ),
+                _MetaPill(
+                  icon: Icons.place_outlined,
+                  label: '${plan.city} / ${plan.approximateLocation}',
+                ),
+                _MetaPill(
+                  icon: plan.isIndoor
+                      ? Icons.meeting_room_outlined
+                      : Icons.park_outlined,
+                  label: plan.isIndoor
+                      ? l10n.activityIndoor
+                      : l10n.activityOutdoor,
+                ),
+                _MetaPill(
+                  icon: Icons.near_me_outlined,
+                  label: plan.distanceKm == null
+                      ? l10n.activityDistanceUnknown
+                      : l10n.activityDistanceKm(plan.distanceKm!),
                 ),
               ],
             ),
-            const SizedBox(height: AppSpacing.sm),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
+            const SizedBox(height: AppSpacing.md),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(AppSpacing.sm),
+              decoration: BoxDecoration(
+                color: scheme.surfaceContainerLow,
+                borderRadius: BorderRadius.circular(AppRadii.md),
+              ),
               child: Row(
                 children: [
-                  _InfoChip(
-                    icon: Icons.schedule_outlined,
-                    label: DateFormat('dd MMM, HH:mm').format(
-                      plan.scheduledAt,
+                  Icon(Icons.person_outline, size: 18, color: scheme.primary),
+                  const SizedBox(width: AppSpacing.sm),
+                  Expanded(
+                    child: Text(
+                      l10n.planOwnerLabel(_compactMemberId(plan.ownerUserId)),
+                      overflow: TextOverflow.ellipsis,
+                      style: typography.bodySmall,
                     ),
-                  ),
-                  _InfoChip(
-                    icon: Icons.timer_outlined,
-                    label: l10n.activityDurationMinutes(plan.durationMinutes),
-                  ),
-                  _InfoChip(
-                    icon: Icons.place_outlined,
-                    label: '${plan.city} / ${plan.approximateLocation}',
-                  ),
-                  _InfoChip(
-                    icon: plan.isIndoor
-                        ? Icons.meeting_room_outlined
-                        : Icons.park_outlined,
-                    label: plan.isIndoor
-                        ? l10n.activityIndoor
-                        : l10n.activityOutdoor,
-                  ),
-                  _InfoChip(
-                    icon: Icons.near_me_outlined,
-                    label: plan.distanceKm == null
-                        ? l10n.activityDistanceUnknown
-                        : l10n.activityDistanceKm(plan.distanceKm!),
                   ),
                 ],
               ),
@@ -145,8 +158,8 @@ class ActivityPlanCard extends StatelessWidget {
   }
 }
 
-class _InfoChip extends StatelessWidget {
-  const _InfoChip({
+class _MetaPill extends StatelessWidget {
+  const _MetaPill({
     required this.icon,
     required this.label,
   });
@@ -158,29 +171,29 @@ class _InfoChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     return Container(
-      margin: const EdgeInsets.only(right: AppSpacing.sm),
-      constraints: const BoxConstraints(maxWidth: 280),
       padding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.sm,
-        vertical: 7,
+        vertical: 8,
       ),
       decoration: BoxDecoration(
         color: scheme.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(999),
+        borderRadius: BorderRadius.circular(AppRadii.pill),
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 15, color: scheme.onSurfaceVariant),
-          const SizedBox(width: AppSpacing.xs),
-          Flexible(
-            child: Text(
-              label,
-              overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.labelMedium,
+      child: IntrinsicWidth(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 15, color: scheme.onSurfaceVariant),
+            const SizedBox(width: AppSpacing.xs),
+            Flexible(
+              child: Text(
+                label,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.labelMedium,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

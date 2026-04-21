@@ -6,6 +6,9 @@ import 'package:aktivite/core/enums/discovery_surface.dart';
 import 'package:aktivite/core/enums/group_preference.dart';
 import 'package:aktivite/core/enums/social_mood.dart';
 import 'package:aktivite/core/enums/verification_level.dart';
+import 'package:aktivite/features/monetization/data/monetization_repository.dart';
+import 'package:aktivite/features/monetization/domain/premium_tier.dart';
+import 'package:aktivite/features/monetization/domain/user_entitlement.dart';
 import 'package:aktivite/features/activities/data/activity_repository.dart';
 import 'package:aktivite/features/chat/data/chat_repository.dart';
 import 'package:aktivite/features/explore/application/explore_controller.dart';
@@ -188,6 +191,17 @@ void main() {
         currentUserProfileProvider.overrideWith(
           (ref) => const Stream<AppUserProfile>.empty(),
         ),
+        monetizationRepositoryProvider.overrideWithValue(
+          _StaticMonetizationRepository(
+            const UserEntitlement(
+              userId: 'demo-user',
+              tier: PremiumTier.free,
+              boostCredits: 0,
+              rewardedExtraSlots: 0,
+            ),
+          ),
+        ),
+        currentUserIdProvider.overrideWith((ref) => 'demo-user'),
       ],
     );
     addTearDown(container.dispose);
@@ -212,6 +226,69 @@ void main() {
       ['near-coffee'],
     );
   });
+
+  test('filteredPlansProvider ranks active boosted plans above regular ones',
+      () async {
+    final container = ProviderContainer(
+      overrides: [
+        activityRepositoryProvider.overrideWithValue(
+          _StaticActivityRepository([
+            ActivityPlan(
+              id: 'regular',
+              ownerUserId: 'guest-1',
+              title: 'Regular plan',
+              category: ActivityCategory.coffee,
+              description: 'Standard visibility',
+              city: 'Istanbul',
+              approximateLocation: 'Kadikoy',
+              timeLabel: 'Tonight',
+              scheduledAt: DateTime(2026, 4, 19, 20),
+              durationMinutes: 60,
+              participantCount: 1,
+              maxParticipants: 4,
+              isIndoor: true,
+              status: ActivityStatus.open,
+              surfaces: const [DiscoverySurface.nearby],
+            ),
+            ActivityPlan(
+              id: 'boosted',
+              ownerUserId: 'guest-2',
+              title: 'Boosted plan',
+              category: ActivityCategory.coffee,
+              description: 'Boosted visibility',
+              city: 'Istanbul',
+              approximateLocation: 'Moda',
+              timeLabel: 'Tonight',
+              scheduledAt: DateTime(2026, 4, 19, 20),
+              durationMinutes: 60,
+              participantCount: 1,
+              maxParticipants: 4,
+              boostLevel: 1,
+              boostExpiresAt: DateTime.now().add(const Duration(hours: 2)),
+              isIndoor: true,
+              status: ActivityStatus.open,
+              surfaces: const [DiscoverySurface.nearby],
+            ),
+          ]),
+        ),
+        currentUserProfileProvider.overrideWith(
+          (ref) => const Stream<AppUserProfile>.empty(),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    await container.read(allPlansProvider.future);
+
+    expect(
+      container
+          .read(filteredPlansProvider)
+          .valueOrNull
+          ?.map((plan) => plan.id)
+          .toList(growable: false),
+      ['boosted', 'regular'],
+    );
+  });
 }
 
 class _StaticActivityRepository implements ActivityRepository {
@@ -224,6 +301,13 @@ class _StaticActivityRepository implements ActivityRepository {
 
   @override
   Future<void> incrementParticipantCount(String activityId) async {}
+
+  @override
+  Future<void> applyBoost({
+    required String activityId,
+    required DateTime expiresAt,
+    int boostLevel = 1,
+  }) async {}
 
   @override
   Stream<List<ActivityPlan>> watchNearbyPlans() => Stream.value(_plans);
@@ -254,4 +338,19 @@ class _StaticChatRepository implements ChatRepository {
   @override
   Stream<List<ChatMessage>> watchMessages(String threadId) =>
       const Stream<List<ChatMessage>>.empty();
+}
+
+class _StaticMonetizationRepository implements MonetizationRepository {
+  _StaticMonetizationRepository(this._entitlement);
+
+  final UserEntitlement _entitlement;
+
+  @override
+  Stream<UserEntitlement> watchCurrentEntitlement(String? userId) {
+    final normalizedUserId = userId?.trim() ?? '';
+    if (normalizedUserId.isEmpty) {
+      return Stream.value(const UserEntitlement.free(userId: 'signed-out'));
+    }
+    return Stream.value(_entitlement.copyWith(userId: normalizedUserId));
+  }
 }

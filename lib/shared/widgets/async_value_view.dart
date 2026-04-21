@@ -1,4 +1,5 @@
 import 'package:aktivite/core/constants/app_spacing.dart';
+import 'package:aktivite/shared/widgets/app_surface.dart';
 import 'package:flutter/material.dart';
 
 class AsyncLoadingView extends StatelessWidget {
@@ -6,9 +7,12 @@ class AsyncLoadingView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.all(AppSpacing.lg),
-      child: Center(child: CircularProgressIndicator()),
+    return const AppSurface(
+      tonal: true,
+      child: Padding(
+        padding: EdgeInsets.all(AppSpacing.lg),
+        child: Center(child: CircularProgressIndicator()),
+      ),
     );
   }
 }
@@ -23,13 +27,16 @@ class AsyncErrorView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(AppSpacing.lg),
-      child: Center(
-        child: Text(
-          message,
-          textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.bodyMedium,
+    return AppSurface(
+      tonal: true,
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.lg),
+        child: Center(
+          child: Text(
+            message,
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
         ),
       ),
     );
